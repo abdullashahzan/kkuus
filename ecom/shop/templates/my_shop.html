@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 <title>{{request.user.first_name}}'s Shop</title>
@@ -10,7 +11,7 @@
         <div class="col-md-6">
             <article>
                 <h1 class="style-text-3">Renew the item?</h1>
-                <p class="lead style-text">Renewing the item will extend the date for 1 more day for 2 SAR.</p>
+                <p class="lead style-text">Renewing the item will extend the date for 1 more day.</p>
                 <p class="style-text"><strong>Note:</strong> You can only renew once.</p>
                 <form class="redirect_link" action="" method="post">
                     {% csrf_token %}
@@ -20,7 +21,7 @@
             </article>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-items-center">
-            <img src="../static/media/undraw_access_account_re_8spm.svg" alt="image">
+            <img src="{% static 'media/undraw_access_account_re_8spm.svg' %}" alt="image">
         </div>
     </div>
 </div>
@@ -46,8 +47,10 @@
                     <hr>
                     <h5 class="card-title style-text">SAR {{item.product_price}}</h5>
                     <hr>
-                    {% if item.is_expired %}
+                    {% if item.is_expired == True and item.is_renewed == False %}
                     <button class="btn btn-success" onclick="openModalParameter('{{item.id}}')">Renew</button>
+                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">Delete</a>
+                    {% elif item.is_expired  %}
                     <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">Delete</a>
                     {% else %}
                     <p class="text-muted style-text">Click here to enter purchase code</p>
@@ -65,11 +68,11 @@
         {% empty %}
         <div class="row d-flex align-items-center" style="min-height: 80vh;">
             <div class="col-md-7">
-                <h1 class="style-text-3">You shop seems empty...</h1>
+                <h1 class="style-text-3">Your shop seems empty...</h1>
                 <p class="text-muted style-text">You don't have anything for sale</p>
             </div>
             <div class="col-md-5">
-                <img src="../static/media/undraw_void_-3-ggu.svg" alt="Void">
+                <img src="{% static 'media/undraw_void_-3-ggu.svg' %}" alt="Void">
             </div>
         </div>
         {% endfor %}

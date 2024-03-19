@@ -1,11 +1,12 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block body %}
 <main>
     <div class="container">
         <div class="row" style="min-height: 80vh;">
             <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <img src="../static/media/undraw_secure_login_pdn4.svg"
+                <img src="{% static 'media/undraw_secure_login_pdn4.svg' %}"
                     alt="Picture">
             </div>
             <div class="col-md-6 d-flex justify-content-start align-items-center p-5">

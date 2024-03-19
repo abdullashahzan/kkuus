@@ -12,7 +12,6 @@ from firebase_admin import storage
 from .scripts import *
 from django.db.models import Avg
 from django.conf import settings
-import moyasar
 import requests
 
 def login_user(request):
@@ -318,10 +317,6 @@ def search_item(request):
             items_found.append(listing)
     return render(request, "search_items.html", {"items": items_found})
 
-def payment(request):
-    # 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
-
-    return render(request, "payment.html")
 
     payment_id = "1fe510b6-d50d-4294-9655-cec43110b2cb"
     # Construct the URL with the payment ID

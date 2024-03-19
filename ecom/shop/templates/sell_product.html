@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 <title>Create a new listing</title>
@@ -9,7 +10,7 @@
 <div class="container">
     <div class="row" style="min-height: 80vh;">
         <div class="col-md-6 d-flex justify-content-center align-items-center">
-            <img src="../static/media/undraw_web_shopping_re_owap.svg" alt="Picture shopping">
+            <img src="{% static 'media/undraw_web_shopping_re_owap.svg' %}" alt="Picture shopping">
         </div>
         <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
             <article>
@@ -55,19 +56,19 @@
                         <div class="form-check col-4 m-2">
                             <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="7" checked>
                             <label class="form-check-label" for="flexRadioDefault">
-                                Post for 1 week <br> (5 SAR)
+                                Post for 1 week <br> (Free)
                             </label>
                         </div>
                         <div class="form-check col-4 m-2">
-                            <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="14">
+                            <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="1" disabled>
                             <label class="form-check-label" for="flexRadioDefault">
-                                Post for 2 week <br> (7 SAR)
+                                Post for 2 weeks <br> (Free)
                             </label>
                         </div>
                         <div class="form-check col-4 m-2">
-                            <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="28">
+                            <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="1" disabled>
                             <label class="form-check-label" for="flexRadioDefault">
-                                Post for 1 month <br>(12 SAR)
+                                Post for 1 month <br>(Free)
                             </label>
                         </div>
                     </div>

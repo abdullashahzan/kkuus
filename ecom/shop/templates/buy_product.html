@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 <title>{{ item.product_name }} details</title>
@@ -10,9 +11,8 @@
         <div class="col-md-6">
             <article>
                 <h1 class="style-text-3">Confirm purchase</h1>
-                <p class="lead style-text">An email will be sent to seller, please show him your code to finalize the
-                    purchase and collect your item.</p>
-                <p class="style-text"><strong>Note:</strong> You can get details about your order from <a href="{% url 'shop:myOrders' %}" class="text-success">order page</a>.</p>
+                <p class="lead style-text">An email will be sent to seller, please show him your code to identify yourself and collect your item.</p>
+                <p class="style-text"><strong>Note:</strong> You can get your code and details about your order from <a href="{% url 'shop:myOrders' %}" class="text-success">order page</a>.</p>
                 <form action="{% url 'shop:purchase' item.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-success"
@@ -23,7 +23,7 @@
             </article>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-items-center">
-            <img src="../static/media/undraw_access_account_re_8spm.svg" alt="image">
+            <img src="{% static 'media/undraw_access_account_re_8spm.svg' %}" alt="image">
         </div>
     </div>
 </div>

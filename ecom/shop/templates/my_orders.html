@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 <title>My orders</title>
@@ -15,7 +16,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-success style-text">{{order.item.product_name}}</h5>
                     <hr>
-                    <p class="style-text"><strong>Key:</strong> <span class="text-success lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller to confirm purchase.</span>
+                    <p class="style-text"><strong>Code: </strong> <span class="text-success lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller to confirm purchase.</span>
                     </p>
                     <p class="style-text"><span class="text-muted">Location:</span><br>{{order.address}}</p>
                 </div>
@@ -28,7 +29,7 @@
                 <p class="text-muted style-text">Your purchased orders appear here</p>
             </div>
             <div class="col-md-5">
-                <img src="../static/media/undraw_shopping_app_flsj.svg" alt="Void">
+                <img src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="Void">
             </div>
         </div>
         {% endfor %}

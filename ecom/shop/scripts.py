@@ -48,7 +48,6 @@ def delete_listing(listing_id):
 
 def check_data():
     current = datetime.now()
-    long_current = datetime.now() - timedelta(days=10)
     expired_objects = UserListings.objects.filter(expiry__lt=current, is_expired=False)
     for obj in expired_objects:
         obj.is_expired = True
@@ -63,6 +62,3 @@ def num_buyers(item_id):
     item = UserListings.objects.get(id=item_id)
     orders = UserOrder.objects.filter(item=item).count
     return orders
-
-def generate_notification(title, body, username):
-    notification = UserNotification(title=title, body=body,  username=username).save()

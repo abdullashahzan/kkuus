@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 <title>Search results</title>
@@ -43,7 +44,7 @@
         {% empty %}
         <div class="row my-4" style="min-height: 80vh;">
             <div class="col-md-5 d-flex align-items-center">
-                <img src="../static/media/undraw_empty_cart_co35.svg" alt="empty">
+                <img src="{% static 'media/undraw_empty_cart_co35.svg' %}" alt="empty">
             </div>
             <div class="col-md-7 d-flex align-items-center">
                 <article>

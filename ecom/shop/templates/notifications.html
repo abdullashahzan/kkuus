@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 <title>Notification panel</title>
@@ -38,7 +39,7 @@
                 </article>
             </div>
             <div class="col-md-5 d-flex align-items-center">
-                <img src="../static/media/undraw_notify_re_65on.svg" alt="notify">
+                <img src="{% static 'media/undraw_notify_re_65on.svg' %}" alt="notify">
             </div>
         </div>
         {% endfor %}
