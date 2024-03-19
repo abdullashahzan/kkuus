@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Create a new listing</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row" style="min-height: 80vh;">
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_web_shopping_re_owap.svg" alt="Picture shopping">
+        </div>
+        <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
+            <article>
+                <h1 class="style-heading mb-4">Create your new listing</h1>
+                <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <label for="product_name" class="form-label">Name of your product:</label>
+                            <input type="text" class="form-control style-text" name="product_name"
+                                placeholder="Chocolate">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <label for="description" class="form-label">Product details:</label>
+                            <textarea class="form-control style-text" id="description" name="product_description"
+                                rows="4" placeholder="Write a short description about your product..."></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <label for="price" class="form-label">Set a price for your product (SAR):</label>
+                            <input type="text" class="form-control style-text" name="price" placeholder="5.00">
+                        </div>
+                    </div>
+                    <div class="row mb-2 mt-4">
+                        <div class="col-md-12">
+                            <label for="imageUpload" class="btn btn-outline-success">Select Images</label>
+                            <input type="file" name="product_images" class="custom-file-input" id="imageUpload"
+                                accept="image/*">
+                            <span class="text-success" id="selectedFiles">No file chosen</span>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mt-4 style-text">
+                        <div class="style-text"><strong>Select your plan:</strong></div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="1">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                Post for 1 day <br> (FREE)
+                            </label>
+                        </div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="7" checked>
+                            <label class="form-check-label" for="flexRadioDefault">
+                                Post for 1 week <br> (5 SAR)
+                            </label>
+                        </div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="14">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                Post for 2 week <br> (7 SAR)
+                            </label>
+                        </div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input bg-success" type="radio" name="flexRadioDefault" value="28">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                Post for 1 month <br>(12 SAR)
+                            </label>
+                        </div>
+                    </div>
+                    {% if message %}
+                    <p class="style-text" style="color: red;">{{message}}</p>
+                    {% endif %}
+                    <button type="submit" class="btn btn-success" style="float: right;"><i
+                            class="bi bi-cash-stack lead mx-1"></i> <span class="style-text lead mx-2">Put up for
+                            sale</span></button>
+                </form>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('imageUpload').addEventListener('change', function (e) {
+        var label = document.getElementById('selectedFiles');
+        var files = e.target.files;
+
+        if (files.length > 1) {
+            label.innerText = files.length + ' files selected';
+        } else {
+            label.innerText = files[0].name;
+        }
+    });
+</script>
+
+{% endblock %}

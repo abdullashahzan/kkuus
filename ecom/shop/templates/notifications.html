@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Notification panel</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row" style="min-height: 80vh;" data-masonry='{"percentPosition": true }'>
+        {% for notification in notifications %}
+        <div class="g-3 col-md-4">
+            <div class="card p-0" style="height: fit-content;">
+                <div class="card-body">
+                    <h2 class="style-text">{{notification.title}}</h2>
+                    <hr>
+                    <p class="style-text-2 mb-4">{{notification.body}}</p>
+                    {% if notification.task == "show_shop" %}
+                    <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-success"><i class="bi bi-bag mx-1"></i> My
+                        Shop</a>
+                    {% elif notification.task == "show_order" %}
+                    <a href="{% url 'shop:myOrders' %}" class="btn btn-outline-success"><i
+                            class="bi bi-check2-circle mx-1"></i> My Orders</a>
+                    {% endif %}
+                    <a href="{% url 'shop:delete_notification' notification.id %}" class="btn btn-outline-danger"><i
+                            class="bi bi-trash mx-1"></i> Delete notification</a>
+                </div>
+                <div class="card-footer text-muted">{{notification.date}}</div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="row" style="min-height: 80vh;">
+            <div class="col-md-7 d-flex align-items-center">
+                <article>
+                    <h1 class="style-text-3 my-3">You don't have any notifications</h1>
+                    <hr>
+                    <p class="text-muted style-text">Your notifications will appear here</p>
+                </article>
+            </div>
+            <div class="col-md-5 d-flex align-items-center">
+                <img src="../static/media/undraw_notify_re_65on.svg" alt="notify">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

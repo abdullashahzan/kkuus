@@ -1,0 +1,91 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>{{request.user.first_name}}'s Shop</title>
+{% endblock %}
+
+{% block body %}
+<div id="myModal" class="container-fluid">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-6">
+            <article>
+                <h1 class="style-text-3">Renew the item?</h1>
+                <p class="lead style-text">Renewing the item will extend the date for 1 more day for 2 SAR.</p>
+                <p class="style-text"><strong>Note:</strong> You can only renew once.</p>
+                <form class="redirect_link" action="" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success">Yes, go ahead!</button>
+                </form>
+                <button class="btn btn-outline-danger mt-2" onclick="closeModal()">No, take me back</button>
+            </article>
+        </div>
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_access_account_re_8spm.svg" alt="image">
+        </div>
+    </div>
+</div>
+<div class="container" style="min-height: 150vh;">
+    {% if item %}
+    <div class="row">
+        <h1 class="style-text-3 mt-3">Items listed by you:</h1>
+    </div>
+    <hr>
+    {% endif %}
+    <div class="row" data-masonry='{"percentPosition": true }'>
+        {% for item in items %}
+        <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
+            <div class="card">
+                {% if item.num_orders != 0 %}
+                <div class="card-header style-text text-success">{{item.num_orders}} people have placed order</div>
+                {% endif %}
+                <img src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
+                    alt="{{item.product_name}}">
+                <div class="card-body">
+                    <h5 class="card-title text-success" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
+                        class="text-success style-text">{{item.product_name}}</a></h5>
+                    <hr>
+                    <h5 class="card-title style-text">SAR {{item.product_price}}</h5>
+                    <hr>
+                    {% if item.is_expired %}
+                    <button class="btn btn-success" onclick="openModalParameter('{{item.id}}')">Renew</button>
+                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">Delete</a>
+                    {% else %}
+                    <p class="text-muted style-text">Click here to enter purchase code</p>
+                    <a href="{% url 'shop:confirmPurchase' item.id %}" class="btn btn-outline-success">Enter code </a>
+                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-outline-danger delete-link">Delete</a>
+                    {% endif %}
+                </div>
+                {% if item.is_expired %}
+                <div class="card-footer style-text text-light bg-danger">Item expired</div>
+                {% else %}
+                <div class="card-footer style-text text-light bg-success">Item expires on: <br>{{item.expiry}}</div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="row d-flex align-items-center" style="min-height: 80vh;">
+            <div class="col-md-7">
+                <h1 class="style-text-3">You shop seems empty...</h1>
+                <p class="text-muted style-text">You don't have anything for sale</p>
+            </div>
+            <div class="col-md-5">
+                <img src="../static/media/undraw_void_-3-ggu.svg" alt="Void">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".delete-link").click(function (e) {
+            e.preventDefault();
+            var confirmation = confirm("Are you sure you want to delete this item?");
+            if (confirmation) {
+                window.location.href = $(this).attr("href");
+            }
+        });
+    });
+</script>
+
+{% endblock %}

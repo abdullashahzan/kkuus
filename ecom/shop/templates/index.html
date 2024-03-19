@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+{% if user.is_authenticated %}
+<title>Welcome, {{request.user.first_name}}!</title>
+{% else %}
+<title>Welcome, user!</title>
+{% endif %}
+{% endblock %}
+
+{% block body %}
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+<div class="container">
+    <div class="row" data-masonry='{"percentPosition": true }'>
+        {% for item in items %}
+        <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
+            <div class="card">
+                <img src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
+                    alt="{{item.product_name}}">
+                <div class="card-body">
+                    <h5 class="card-title style-text-2 text-success">{{item.product_name}}</h5>
+                    <hr>
+                    <h5 class="card-title style-text">SAR {{item.product_price}}</h5>
+                    <p class="card-text text-dark style-text-2">{{item.product_description}}</p>
+                    <p class="text-muted style-text"><i class="bi bi-star-fill lead"></i> {{item.ratings}}/5.0
+                        ({{item.num_raters}})</p>
+                    {% if user.username != item.username %}
+                    {% if item.id in bought_items %}
+                    <a href="{% url 'shop:myOrders' %}" class="btn btn-success my-2">Requested</a>
+                    {% elif item.id in completed_items %}
+                    <button class="btn btn-disabled my-2 text-success">Purchased</button>
+                    {% else %}
+                    <a href="{% url 'shop:buy' item.id %}" class="btn btn-success my-2">Show item</a>
+                    {% endif %}
+                    {% if item.id in wishlist %}
+                    <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
+                        Remove from wishlist</button>
+                    {% else %}
+                    <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
+                        Add to wishlist</button>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                <div class="card-footer style-text-2 text-muted">Posted on {{item.timestamp}}</div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="row my-4" style="min-height: 80vh;">
+            <div class="col-md-5 d-flex align-items-center">
+                <img src="../static/media/undraw_empty_re_opql.svg" alt="empty">
+            </div>
+            <div class="col-md-7 d-flex align-items-center">
+                <article>
+                    <h1 class="style-text-3 my-3">No products available yet...</h1>
+                    <hr>
+                    <p class="text-muted style-text">Marketplace seems empty today</p>
+                </article>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    $('.add-to-wishlist').on('click', function () {
+        var button = $(this);
+        var item_id = $(this).data('item-id');
+        if (button.text().trim() === 'Add to wishlist') {
+            $.ajax({
+                url: '/addToWishlist/' + item_id,
+                type: 'POST',
+                dataType: 'json',
+                headers: { 'X-CSRFToken': csrftoken },
+                success: function (data) {
+                    alert(data.message);
+                    button.text('Remove from wishlist');
+                },
+                error: function (xhr, errmsg, err) {
+                    alert('Failed to add item in your wishlist');
+                }
+            });
+        } else if (button.text().trim() === 'Remove from wishlist') {
+            $.ajax({
+                url: '/removeFromWishlist/' + item_id,
+                type: 'POST',
+                dataType: 'json',
+                headers: { 'X-CSRFToken': csrftoken },
+                success: function (data) {
+                    alert(data.message);
+                    button.text('Add to wishlist');
+                },
+                error: function (xhr, errmsg, err) {
+                    alert('Failed to remove item from your wishlist');
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

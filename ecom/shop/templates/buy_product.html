@@ -1,0 +1,147 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>{{ item.product_name }} details</title>
+{% endblock %}
+
+{% block body %}
+<div id="myModal" class="container-fluid">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-6">
+            <article>
+                <h1 class="style-text-3">Confirm purchase</h1>
+                <p class="lead style-text">An email will be sent to seller, please show him your code to finalize the
+                    purchase and collect your item.</p>
+                <p class="style-text"><strong>Note:</strong> You can get details about your order from <a href="{% url 'shop:myOrders' %}" class="text-success">order page</a>.</p>
+                <form action="{% url 'shop:purchase' item.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success"
+                        onclick="this.disabled=true; this.value='Submitting...'; this.form.submit();">Yes, go
+                        ahead!</button>
+                </form>
+                <button class="btn btn-outline-danger mt-2" onclick="closeModal()">No, take me back</button>
+            </article>
+        </div>
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_access_account_re_8spm.svg" alt="image">
+        </div>
+    </div>
+</div>
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+<div class="container">
+    <div class="row p-4">
+        <div class="col-md-4">
+            <img src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}">
+        </div>
+        <div class="col-md-8">
+            <article>
+                <h1 class="style-heading">{{item.product_name}}</h1>
+                <h2 class="style-text-3 text-success"><strong>SAR </strong>{{item.product_price}}</h2>
+                <h5 class="style-text-2">Ratings: {{item.ratings}} / 5.0 <span class="text-muted"
+                        style="font-size: 0.9rem;">
+                        ({{item.num_raters}} people voted)</span></h5>
+                {% if user.is_authenticated and user.username != item.username %}
+                <button class="btn btn-success my-3" onclick="openModal()">Place order</button>
+                {% if item.id in wishlist %}
+                <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
+                    Remove from wishlist</button>
+                {% else %}
+                <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
+                    Add to wishlist</button>
+                {% endif %}
+                {% else %}
+                <h5 class="style-text-2 text-danger my-4">You cannot purchase this item.</h5>
+                {% endif %}
+                <hr>
+                <h5 class="lead"><strong>Product description:</strong></h5>
+                <p class="style-text">{{item.product_description}}</p>
+            </article>
+        </div>
+    </div>
+    <div class="row">
+        <h1 class="style-heading my-3">Comments</h1>
+        <hr>
+        {% if user.username != item.username %}
+        <form action="{% url 'shop:postComment' item.id %}" method="post" class="col-md-4 my-1">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input class="form-control my-2" type="text" name="heading" placeholder="Heading of your comment">
+                <textarea class="form-control" name="comment" rows="4"
+                    placeholder="Write your opinion about the product..." style="resize: none;"></textarea>
+                <input type="text" class="form-control my-2" name="ratings"
+                    placeholder="How much do you rate the product out of 5?">
+            </div>
+            
+            <button type="submit" class="btn btn-success">Post</button>
+        </form>
+        {% else %}
+            <h5 class="style-text-2 text-danger col-md-4 my-1">You cannot comment on your own item.</h5>
+        {% endif %}
+        <div class="col-md-8">
+            {% for comment in comments %}
+            <div class="card my-2">
+                <div class="card-body">
+                    <h2 class="style-text-2">{{comment.heading}}</h2>
+                    <h6 class="text-muted">By: {{comment.username}}</h6>
+                    <h6 class="style-text-2 my-3"><i class="bi bi-star-fill"></i> {{comment.ratings}}/5.0</h6>
+                    <p class="style-text-2">{{comment.comment}}</p>
+                </div>
+                <div class="card-footer">
+                    <p class="text-muted">Posted on {{comment.timestamp}}</p>
+                    {% if comment.username == user.username %}
+                    <form action="{% url 'shop:delete_comment' comment.id item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="card my-2">
+                <div class="card-body">
+                    <h2 class="style-text-2">There are no comments yet...</h2>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    $('.add-to-wishlist').on('click', function () {
+        var button = $(this);
+        var item_id = $(this).data('item-id');
+        if (button.text().trim() === 'Add to wishlist') {
+            $.ajax({
+                url: '/addToWishlist/' + item_id,
+                type: 'POST',
+                dataType: 'json',
+                headers: { 'X-CSRFToken': csrftoken },
+                success: function (data) {
+                    alert(data.message);
+                    button.text('Remove from wishlist');
+                },
+                error: function (xhr, errmsg, err) {
+                    alert('Failed to add item in your wishlist');
+                }
+            });
+        } else if (button.text().trim() === 'Remove from wishlist') {
+            $.ajax({
+                url: '/removeFromWishlist/' + item_id,
+                type: 'POST',
+                dataType: 'json',
+                headers: { 'X-CSRFToken': csrftoken },
+                success: function (data) {
+                    alert(data.message);
+                    button.text('Add to wishlist');
+                },
+                error: function (xhr, errmsg, err) {
+                    alert('Failed to remove item from your wishlist');
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

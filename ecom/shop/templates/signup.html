@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<main>
+    <div class="container">
+        <div class="row" style="min-height: 80vh;">
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <img src="../static/media/undraw_sign_up_n6im.svg" alt="Picture">
+            </div>
+            <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
+                <article>
+                    <h1 class="style-heading mb-4">Discover joy in every click, sign up today!</h1>
+                    <form action="{% url 'shop:signup_user' %}" method="post">
+                        {% csrf_token %}
+                        <div class="row mb-2 style-text">
+                            <div class="col-md-6">
+                                <label for="first" class="form-label">First name</label>
+                                <input type="text" class="form-control" name="first">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="second" class="form-label">Second name</label>
+                                <input type="text" class="form-control" name="second">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" name="username" id="userInput" aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
+                                <div id="checkUsernameAvailability" class="form-text"></div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" name="email">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label for="exampleInputPassword1" class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="exampleInputPassword2" class="form-label">Confirm password</label>
+                                <input type="password" name="password2" class="form-control" id="exampleInputPassword2">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label for="address" class="form-label">Student housing address</label>
+                                <input type="address" class="form-control" name="address" placeholder="e.g. BR7, Building 5, Room no. 403">
+                            </div>
+                        </div>
+                        {% if message %}
+                        <p class="style-text" style="color: red;">{{message}}</p>
+                        {% endif %}
+                        <button type="submit" class="btn btn-success">Register</button>
+                        <a href="{% url 'shop:login_user' %}" type="submit" class="btn btn-light btn-outline-success mx-2">Already
+                            have an account</a>
+                    </form>
+                </article>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    let timeoutId;
+    let functionCalled = false;
+
+    function delayFunction(){
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            if (!functionCalled) {
+                checkUsername();
+                functionCalled = true;
+            }
+        }, 2000);
+        functionCalled = false;
+    }
+
+    function checkUsername() {
+        
+        var messageBox = document.getElementById('checkUsernameAvailability');
+        var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        var userInput = document.getElementById('userInput');
+        var userInputValue = userInput.value;
+
+        if (userInputValue == "") {
+            html_data = `<p class="style-text" style="color: red;">Username cannot be empty</p>`
+            messageBox.innerHTML = html_data;
+        } else {
+            fetch(`/username_availability/${userInputValue}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: 'user_input=' + encodeURIComponent(userInputValue),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var html_data;
+                    console.log(data.response)
+                    if (data.response == "available") {
+                        html_data = `<p class="style-text" style="color: green;">Username is available</p>`
+                        messageBox.innerHTML = html_data;
+                    }
+                    else if (data.response == "not available") {
+                        html_data = `<p class="style-text" style="color: red;">Username is already taken</p>`
+                        messageBox.innerHTML = html_data;
+                    }
+                });
+        }
+    }
+</script>
+{% endblock %}

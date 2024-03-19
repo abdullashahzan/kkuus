@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<main>
+    <div class="container">
+        <div class="row" style="min-height: 80vh;">
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <img src="../static/media/undraw_secure_login_pdn4.svg"
+                    alt="Picture">
+            </div>
+            <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
+                <article>
+                    <h1 class="mb-4 style-heading">Welcome back! Please log in to your account</h1>
+                    <form action="{% url 'shop:login_user' %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            <label for="InputEmail1" class="form-label style-text">Username</label>
+                            <input type="text" name="username" placeholder="e.g. john53" class="form-control style-text" id="InputEmail1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="InputPassword1" class="form-label style-text">Password</label>
+                            <input type="password" name="password" class="form-control" id="InputPassword1">
+                        </div>
+                        {% if message %}
+                            <p class="style-text" style="color: red;">Invalid credentials, please try again.</p>
+                        {% endif %}
+                        <button type="submit" class="btn btn-success">Log in</button>
+                        <a href="{% url 'shop:signup_user' %}" type="submit" class="btn btn-light btn-outline-success mx-2">Register a new account</a>
+                    </form>
+                </article>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
