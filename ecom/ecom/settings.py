@@ -23,7 +23,7 @@ from firebase_admin import credentials
 
 #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-cred = credentials.Certificate(os.path.join(BASE_DIR, 'firebase', '/home/shahzan/VSCode/E-commerce/ecom/firebase/kku-unofficial-store-firebase-adminsdk-6b6wq-c86f24eae5.json'))
+cred = credentials.Certificate(os.path.join(BASE_DIR, 'firebase', f'{BASE_DIR}/firebase/kku-unofficial-store-firebase-adminsdk-6b6wq-c86f24eae5.json'))
 firebase_admin.initialize_app(cred, {'storageBucket': 'kku-unofficial-store.appspot.com'})
 
 
