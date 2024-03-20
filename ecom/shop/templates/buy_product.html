@@ -6,13 +6,19 @@
 {% endblock %}
 
 {% block body %}
-<div id="myModal" class="container-fluid">
+<div id="myModal" class="container-fluid animate__animated animate__slideInDown">
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-6">
             <article>
-                <h1 class="style-text-3">Confirm purchase</h1>
-                <p class="lead style-text">An email will be sent to seller, please show him your code to identify yourself and collect your item.</p>
-                <p class="style-text"><strong>Note:</strong> You can get your code and details about your order from <a href="{% url 'shop:myOrders' %}" class="text-success">order page</a>.</p>
+                <h1 class="style-text-3">Confirm purchase?</h1>
+                <p class="lead style-text">
+                    You are almost there! By clicking confirm purchase, seller will be notified about your purchase.
+                    Keep in mind you have just notified the seller about your interest, to complete the purchase,
+                    please visit seller's place and collect your order.
+                </p>
+                <p class="style-text"><strong>Do not forget to show him your buyer code!</strong></p>
+                <p class="style-text"><strong>Note:</strong> You can get address of the seller and buyer code from <a
+                        href="{% url 'shop:myOrders' %}" class="text-success">My orders</a>.</p>
                 <form action="{% url 'shop:purchase' item.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-success"
@@ -22,18 +28,18 @@
                 <button class="btn btn-outline-danger mt-2" onclick="closeModal()">No, take me back</button>
             </article>
         </div>
-        <div class="col-md-6 d-flex justify-content-center align-items-center">
-            <img src="{% static 'media/undraw_access_account_re_8spm.svg' %}" alt="image">
+        <div class="col-md-6 d-flex justify-content-center align-items-center my-3">
+            <img class="widthlock" src="{% static 'media/undraw_access_account_re_8spm.svg' %}" alt="image">
         </div>
     </div>
 </div>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-<div class="container">
+<div class="container animate__animated animate__fadeInUp">
     <div class="row p-4">
         <div class="col-md-4">
-            <img src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}">
+            <img class="widthlock" src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}">
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 my-2">
             <article>
                 <h1 class="style-heading">{{item.product_name}}</h1>
                 <h2 class="style-text-3 text-success"><strong>SAR </strong>{{item.product_price}}</h2>
@@ -49,45 +55,74 @@
                 <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
                     Add to wishlist</button>
                 {% endif %}
-                {% else %}
-                <h5 class="style-text-2 text-danger my-4">You cannot purchase this item.</h5>
                 {% endif %}
+                <p class="style-text-2 text-muted">{{item.num_orders}} Buyer(s) have purchased so far</p>
                 <hr>
                 <h5 class="lead"><strong>Product description:</strong></h5>
-                <p class="style-text">{{item.product_description}}</p>
+                <p class="style-text-2">{{item.product_description}}</p>
             </article>
         </div>
     </div>
-    <div class="row">
+    <div class="row p-3">
         <h1 class="style-heading my-3">Comments</h1>
         <hr>
         {% if user.username != item.username %}
         <form action="{% url 'shop:postComment' item.id %}" method="post" class="col-md-4 my-1">
             {% csrf_token %}
-            <div class="mb-3">
-                <input class="form-control my-2" type="text" name="heading" placeholder="Heading of your comment">
-                <textarea class="form-control" name="comment" rows="4"
-                    placeholder="Write your opinion about the product..." style="resize: none;"></textarea>
-                <input type="text" class="form-control my-2" name="ratings"
-                    placeholder="How much do you rate the product out of 5?">
+            <div class="card p-3">
+                <div class="mb-2 style-text">
+                    <input class="form-control mb-2" type="text" name="heading" placeholder="Heading of your comment">
+                    <textarea class="form-control" name="comment" id="comment" rows="4"
+                        placeholder="Write your opinion about the product..." style="resize: none;"></textarea>
+                    <p class="style-text-2 text-success"><span id="charCount">0</span> / 200</p>
+                    <label class="style-text mt-3" for="rating">How much do you rate the product? (Out of 5)</label>
+                    <div class="rating my-2 style-text">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                                value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                                value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                                value="3">
+                            <label class="form-check-label" for="inlineRadio3">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                                value="4">
+                            <label class="form-check-label" for="inlineRadio3">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                                value="5">
+                            <label class="form-check-label" for="inlineRadio3">5</label>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-danger style-text-2">{{message}}</p>
+                <button type="submit" class="btn btn-success">Post</button>
             </div>
-            
-            <button type="submit" class="btn btn-success">Post</button>
         </form>
         {% else %}
-            <h5 class="style-text-2 text-danger col-md-4 my-1">You cannot comment on your own item.</h5>
+        <h5 class="style-text-2 text-danger col-md-4 my-1">You cannot comment on your own item.</h5>
         {% endif %}
         <div class="col-md-8">
             {% for comment in comments %}
             <div class="card my-2">
                 <div class="card-body">
                     <h2 class="style-text-2">{{comment.heading}}</h2>
-                    <h6 class="text-muted">By: {{comment.username}}</h6>
+                    <h6 class="text-muted style-text">By: {{comment.username}}</h6>
                     <h6 class="style-text-2 my-3"><i class="bi bi-star-fill"></i> {{comment.ratings}}/5.0</h6>
+                    <hr>
                     <p class="style-text-2">{{comment.comment}}</p>
                 </div>
                 <div class="card-footer">
-                    <p class="text-muted">Posted on {{comment.timestamp}}</p>
+                    <p class="text-muted style-text">Posted on {{comment.timestamp}}</p>
                     {% if comment.username == user.username %}
                     <form action="{% url 'shop:delete_comment' comment.id item.id %}" method="post">
                         {% csrf_token %}
@@ -141,6 +176,15 @@
                 }
             });
         }
+    });
+    $(document).ready(function () {
+        $('#comment').on('input', function () {
+            var text = $(this).val();
+            if (text.length > 200) {
+                $(this).val(text.substring(0, 200));
+            }
+            $('#charCount').text($(this).val().length);
+        });
     });
 </script>
 

@@ -44,8 +44,8 @@
         }
 
         .container {
-            min-height: 50vh;
-            background-color: #f7f7f7;
+            min-height: 30vh;
+            background-color: #198754;
             padding: 2rem;
         }
     </style>
@@ -56,11 +56,11 @@
     <div class="container p-4">
         <div class="row">
             <article>
-                <h1 class="style-text-2 text-success">{{Title}}</h1>
+                <h1 class="style-text-2 text-light">{{Title}}</h1>
                 <hr>
-                <p class="lead style-text-2 text-dark">{{Body}}</p>
+                <p class="lead style-text-2 text-light">{{Body}}</p>
                 {% if specialKeys == 'purchase' %}
-                    <a href="{% url 'shop:my_shop' %}" class="btn btn-success">My products</a>
+                    <a href="https://kkuunstore.pythonanywhere.com/myShop/" class="btn btn-outline-light">My products</a>
                 {% endif %}
         </div>
         <hr>

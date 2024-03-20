@@ -17,9 +17,19 @@
     height: 30vh;
 }
 
-img {
-    width: 90%;
+.heightlock {
+    height: 30vh;
+    width: fit-content;
+}
+
+.widthlock {
     height: auto;
+    width: 90%;
+}
+
+.doublelock {
+    height: 30vh;
+    width: 90%;
 }
 
 .style-heading {
@@ -40,6 +50,13 @@ img {
 
 .style-text-4 {
     font-family: var(--family5);
+}
+
+.truncate-3-lines {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 ul.horizontal-list li {
@@ -82,16 +99,14 @@ nav.custom_nav {
 
 #myModal {
     display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 0;
+    left: 0;
     padding: 2rem;
-    background-color: #f7f7f7;
-    border-radius: 2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    min-height: 50vh;
-    width: 80%;
+    background-color: #fff;
+    min-height: 60vh;
+    width: 100%;
     z-index: 10;
 }
 
@@ -114,3 +129,4 @@ nav.custom_nav {
     width: 10px;
     border-radius: 100rem;
 }
+

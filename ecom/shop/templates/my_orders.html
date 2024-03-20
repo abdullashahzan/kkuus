@@ -10,13 +10,13 @@
     <div class="row" data-masonry='{"percentPosition": true }'>
         {% for order in orders %}
         <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
-            <div class="card">
-                <img src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top"
+            <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex justify-content-center align-items-center">
+                <img class="heightlock" src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top"
                     alt="{{order.item.product_name}}">
                 <div class="card-body">
                     <h5 class="card-title text-success style-text">{{order.item.product_name}}</h5>
                     <hr>
-                    <p class="style-text"><strong>Code: </strong> <span class="text-success lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller to confirm purchase.</span>
+                    <p class="style-text"><strong>Code: </strong> <span class="text-success lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller. <br>This code is used to identify buyer and prevent fraud.</span>
                     </p>
                     <p class="style-text"><span class="text-muted">Location:</span><br>{{order.address}}</p>
                 </div>
@@ -29,7 +29,7 @@
                 <p class="text-muted style-text">Your purchased orders appear here</p>
             </div>
             <div class="col-md-5">
-                <img src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="Void">
+                <img class="widthlock" src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="Void">
             </div>
         </div>
         {% endfor %}

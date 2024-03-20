@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row" style="min-height: 80vh;">
             <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <img src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="Picture">
+                <img class="widthlock" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="Picture">
             </div>
             <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
                 <article>
@@ -55,8 +55,8 @@
                         {% if message %}
                         <p class="style-text" style="color: red;">{{message}}</p>
                         {% endif %}
-                        <button type="submit" class="btn btn-success">Register</button>
-                        <a href="{% url 'shop:login_user' %}" type="submit" class="btn btn-light btn-outline-success mx-2">Already
+                        <button type="submit" class="btn btn-success my-2">Register</button><br>
+                        <a href="{% url 'shop:login_user' %}" type="submit" class="btn btn-light btn-outline-success">Already
                             have an account</a>
                     </form>
                 </article>

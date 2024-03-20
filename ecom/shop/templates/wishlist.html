@@ -15,14 +15,17 @@
     <div class="row" data-masonry='{"percentPosition": true }'>
         {% for item in items %}
         <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
-            <div class="card">
-                <img src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
+            <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex justify-content-center align-items-center">
+                <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">
                 <div class="card-body">
-                    <h5 class="card-title text-success style-text">{{item.product_name}}</h5>
+                    <h5 class="card-title style-text-2 text-success"><a href="{% url 'shop:buy' item.id %}"
+                        class="text-success style-text">{{item.product_name}}</a></h5>
                     <hr>
                     <h5 class="card-title style-text">SAR {{item.product_price}}</h5>
-                    <p class="card-text text-dark style-text-2">{{item.product_description}}</p>
+                    <p class="card-text text-dark style-text-2 truncate-3-lines">{{item.product_description}}</p>
+                    <p class="text-muted style-text"><i class="bi bi-star-fill lead"></i> {{item.ratings}}/5.0
+                        ({{item.num_raters}})</p>
                     {% if user.username != item.username %}
                     {% if item.id in bought_items %}
                     <a href="{% url 'shop:myOrders' %}" class="btn btn-success my-2">Requested</a>
@@ -40,6 +43,7 @@
                     {% endif %}
                     {% endif %}
                 </div>
+                <div class="card-footer style-text-2 text-muted">Posted on {{item.timestamp}}</div>
             </div>
         </div>
         {% empty %}
@@ -48,8 +52,8 @@
                 <h1 class="style-text-3">You don't have any items in your wishlist...</h1>
                 <p class="text-muted style-text">Wishlisted items appear here</p>
             </div>
-            <div class="col-md-5">
-                <img src="{% static 'media/undraw_wishlist_re_m7tv.svg' %}" alt="Wishlist">
+            <div class="col-md-5 d-flex justify-content-center align-items-center">
+                <img class="widthlock" src="{% static 'media/undraw_wishlist_re_m7tv.svg' %}" alt="Wishlist">
             </div>
         </div>
         {% endfor %}

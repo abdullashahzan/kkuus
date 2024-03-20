@@ -144,17 +144,20 @@ def new_listing(request):
         price = request.POST['price']
         plan = request.POST['flexRadioDefault']
         uploaded_file = request.FILES['product_images']
-        unique_filename = str(uuid.uuid4())
-        firebase_path = f'product_images/{unique_filename}/'
-        firebase_bucket = storage.bucket()
-        blob = firebase_bucket.blob(firebase_path)
-        blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
-        expiry_date = set_expiry(plan)
-        UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False).save()
-        notification_title = f"{product_name} was listed successfully in marketplace!"
-        notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-        UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
-        return redirect(reverse('shop:homepage'))
+        if product_name is not None and product_description is not None and float(price) >= 0 and uploaded_file is not None:
+            unique_filename = str(uuid.uuid4())
+            firebase_path = f'product_images/{unique_filename}/'
+            firebase_bucket = storage.bucket()
+            blob = firebase_bucket.blob(firebase_path)
+            blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
+            expiry_date = set_expiry(plan)
+            UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False).save()
+            notification_title = f"{product_name} was listed successfully in marketplace!"
+            notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+            UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
+            return redirect(reverse('shop:homepage'))
+        else:
+            return render(request, "sell_product.html", {"message": "Please fill all fields"})
     else:
         return render(request, "sell_product.html")
 
@@ -227,14 +230,15 @@ def buy(request, item_id):
 def comment(request, item_id):
     item = UserListings.objects.get(id=item_id)
     username = request.user.username
-    ratings = request.POST['ratings']
+    ratings = int(request.POST['inlineRadioOptions'])
     heading = request.POST['heading']
     comment = request.POST['comment']
-    UserComment(item=item, username=username, ratings=ratings, heading=heading, comment=comment).save()
-    new_avg_rating = UserComment.objects.filter(item=item).aggregate(avg_rating=Avg('ratings'))['avg_rating']
-    item.ratings = new_avg_rating
-    item.num_raters += 1
-    item.save()
+    if ratings is not None and heading is not None and comment is not None:
+        UserComment(item=item, username=username, ratings=ratings, heading=heading, comment=comment).save()
+        new_avg_rating = UserComment.objects.filter(item=item).aggregate(avg_rating=Avg('ratings'))['avg_rating']
+        item.ratings = format(new_avg_rating, '.2f')
+        item.num_raters += 1
+        item.save()
     referring_url = request.META.get('HTTP_REFERER')
     return redirect(referring_url or reverse("shop:homepage"))
 

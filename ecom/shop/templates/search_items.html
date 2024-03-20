@@ -11,14 +11,15 @@
     <div class="row" data-masonry='{"percentPosition": true }'>
         {% for item in items %}
         <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
-            <div class="card">
-                <img src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
+            <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex justify-content-center align-items-center">
+                <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">
                 <div class="card-body">
-                    <h5 class="card-title style-text-2 text-success">{{item.product_name}}</h5>
+                    <h5 class="card-title style-text-2 text-success"><a href="{% url 'shop:buy' item.id %}"
+                        class="text-success style-text">{{item.product_name}}</a></h5>
                     <hr>
                     <h5 class="card-title style-text">SAR {{item.product_price}}</h5>
-                    <p class="card-text text-dark style-text-2">{{item.product_description}}</p>
+                    <p class="card-text text-dark style-text-2 truncate-3-lines">{{item.product_description}}</p>
                     <p class="text-muted style-text"><i class="bi bi-star-fill lead"></i> {{item.ratings}}/5.0
                         ({{item.num_raters}})</p>
                     {% if user.username != item.username %}
@@ -29,7 +30,6 @@
                     {% else %}
                     <a href="{% url 'shop:buy' item.id %}" class="btn btn-success my-2">Show item</a>
                     {% endif %}
-                    {% endif %}
                     {% if item.id in wishlist %}
                     <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
                         Remove from wishlist</button>
@@ -37,14 +37,15 @@
                     <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
                         Add to wishlist</button>
                     {% endif %}
+                    {% endif %}
                 </div>
                 <div class="card-footer style-text-2 text-muted">Posted on {{item.timestamp}}</div>
             </div>
         </div>
         {% empty %}
         <div class="row my-4" style="min-height: 80vh;">
-            <div class="col-md-5 d-flex align-items-center">
-                <img src="{% static 'media/undraw_empty_cart_co35.svg' %}" alt="empty">
+            <div class="col-md-5 d-flex align-items-center justify-content-center">
+                <img class="widthlock" src="{% static 'media/undraw_empty_cart_co35.svg' %}" alt="empty">
             </div>
             <div class="col-md-7 d-flex align-items-center">
                 <article>
