@@ -3,6 +3,7 @@
     --family2: 'Wix Madefor Display';
     --family3: 'Raleway';
     --family4: 'Poltawski Nowy';
+    --family5: 'Trochut';
     --themecolor1: '#198754';
     --themecolor2: '#f7f7f7';
 }
@@ -35,6 +36,10 @@ img {
 
 .style-text-3 {
     font-family: var(--family4);
+}
+
+.style-text-4 {
+    font-family: var(--family5);
 }
 
 ul.horizontal-list li {

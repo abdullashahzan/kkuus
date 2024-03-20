@@ -21,10 +21,10 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-    <!-- Google font: Kalnia, Wix Madefor Display, Raleway, Półtawski Nowy -->
+    <!-- Google font: Kalnia, Wix Madefor Display, Raleway, Półtawski Nowy, Trochut -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kalnia:wght@100..700&family=Poltawski+Nowy:ital,wght@0,400..700;1,400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Wix+Madefor+Display:wght@400..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kalnia:wght@100..700&family=Poltawski+Nowy:ital,wght@0,400..700;1,400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Trochut:ital,wght@0,400;0,700;1,400&family=Wix+Madefor+Display:wght@400..800&display=swap" rel="stylesheet">
     
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -37,7 +37,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-success p-3 mb-2">
         <div class="container-fluid" style="min-height: 0;">
-            <a class="style-text-3" href="{% url 'shop:homepage' %}" style="color: #f7f7f7; text-decoration: none; font-size: 2rem;">LOGO</a>
+            <a class="style-text-4" href="{% url 'shop:homepage' %}" style="color: #f7f7f7; text-decoration: none; font-size: 2rem;" title="E-commerce application for students of King Khalid University">KKU <span class="style-text-4" style="font-size: 1.6rem;">unofficial store</span></a>
             <button class="navbar-toggler notification_panel" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="bi bi-list"></span>{% if notifications %}<span class="notification_badge"></span>{% endif %}
@@ -123,6 +123,8 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
       </script>
+
+<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="kkuunofficialstore" data-description="Support me on Buy me a coffee!" data-color="#198754" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </body>
 
 </html>
