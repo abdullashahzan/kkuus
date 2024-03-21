@@ -4,6 +4,8 @@ from . import views
 app_name = 'shop'
 urlpatterns = [
     path('username_availability/<str:username>', views.check_username_availability, name='username_availability'),
+    path('email_availability/<str:email>', views.check_email_availability, name='email_availability'),
+    path('developer_dashboard/', views.developer, name='developer'),
 
     path('', views.index, name="index"),
     path('login/', views.login_user, name="login_user"),
@@ -27,4 +29,9 @@ urlpatterns = [
     path('myOrders', views.myOrders, name='myOrders'),
     path('myShop/renew/<str:item_id>', views.renew_item, name='renew_item'),
     path('search/', views.search_item, name='search_item'),
+    path('profile/', views.profile, name="profile"),
+    path('updateAddress/', views.update_address, name='update_address'),
+    path('updateInfo/', views.update_info, name='update_info'),
+    path('updatePassword/', views.update_password, name='update_password'),
+    path('deleteAccount/', views.delete_account, name='delete_account'),
 ]

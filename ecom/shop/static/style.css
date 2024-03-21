@@ -19,7 +19,7 @@
 
 .heightlock {
     height: 30vh;
-    width: fit-content;
+    max-width: 19rem;
 }
 
 .widthlock {
@@ -130,3 +130,7 @@ nav.custom_nav {
     border-radius: 100rem;
 }
 
+.bignum {
+    color: #198754;
+    font-size: 1.5rem;
+}

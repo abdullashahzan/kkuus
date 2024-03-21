@@ -68,6 +68,14 @@ def check_username_availability(request, username):
             return JsonResponse({'response' : 'not available'})
         else:
             return JsonResponse({'response': 'available'})
+        
+def check_email_availability(request, email):
+    if request.method == "POST":
+        username_output = User.objects.filter(email=email).first()
+        if username_output is not None:
+            return JsonResponse({'response' : 'not available'})
+        else:
+            return JsonResponse({'response': 'available'})
 
 def logout_user(request):
     logout(request)
@@ -144,7 +152,7 @@ def new_listing(request):
         price = request.POST['price']
         plan = request.POST['flexRadioDefault']
         uploaded_file = request.FILES['product_images']
-        if product_name is not None and product_description is not None and float(price) >= 0 and uploaded_file is not None:
+        if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
             unique_filename = str(uuid.uuid4())
             firebase_path = f'product_images/{unique_filename}/'
             firebase_bucket = storage.bucket()
@@ -223,7 +231,11 @@ def buy(request, item_id):
         for i in user_wishlist:
             user_wishlist_list.append(i.id)
         comments = UserComment.objects.filter(item=item).order_by('-timestamp')
-        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments})
+        bought_users = UserOrder.objects.filter(item=item)
+        bought_users_username = []
+        for i in bought_users:
+            bought_users_username.append(i.username)
+        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username})
     return render(request, "buy_product.html", {"item": item})
 
 @require_POST
@@ -233,7 +245,7 @@ def comment(request, item_id):
     ratings = int(request.POST['inlineRadioOptions'])
     heading = request.POST['heading']
     comment = request.POST['comment']
-    if ratings is not None and heading is not None and comment is not None:
+    if ratings is not None and heading != "" and comment is not None:
         UserComment(item=item, username=username, ratings=ratings, heading=heading, comment=comment).save()
         new_avg_rating = UserComment.objects.filter(item=item).aggregate(avg_rating=Avg('ratings'))['avg_rating']
         item.ratings = format(new_avg_rating, '.2f')
@@ -256,8 +268,8 @@ def delete_comment(request, comment_id, item_id):
 def purchase(request, item_id):
     item = UserListings.objects.get(id=item_id)
     recipient_list = [User.objects.get(username=item.username).email]
-    title = f"Someone is interested in purchasing your item."
-    body = request.user.username + " would like to buy "+ item.product_name +". Please click the attatched link to finalize the purchase."
+    title = f"{request.user.username} would like to purchase your item."
+    body = ""
     special_keys = "purchase"
     message = send_email("Purchase notification", recipient_list, title, body, special_keys)
     if message == "success":
@@ -273,7 +285,7 @@ def purchase(request, item_id):
         notification_title = f"Please collect your item immediately from {address}, your code is {key}"
         notification_body = f"Even though you have purchased the item, there is a slight chance that someone else might have ordered it as well. It is advised to collect your order as soon as possible."
         UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_order").save()
-        return redirect(reverse('shop:homepage'))
+        return redirect(reverse('shop:myOrders'))
     else:
         return HttpResponse("The email was not sent :(")
     
@@ -353,3 +365,117 @@ def search_item(request):
         print(f"Request failed: {e}")
         return None
 
+@require_POST
+def update_address(request):
+    global address_error
+    new_address = request.POST['new_address']
+    object = UserProfile.objects.get(user=request.user)
+    old_address = object.address
+    if old_address == new_address:
+        address_error = "New address cannot be the same as old address"
+    elif old_address != new_address:
+        object.address = new_address
+        object.save()
+    else:
+        address_error = "An unkown error occured while changing address"
+    referring_url = request.META.get('HTTP_REFERER')
+    return redirect(referring_url or reverse("shop:profile"))
+
+def get_address():
+    address = address_error
+    return address
+
+@require_POST
+def update_info(request):
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    email = request.POST['email']
+    user_object = User.objects.get(username=request.user.username)
+    if first_name != "":
+        user_object.first_name = first_name
+        user_object.save()
+    if last_name != "":
+        user_object.last_name = last_name
+        user_object.save()
+    if email != "":
+        user_object.email = email
+        user_object.save()
+    referring_url = request.META.get('HTTP_REFERER')
+    return redirect(referring_url or reverse("shop:profile"))
+
+@require_POST
+def update_password(request):
+    global password_error
+    old_password = request.POST['old_password']
+    new_password1 = request.POST['new_password1']
+    new_password2 = request.POST['new_password2']
+    if new_password1 == new_password2:
+        try:
+            user = User.objects.get(username=request.user.username)
+            if authenticate(username=user.username, password=old_password) is not None:
+                user.set_password(new_password1)
+                user.save()
+                logout(request)
+                return redirect("shop:login_user")
+            else:
+                password_error = "Old password is incorrect"
+        except User.DoesNotExist:
+            password_error = "User does not exist"
+        except Exception as e:
+            password_error = "An unkown error occured."
+    else:
+        password_error = "New passwords do not match"
+    referring_url = request.META.get('HTTP_REFERER')
+    return redirect(referring_url or reverse("shop:profile"))
+
+def get_password_error():
+    err = password_error
+    return err
+
+def delete_account(request):
+    username = request.user.username
+    user_object = User.objects.get(username=username)
+    listings = UserListings.objects.filter(username=username)
+    for listing in listings:
+        listing.delete()
+    comments = UserComment.objects.filter(username=username)
+    for comment in comments:
+        comment.delete()
+    wishlist = UserWishlist.objects.get(username=username)
+    wishlist.delete()
+    orders = UserOrder.objects.filter(username=username)
+    for order in orders:
+        order.delete()
+    notifications = UserNotification.objects.filter(username=username)
+    for notification in notifications:
+        notification.delete()
+    user_object.delete()
+    logout(request)
+    return redirect(reverse("shop:login_user"))
+
+def profile(request):
+    try:
+        address_error = get_address()
+    except:
+        address_error = ""
+    try:
+        password_error = get_password_error()
+    except:
+        password_error = ""
+    this_user = User.objects.get(username=request.user.username)
+    this_user_profile = UserProfile.objects.get(user=request.user)
+    return render(request, "profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error})
+
+def developer(request):
+    users = User.objects.all().count()
+    all_listings = UserListings.objects.all().count()
+    active_listings = UserListings.objects.filter(is_expired = False).count()
+    expired_listings = UserListings.objects.filter(is_expired = True).count()
+    current_time = timezone.now()
+    return render(request, "developer.html", {
+        "all_users": users,
+        "all_listings":all_listings,
+        "active_listings": active_listings,
+        "expired_listings": expired_listings,
+        "time": current_time
+    })

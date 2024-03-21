@@ -14,7 +14,7 @@
             <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex justify-content-center align-items-center">
                 <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">
-                <div class="card-body">
+                <div class="card-body" style="width: 100%;">
                     <h5 class="card-title style-text-2 text-success"><a href="{% url 'shop:buy' item.id %}"
                         class="text-success style-text">{{item.product_name}}</a></h5>
                     <hr>
@@ -39,7 +39,7 @@
                     {% endif %}
                     {% endif %}
                 </div>
-                <div class="card-footer style-text-2 text-muted">Posted on {{item.timestamp}}</div>
+                <div class="card-footer style-text-2 text-muted" style="width: 100%;">Posted on {{item.timestamp}}</div>
             </div>
         </div>
         {% empty %}

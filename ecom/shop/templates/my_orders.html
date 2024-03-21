@@ -13,7 +13,7 @@
             <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex justify-content-center align-items-center">
                 <img class="heightlock" src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top"
                     alt="{{order.item.product_name}}">
-                <div class="card-body">
+                <div class="card-body" style="width: 100%;">
                     <h5 class="card-title text-success style-text">{{order.item.product_name}}</h5>
                     <hr>
                     <p class="style-text"><strong>Code: </strong> <span class="text-success lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller. <br>This code is used to identify buyer and prevent fraud.</span>

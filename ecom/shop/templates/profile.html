@@ -1,0 +1,220 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>My Profile</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container p-4">
+    <div class="row">
+        <div class="d-none d-lg-block col-3 p-3">
+            <h3 class="style-heading text-success">My profile</h3>
+            <hr>
+            <ul class="list-unstyled px-3">
+                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-success style-text-2" style="text-decoration: none;">My
+                        information</a></li>
+                {% if user.is_staff and user.is_superuser and user.username == "shahzan" %}
+                <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-muted style-text-2" style="text-decoration: none;">Developer dashboard</a></li>
+                {% endif %}
+                <li class="my-1">Version: 1.0 (Beta)</li>
+            </ul>
+            <hr>
+            <p class="text-muted style-text">
+                Sorry if you encounter any bugs as the website is still under development.
+            </p>
+        </div>
+        <div class="col-md-9 p-3">
+            <article class="mb-4">
+                <h3 class="style-heading">Update address</h3>
+                <hr>
+                <form action="{% url 'shop:update_address' %}" class=" style-text-2" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <label for="old_address" class="form-label">Old address</label>
+                            <input type="text" class="form-control" id="old_address" aria-describedby="emailHelp"
+                                placeholder="{{other.address}}" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="new_address" class="form-label">New address</label>
+                            <input type="text" class="form-control" id="new_address" name="new_address"
+                                aria-describedby="address_help">
+                            <div id="address_help" class="form-text">Address format should be like this: <br> BUILDING
+                                CODE, BUILDING NUMBER, ROOM NUMBER</div>
+                        </div>
+                    </div>
+                    {% if address_error %}
+                    <p class="text-danger">{{address_error}}</p>
+                    {% endif %}
+                    <button type="submit" class="btn btn-success">Update address</button>
+                </form>
+            </article>
+            <article class="mb-4">
+                <h3 class="style-heading">General information</h3>
+                <hr>
+                <form class="style-text-2" action="{% url 'shop:update_info' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">First name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name"
+                                placeholder="{{user.first_name}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">Last name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name"
+                                placeholder="{{user.last_name}}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" disabled placeholder="{{user.username}}">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="{{user.email}}"
+                            oninput="delayFunction()">
+                        <div id="checkEmailAvailability" class="form-text"></div>
+                    </div>
+                    <button type="submit" class="btn btn-success updateInfo">Update information</button>
+                </form>
+            </article>
+            <article class="mb-4">
+                <h3 class="style-heading">Update password</h3>
+                <hr>
+                <form action="{% url 'shop:update_password' %}" class="style-text-2" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">Old password</label>
+                        <input type="password" class="form-control" id="password1" name="old_password">
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <label for="password2" class="form-label">New password</label>
+                            <input type="password" class="form-control" id="password2" name="new_password1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password3" class="form-label">Re-enter new password</label>
+                            <input type="password" class="form-control" id="password3" name="new_password2">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="btn btn-outline-success password_toggler" onclick="togglePasswordVisibility()">Show
+                            passwords</div>
+                    </div>
+                    <hr>
+                    {% if password_error %}
+                    <p class="text-danger">{{password_error}}</p>
+                    {% endif %}
+                    <button type="submit" class="btn btn-success">Update password</button>
+                </form>
+            </article>
+            <hr>
+            <article class="d-flex justify-content-center align-items-center mt-4 p-4">
+                <div class="style-text" style="text-align: center;">
+                    <a href="{% url 'shop:delete_account' %}" class="btn btn-danger mb-2 delete-link">Delete account</a>
+                    <p class="text-muted">Please note that this process cannot be undone, once your account gets delete you can not recover it.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll(".delete-link").forEach(function (link) {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            var confirmation = confirm("Are you sure you want to delete this item?");
+            if (confirmation) {
+                window.location.href = this.getAttribute("href");
+            }
+        });
+    });
+
+    function togglePasswordVisibility() {
+        var passwordInput1 = document.getElementById('password1');
+        var passwordInput2 = document.getElementById('password2');
+        var passwordInput3 = document.getElementById('password3');
+        var btn = document.querySelector('.password_toggler')
+
+        if (btn.innerHTML === "Show passwords") {
+            btn.innerHTML = "Hide passwords"
+        } else {
+            btn.innerHTML = "Show passwords";
+        }
+
+        if (passwordInput1.type === "password") {
+            passwordInput1.type = "text";
+        } else {
+            passwordInput1.type = "password";
+        }
+
+        if (passwordInput2.type === "password") {
+            passwordInput2.type = "text";
+        } else {
+            passwordInput2.type = "password";
+        }
+
+        if (passwordInput3.type === "password") {
+            passwordInput3.type = "text";
+        } else {
+            passwordInput3.type = "password";
+        }
+    }
+
+    let timeoutId;
+    let functionCalled = false;
+
+    function delayFunction() {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            if (!functionCalled) {
+                checkEmail();
+                functionCalled = true;
+            }
+        }, 10);
+        functionCalled = false;
+    }
+
+    function checkEmail() {
+        var updateInfo = document.querySelector('.updateInfo')
+        var messageBox = document.getElementById('checkEmailAvailability');
+        var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        var userInput = document.getElementById('email');
+        var userInputValue = userInput.value;
+
+        if (userInputValue == "") {
+            html_data = `<p class="style-text" style="color: red;">Email cannot be empty</p>`
+            messageBox.innerHTML = html_data;
+        } else {
+            fetch(`/email_availability/${userInputValue}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: 'user_input=' + encodeURIComponent(userInputValue),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var html_data;
+                    console.log(data.response)
+                    if (data.response == "available") {
+                        html_data = `<p class="style-text" style="color: green;">Email is not taken</p>`
+                        messageBox.innerHTML = html_data;
+                        updateInfo.disabled = false;
+                    }
+                    else if (data.response == "not available") {
+                        html_data = `<p class="style-text" style="color: red;">Email is already taken</p>`
+                        messageBox.innerHTML = html_data;
+                        updateInfo.disabled = true;
+                    }
+                });
+        }
+    }
+</script>
+
+{% endblock %}
