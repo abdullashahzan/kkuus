@@ -20,7 +20,7 @@
                 <div class="card-header style-text text-primary" style="width: 100%;">{{item.num_orders}} people have
                     placed order</div>
                 {% endif %}
-                <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
+                <img class="heightlock p-2" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">
                 <div class="card-body mt-2" style="width: 100%;">
                     <h5 class="card-title text-primary" id="itemModal{{ item.id }}"><a
