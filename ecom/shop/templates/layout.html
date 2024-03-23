@@ -24,13 +24,19 @@
     <!-- Google font: Kalnia, Wix Madefor Display, Raleway, Półtawski Nowy, Trochut -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kalnia:wght@100..700&family=Poltawski+Nowy:ital,wght@0,400..700;1,400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Trochut:ital,wght@0,400;0,700;1,400&family=Wix+Madefor+Display:wght@400..800&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kalnia:wght@100..700&family=Poltawski+Nowy:ital,wght@0,400..700;1,400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Trochut:ital,wght@0,400;0,700;1,400&family=Wix+Madefor+Display:wght@400..800&display=swap"
+        rel="stylesheet">
+
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <!-- Animations -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8650665056742555"
+        crossorigin="anonymous"></script>
 
     {% block title %}
     <title>KKU Unofficial Store</title>
@@ -40,37 +46,50 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-3 mb-2 shadow">
         <div class="container-fluid" style="min-height: 0;">
-            <a class="style-text-4" href="{% url 'shop:homepage' %}" style="color: #f7f7f7; text-decoration: none; font-size: 2rem;" title="E-commerce application for students of King Khalid University">KKU <span class="style-text-4" style="font-size: 1.6rem;">unofficial store</span></a>
-            <button class="navbar-toggler notification_panel" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="bi bi-list"></span>{% if notifications %}<span class="notification_badge animate__animated animate__headShake"></span>{% endif %}
+            <a class="style-text-4" href="{% url 'shop:homepage' %}"
+                style="color: #f7f7f7; text-decoration: none; font-size: 2rem;"
+                title="E-commerce application for students of King Khalid University">KKU <span class="style-text-4"
+                    style="font-size: 1.6rem;">unofficial store</span></a>
+            <button class="navbar-toggler notification_panel" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="bi bi-list"></span>{% if notifications %}<span
+                    class="notification_badge animate__animated animate__headShake"></span>{% endif %}
             </button>
             <div class="collapse navbar-collapse style-text" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'shop:index' %}"><i class="bi bi-house-fill lead mx-2"></i> Home </a>
+                        <a class="nav-link active" href="{% url 'shop:index' %}"><i
+                                class="bi bi-house-fill lead mx-2"></i> Home </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'shop:myOrders' %}"><i class="bi bi-receipt lead mx-2"></i> My orders </a>
+                        <a class="nav-link active" href="{% url 'shop:myOrders' %}"><i
+                                class="bi bi-receipt lead mx-2"></i> My orders </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" href="" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                class="bi bi-cash lead mx-2"></i> Sell </a>
+                        <a class="nav-link dropdown-toggle active" href="" data-bs-toggle="dropdown"
+                            aria-expanded="false"><i class="bi bi-cash lead mx-2"></i> Sell </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'shop:new_listing' %}">Sell new product</a></li>
                             <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My shop</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active notification_panel" href="" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle lead mx-2"></i> Account {% if notifications %}<span class="notification_badge"></span>{% endif %}</a>
+                        <a class="nav-link dropdown-toggle active notification_panel" href="" data-bs-toggle="dropdown"
+                            aria-expanded="false"><i class="bi bi-person-circle lead mx-2"></i> Account {% if
+                            notifications %}<span class="notification_badge"></span>{% endif %}</a>
                         <ul class="dropdown-menu">
                             {% if user.is_authenticated %}
-                            <li class="mx-3"><div class="style-text">Logged in as <strong>{{user.username}}</strong></div></li>
+                            <li class="mx-3">
+                                <div class="style-text">Logged in as <strong>{{user.username}}</strong></div>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" href="{% url 'shop:wishlist' %}"> Wishlist</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop:notifications' %}"> Notifications {% if notifications %}<span class="bg-danger rounded text-light style-text-2 p-1 mx-1"> New</span>{% endif %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:notifications' %}"> Notifications {% if
+                                    notifications %}<span class="bg-danger rounded text-light style-text-2 p-1 mx-1">
+                                        New</span>{% endif %}</a></li>
                             <li><a class="dropdown-item" href="{% url 'shop:profile' %}"> Settings</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -83,13 +102,16 @@
                             {% endif %}
                         </ul>
                     </li>
-                    <li><div class="vertical-line d-none d-lg-block"></div></li>
+                    <li>
+                        <div class="vertical-line d-none d-lg-block"></div>
+                    </li>
                     <li class="nav-item mt-2 mx-1">
-                        <form action="{% url 'shop:search_item' %}" class="d-flex justify-content-center align-items-center style-text-2" method="post">
+                        <form action="{% url 'shop:search_item' %}"
+                            class="d-flex justify-content-center align-items-center style-text-2" method="post">
                             {% csrf_token %}
                             <input type="text" class="form-control mx-2" placeholder="Search for an item"
                                 aria-label="Search for an item" aria-describedby="basic-addon2" name="search">
-                                <a class="btn btn-outline-light" type="submit">Search</a>
+                            <a class="btn btn-outline-light" type="submit">Search</a>
                         </form>
                     </li>
                 </ul>
@@ -146,29 +168,31 @@
     </footer>
     <script src="{% static 'script.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>
-    
+
     <!-- Firebase -->
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
-      
+
         // Your web app's Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyBSCpcctpJNIr26-D73N9-M6Jhxe3pZnk0",
-          authDomain: "kku-unofficial-store.firebaseapp.com",
-          projectId: "kku-unofficial-store",
-          storageBucket: "kku-unofficial-store.appspot.com",
-          messagingSenderId: "920854395385",
-          appId: "1:920854395385:web:2c52cbe92d41289d912528"
+            apiKey: "AIzaSyBSCpcctpJNIr26-D73N9-M6Jhxe3pZnk0",
+            authDomain: "kku-unofficial-store.firebaseapp.com",
+            projectId: "kku-unofficial-store",
+            storageBucket: "kku-unofficial-store.appspot.com",
+            messagingSenderId: "920854395385",
+            appId: "1:920854395385:web:2c52cbe92d41289d912528"
         };
-      
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-      </script>
+    </script>
 
-<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="kkuunofficialstore" data-description="Support me on Buy me a coffee!" data-color="#0d6efd" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+        data-id="kkuunofficialstore" data-description="Support me on Buy me a coffee!" data-color="#0d6efd"
+        data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </body>
 
 </html>
