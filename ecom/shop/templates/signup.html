@@ -3,7 +3,7 @@
 
 {% block body %}
 <main>
-    <div class="container">
+    <div class="container d-none d-md-block">
         <div class="row" style="min-height: 80vh;">
             <div class="col-md-6 d-flex justify-content-center align-items-center">
                 <img class="widthlock" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="Picture">
@@ -60,6 +60,66 @@
                             have an account</a>
                     </form>
                 </article>
+            </div>
+        </div>
+    </div>
+    <div class="container d-block d-sm-none justify-content-center align-items-center mb-4" style="min-height: 80vh;">
+        <div class="col-12 col-md-5">
+            <div class="card shadow animate__animated animate__slideInLeft">
+                <img class="widthlock p-2" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="empty">
+                <div class="card-body">
+                    <article>
+                        <h1 class="style-heading mb-4">Discover joy in every click, sign up today!</h1>
+                        <form action="{% url 'shop:signup_user' %}" method="post">
+                            {% csrf_token %}
+                            <div class="row mb-2 style-text">
+                                <div class="col-md-6">
+                                    <label for="first" class="form-label">First name</label>
+                                    <input type="text" class="form-control" name="first">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="second" class="form-label">Second name</label>
+                                    <input type="text" class="form-control" name="second">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" name="username" id="userInput" aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
+                                    <div id="checkUsernameAvailability" class="form-text"></div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label for="email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" name="email">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                                    <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="exampleInputPassword2" class="form-label">Confirm password</label>
+                                    <input type="password" name="password2" class="form-control" id="exampleInputPassword2">
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <label for="address" class="form-label">Student housing address</label>
+                                    <input type="address" class="form-control" name="address" placeholder="e.g. BR7, Building 5, Room no. 403">
+                                </div>
+                            </div>
+                            {% if message %}
+                            <p class="style-text" style="color: red;">{{message}}</p>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary my-2">Register</button><br>
+                            <a href="{% url 'shop:login_user' %}" type="submit" class="btn btn-light btn-outline-primary">Already
+                                have an account</a>
+                        </form>
+                    </article>
+                </div>
             </div>
         </div>
     </div>

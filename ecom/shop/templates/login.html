@@ -3,7 +3,7 @@
 
 {% block body %}
 <main>
-    <div class="container">
+    <div class="container d-none d-md-block">
         <div class="row" style="min-height: 80vh;">
             <div class="col-md-6 d-flex justify-content-center align-items-center">
                 <img class="widthlock" src="{% static 'media/undraw_secure_login_pdn4.svg' %}"
@@ -29,6 +29,34 @@
                         <a href="{% url 'shop:signup_user' %}" type="submit" class="btn btn-light btn-outline-primary mx-2">Register a new account</a>
                     </form>
                 </article>
+            </div>
+        </div>
+    </div>
+    <div class="container d-block d-sm-none justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-12 col-md-5">
+            <div class="card shadow animate__animated animate__slideInLeft">
+                <img class="widthlock p-2" src="{% static 'media/undraw_secure_login_pdn4.svg' %}" alt="empty">
+                <div class="card-body">
+                    <article>
+                        <h1 class="mb-4 style-heading">Welcome back! Please log in to your account</h1>
+                        <form action="{% url 'shop:login_user' %}" method="post">
+                            {% csrf_token %}
+                            <div class="mb-2">
+                                <label for="InputEmail1" class="form-label style-text">Username</label>
+                                <input type="text" name="username" placeholder="e.g. john53" class="form-control style-text" id="InputEmail1">
+                            </div>
+                            <div class="mb-3">
+                                <label for="InputPassword1" class="form-label style-text">Password</label>
+                                <input type="password" name="password" class="form-control" id="InputPassword1">
+                            </div>
+                            {% if message %}
+                                <p class="style-text" style="color: red;">Invalid credentials, please try again.</p>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">Log in</button>
+                            <a href="{% url 'shop:signup_user' %}" type="submit" class="btn btn-light btn-outline-primary mx-2">Register a new account</a>
+                        </form>
+                    </article>
+                </div>
             </div>
         </div>
     </div>
