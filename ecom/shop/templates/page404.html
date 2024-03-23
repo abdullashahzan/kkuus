@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>Page 404 Not found</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row d-flex align-items-center" style="min-height: 70vh;">
+        <div class="col-md-5 d-flex justify-content-center align-items-center">
+            <img src="{% static 'media/undraw_location_search_re_ttoj.svg' %}" alt="page 404" class="widthlock">
+        </div>
+        <div class="col-md-7 animate__animated animate__bounceIn">
+            <h1 class="style-text-3">You don't have any items in your wishlist...</h1>
+            <p class="text-muted style-text">Wishlisted items appear here</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

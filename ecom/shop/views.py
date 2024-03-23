@@ -336,38 +336,6 @@ def search_item(request):
             items_found.append(listing)
     return render(request, "search_items.html", {"items": items_found})
 
-
-    payment_id = "1fe510b6-d50d-4294-9655-cec43110b2cb"
-    # Construct the URL with the payment ID
-    api_key = settings.MOYASAR_SECRET_KEY.encode('utf-8')
-    encoded_api_key = base64.b64encode(api_key).decode('utf-8')
-
-    url = f"https://api.moyasar.com/v1/payments/{payment_id}"
-
-    # Set up the authentication header using your Moyasar secret key
-    headers = {
-        'Authorization': f"Basic {encoded_api_key}:",
-        'Content-Type': 'application/json'
-    }
-
-    try:
-        # Send GET request to the Moyasar API
-        response = requests.get(url, headers=headers)
-
-        # Check if the request was successful
-        if response.status_code == 200:
-            # Parse the JSON response
-            payment_details = response.json()
-            return payment_details
-        else:
-            # Handle unsuccessful request (e.g., handle errors)
-            print(f"Error: {response.status_code} - {response.text}")
-            return None
-    except requests.exceptions.RequestException as e:
-        # Handle connection errors or other exceptions
-        print(f"Request failed: {e}")
-        return None
-
 @require_POST
 def update_address(request):
     global address_error
@@ -484,3 +452,6 @@ def developer(request):
         "expired_listings": expired_listings,
         "time": current_time
     })
+
+def page_404(request, exception):
+    return render(request, "page404.html", status=404)
