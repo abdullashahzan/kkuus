@@ -433,7 +433,6 @@ def profile(request):
         password_error = get_password_error()
     except:
         password_error = ""
-    
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     this_user = User.objects.get(username=request.user.username)
     this_user_profile = UserProfile.objects.get(user=request.user)
