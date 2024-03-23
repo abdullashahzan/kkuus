@@ -12,3 +12,25 @@ function openModal(){
 function closeModal() {
     document.getElementById('myModal').style.display = 'none';
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    var forms = document.querySelectorAll("form");
+
+    forms.forEach(function(form) {
+        form.addEventListener("submit", function(event) {
+            var submitButton = form.querySelector("button[type='submit']");
+            submitButton.disabled = true;
+            
+            // Optional: Display a loading indicator
+            submitButton.innerHTML = "Submitting...";
+            
+            // Prevent the default form submission behavior
+            event.preventDefault();
+            
+            // Manually submit the form after a short delay (optional)
+            setTimeout(function() {
+                form.submit();
+            }, 200); // Adjust the delay as needed
+        });
+    });
+});
