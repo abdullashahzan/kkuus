@@ -146,6 +146,3 @@ EMAIL_HOST_PASSWORD = 'xzpk eiih bsjl nnsp'
 
 TIME_ZONE = 'Asia/Riyadh'
 USE_TZ = True
-
-MOYASAR_PUBLIC_KEY = 'pk_test_FPVK3x5UeDynK4B1MJRTYhwyCBPJXSbTzcuhBy9V'
-MOYASAR_SECRET_KEY = 'sk_test_9MzMAZAgnz7HrDXUzAU4ZNJYb4NTp1idMg5cxotF'

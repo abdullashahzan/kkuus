@@ -133,6 +133,7 @@ def wishlist(request):
     user_wishlist = get_user_wishlist(request.user.username)
     bought_items = UserOrder.objects.filter(username=request.user.username, status='requested')
     completed_items = UserOrder.objects.filter(username=request.user.username, status='Completed')
+    notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     user_wishlist_list = []
     cart = []
     completed = []
@@ -142,7 +143,7 @@ def wishlist(request):
         completed.append(completed_item.item.id)
     for i in user_wishlist:
         user_wishlist_list.append(i.id)
-    return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart,})
+    return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications})
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
@@ -193,7 +194,8 @@ def delete_listing(request, listing_id):
 def my_shop(request):
     check_data()
     items = UserListings.objects.filter(username=request.user.username)
-    return render(request, 'my_shop.html', {"items": items})
+    notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
+    return render(request, 'my_shop.html', {"items": items, "notifications":notifications})
 
 @require_POST
 def add_to_wishlist(request, item_id):
@@ -317,8 +319,9 @@ def confirm_purchase(request, item_id):
     return render(request, "confirm_purchase.html", {"item": item, "message":message})
 
 def myOrders(request):
+    notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     ordered_items = UserOrder.objects.filter(username=request.user.username, status="requested")
-    return render(request, "my_orders.html", {'orders': ordered_items})
+    return render(request, "my_orders.html", {'orders': ordered_items, "notifications":notifications})
 
 @require_POST
 def search_item(request):
@@ -462,9 +465,11 @@ def profile(request):
         password_error = get_password_error()
     except:
         password_error = ""
+    
+    notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     this_user = User.objects.get(username=request.user.username)
     this_user_profile = UserProfile.objects.get(user=request.user)
-    return render(request, "profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error})
+    return render(request, "profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error, "notifications":notifications})
 
 def developer(request):
     users = User.objects.all().count()

@@ -10,10 +10,10 @@
 <div class="container p-4">
     <div class="row">
         <div class="d-none d-lg-block col-3 p-3">
-            <h3 class="style-heading text-success">My profile</h3>
+            <h3 class="style-heading text-primary">My profile</h3>
             <hr>
             <ul class="list-unstyled px-3">
-                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-success style-text-2" style="text-decoration: none;">My
+                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-primary style-text-2" style="text-decoration: none;">My
                         information</a></li>
                 {% if user.is_staff and user.is_superuser and user.username == "shahzan" %}
                 <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-muted style-text-2" style="text-decoration: none;">Developer dashboard</a></li>
@@ -48,7 +48,7 @@
                     {% if address_error %}
                     <p class="text-danger">{{address_error}}</p>
                     {% endif %}
-                    <button type="submit" class="btn btn-success">Update address</button>
+                    <button type="submit" class="btn btn-primary">Update address</button>
                 </form>
             </article>
             <article class="mb-4">
@@ -78,7 +78,7 @@
                             oninput="delayFunction()">
                         <div id="checkEmailAvailability" class="form-text"></div>
                     </div>
-                    <button type="submit" class="btn btn-success updateInfo">Update information</button>
+                    <button type="submit" class="btn btn-primary updateInfo">Update information</button>
                 </form>
             </article>
             <article class="mb-4">
@@ -101,14 +101,14 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <div class="btn btn-outline-success password_toggler" onclick="togglePasswordVisibility()">Show
+                        <div class="btn btn-outline-primary password_toggler" onclick="togglePasswordVisibility()">Show
                             passwords</div>
                     </div>
                     <hr>
                     {% if password_error %}
                     <p class="text-danger">{{password_error}}</p>
                     {% endif %}
-                    <button type="submit" class="btn btn-success">Update password</button>
+                    <button type="submit" class="btn btn-primary">Update password</button>
                 </form>
             </article>
             <hr>

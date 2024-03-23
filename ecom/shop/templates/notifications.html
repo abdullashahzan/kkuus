@@ -17,10 +17,10 @@
                     <hr>
                     <p class="style-text-2 mb-4">{{notification.body}}</p>
                     {% if notification.task == "show_shop" %}
-                    <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-success"><i class="bi bi-bag mx-1"></i> My
+                    <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-primary"><i class="bi bi-bag mx-1"></i> My
                         Shop</a>
                     {% elif notification.task == "show_order" %}
-                    <a href="{% url 'shop:myOrders' %}" class="btn btn-outline-success"><i
+                    <a href="{% url 'shop:myOrders' %}" class="btn btn-outline-primary"><i
                             class="bi bi-check2-circle mx-1"></i> My Orders</a>
                     {% endif %}
                     <a href="{% url 'shop:delete_notification' notification.id %}" class="btn btn-outline-danger"><i
@@ -30,16 +30,13 @@
             </div>
         </div>
         {% empty %}
-        <div class="row" style="min-height: 80vh;">
-            <div class="col-md-7 d-flex align-items-center">
-                <article>
-                    <h1 class="style-text-3 my-3">You don't have any notifications</h1>
-                    <hr>
-                    <p class="text-muted style-text">Your notifications will appear here</p>
-                </article>
+        <div class="row d-flex align-items-center p-4" style="min-height: 70vh;">
+            <div class="col-md-7 animate__animated animate__jackInTheBox">
+                <h1 class="style-text-3">You don't have any notifications</h1>
+                <p class="text-muted style-text">Your notifications will appear here</p>
             </div>
             <div class="col-md-5 d-flex justify-content-center align-items-center">
-                <img class="widthlock" src="{% static 'media/undraw_notify_re_65on.svg' %}" alt="notify">
+                <img class="widthlock" src="{% static 'media/undraw_notify_re_65on.svg' %}" alt="Wishlist">
             </div>
         </div>
         {% endfor %}

@@ -38,12 +38,12 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success p-3 mb-2">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-3 mb-2 shadow">
         <div class="container-fluid" style="min-height: 0;">
             <a class="style-text-4" href="{% url 'shop:homepage' %}" style="color: #f7f7f7; text-decoration: none; font-size: 2rem;" title="E-commerce application for students of King Khalid University">KKU <span class="style-text-4" style="font-size: 1.6rem;">unofficial store</span></a>
             <button class="navbar-toggler notification_panel" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="bi bi-list"></span>{% if notifications %}<span class="notification_badge"></span>{% endif %}
+                <span class="bi bi-list"></span>{% if notifications %}<span class="notification_badge animate__animated animate__headShake"></span>{% endif %}
             </button>
             <div class="collapse navbar-collapse style-text" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
@@ -58,7 +58,7 @@
                                 class="bi bi-cash lead mx-2"></i> Sell </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'shop:new_listing' %}">Sell new product</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My products</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My shop</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -98,7 +98,50 @@
     </nav>
     {% block body %}
     {% endblock %}
-    <footer class="text-light text-center py-2" style="background-color: #198754; margin-top: 3rem;">
+
+    <svg class="animatedSVG" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice"
+        viewBox="24 105 156 95">
+        <defs>
+            <style type="text/css">
+                @keyframes rotate {
+                    100% {
+                        transform: rotate(360deg)
+                    }
+                }
+
+                .top-outer {
+                    transform-origin: 63px 69px;
+                    animation: rotate 30s linear infinite;
+                }
+
+                .top-inner {
+                    transform-origin: 73px 69px;
+                    animation: rotate 20s linear infinite;
+                }
+
+                .bottom-outer {
+                    transform-origin: 134px 222px;
+                    animation: rotate 30s linear infinite;
+                }
+
+                .bottom-inner {
+                    transform-origin: 134px 222px;
+                    animation: rotate 20s linear infinite;
+                }
+            </style>
+        </defs>
+        <rect x="0" y="0" width="300" height="300" fill="#fff" />
+        <path class="top-outer" fill="#F5F5DC" stroke="#F5F5DC" stroke-width="1"
+            d="M68 1c23,0 67,17 69,39 4,38 5,52 -5,69 -20,36 -68,46 -120,-9 -27,-28 -7,-101 56,-99z" />
+        <path class="top-inner" fill="#F5F5DC" stroke="#F5F5DC" stroke-width="1"
+            d="M69 22c33,-7 52,21 54,37 3,26 -1,28 -8,40 -15,25 -48,25 -85,-14 -19,-20 -4,-53 39,-63z" />
+        <path class="bottom-outer" fill="#F5F5DC" stroke="#F5F5DC" stroke-width="1"
+            d="M158 158c30,13 56,50 44,75 -9,18 -22,46 -42,55 -20,10 -48,2 -73,-19 -29,-25 -27,-55 -9,-79 17,-22 43,-48 80,-32z" />
+        <path class="bottom-inner" fill="#F5F5DC" stroke="#F5F5DC" stroke-width="1"
+            d="M136 180c32,-9 45,13 46,29 3,27 8,29 0,42 -14,25 -52,24 -79,0 -21,-18 -2,-61 33,-71z" />
+    </svg>
+
+    <footer class="text-light text-center py-2 bg-primary">
         <p class="style-text">&copy; 2024 All rights reserved.</p>
     </footer>
     <script src="{% static 'script.js' %}"></script>
@@ -125,7 +168,7 @@
         const app = initializeApp(firebaseConfig);
       </script>
 
-<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="kkuunofficialstore" data-description="Support me on Buy me a coffee!" data-color="#198754" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="kkuunofficialstore" data-description="Support me on Buy me a coffee!" data-color="#0d6efd" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </body>
 
 </html>

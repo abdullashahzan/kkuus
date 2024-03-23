@@ -5,11 +5,11 @@
 <main>
     <div class="container">
         <div class="row" style="min-height: 80vh;">
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <div class="col-md-6 d-flex justify-content-center align-items-center animate__animated animate__slideInLeft">
                 <img class="widthlock" src="{% static 'media/undraw_certification_re_ifll.svg' %}"
                     alt="Picture">
             </div>
-            <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
+            <div class="col-md-6 d-flex justify-content-start align-items-center p-5 animate__animated animate__slideInUp">
                 <article>
                     <h1 class="mb-4 style-heading">Please ask the buyer to give the 6 digit code to complete the purchase</h1>
                     <form action="{% url 'shop:confirmPurchase' item.id %}" method="post">
@@ -21,7 +21,7 @@
                         {% if message %}
                             <p class="style-text text-danger">Invalid code, no such code exists.</p>
                         {% endif %}
-                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </article>
             </div>

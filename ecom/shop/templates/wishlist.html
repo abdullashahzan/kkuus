@@ -19,8 +19,8 @@
                 <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">
                 <div class="card-body" style="width: 100%;">
-                    <h5 class="card-title style-text-2 text-success"><a href="{% url 'shop:buy' item.id %}"
-                        class="text-success style-text">{{item.product_name}}</a></h5>
+                    <h5 class="card-title style-text-2 text-primary"><a href="{% url 'shop:buy' item.id %}"
+                        class="text-primary style-text">{{item.product_name}}</a></h5>
                     <hr>
                     <h5 class="card-title style-text">SAR {{item.product_price}}</h5>
                     <p class="card-text text-dark style-text-2 truncate-3-lines">{{item.product_description}}</p>
@@ -28,18 +28,18 @@
                         ({{item.num_raters}})</p>
                     {% if user.username != item.username %}
                     {% if item.id in bought_items %}
-                    <a href="{% url 'shop:myOrders' %}" class="btn btn-success my-2">Requested</a>
+                    <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2">Requested</a>
                     {% elif item.id in completed_items %}
-                    <button class="btn btn-disabled my-2 text-success">Purchased</button>
+                    <button class="btn btn-disabled my-2 text-primary">Purchased</button>
                     {% else %}
-                    <a href="{% url 'shop:buy' item.id %}" class="btn btn-success my-2">Show item</a>
+                    <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2">Show item</a>
                     {% endif %}
                     {% if item.id in wishlist %}
-                    <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
-                        Remove from wishlist</button>
+                    <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
+                        <i class="bi bi-star-fill"></i></button>
                     {% else %}
-                    <button class="btn btn-outline-success add-to-wishlist" data-item-id="{{ item.id }}">
-                        Add to wishlist</button>
+                    <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
+                        <i class="bi bi-star"></i></button>
                     {% endif %}
                     {% endif %}
                 </div>
@@ -47,8 +47,8 @@
             </div>
         </div>
         {% empty %}
-        <div class="row d-flex align-items-center" style="min-height: 80vh;">
-            <div class="col-md-7">
+        <div class="row d-flex align-items-center" style="min-height: 70vh;">
+            <div class="col-md-7 animate__animated animate__bounceIn">
                 <h1 class="style-text-3">You don't have any items in your wishlist...</h1>
                 <p class="text-muted style-text">Wishlisted items appear here</p>
             </div>
@@ -63,9 +63,10 @@
 <script>
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();
     $('.add-to-wishlist').on('click', function () {
-        var button = $(this);
+        var icon = $(this).find('i');
         var item_id = $(this).data('item-id');
-        if (button.text().trim() === 'Add to wishlist') {
+        if (icon.hasClass('bi bi-star')) {
+            // Add item to wishlist
             $.ajax({
                 url: '/addToWishlist/' + item_id,
                 type: 'POST',
@@ -73,13 +74,14 @@
                 headers: { 'X-CSRFToken': csrftoken },
                 success: function (data) {
                     alert(data.message);
-                    button.text('Remove from wishlist');
+                    icon.removeClass('bi bi-star').addClass('bi bi-star-fill');
                 },
                 error: function (xhr, errmsg, err) {
-                    alert('Failed to add item in your wishlist');
+                    alert('Failed to add item to your wishlist');
                 }
             });
-        } else if (button.text().trim() === 'Remove from wishlist') {
+        } else if (icon.hasClass('bi bi-star-fill')) {
+            // Remove item from wishlist
             $.ajax({
                 url: '/removeFromWishlist/' + item_id,
                 type: 'POST',
@@ -87,7 +89,7 @@
                 headers: { 'X-CSRFToken': csrftoken },
                 success: function (data) {
                     alert(data.message);
-                    button.text('Add to wishlist');
+                    icon.removeClass('bi bi-star-fill').addClass('bi bi-star');
                 },
                 error: function (xhr, errmsg, err) {
                     alert('Failed to remove item from your wishlist');

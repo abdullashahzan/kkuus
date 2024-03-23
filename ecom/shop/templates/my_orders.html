@@ -14,9 +14,9 @@
                 <img class="heightlock" src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top"
                     alt="{{order.item.product_name}}">
                 <div class="card-body" style="width: 100%;">
-                    <h5 class="card-title text-success style-text">{{order.item.product_name}}</h5>
+                    <h5 class="card-title text-primary style-text">{{order.item.product_name}}</h5>
                     <hr>
-                    <p class="style-text"><strong>Code: </strong> <span class="text-success lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller. <br>This code is used to identify buyer and prevent fraud.</span>
+                    <p class="style-text"><strong>Code: </strong> <span class="text-primary lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller. <br>This code is used to identify buyer and prevent fraud.</span>
                     </p>
                     <p class="style-text"><span class="text-muted">Location:</span><br>{{order.address}}</p>
                 </div>
@@ -24,11 +24,11 @@
         </div>
         {% empty %}
         <div class="row d-flex align-items-center" style="min-height: 75vh;">
-            <div class="col-md-7">
+            <div class="col-md-7 animate__animated animate__backInLeft">
                 <h1 class="style-text-3">You don't have any orders...</h1>
                 <p class="text-muted style-text">Your purchased orders appear here</p>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 animate__animated animate__slideInLeft">
                 <img class="widthlock" src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="Void">
             </div>
         </div>

@@ -7,17 +7,17 @@
 
 {% block body %}
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 animate__animated animate__slideInLeft">
             <img class="widthlock" src="{% static 'media/undraw_successful_purchase_re_mpig.svg' %}" alt="purchase_successful">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3 p-3 animate__animated animate__slideInRight">
             <h1 class="style-heading">Purchase completed successfully!</h1>
             <p class="style-text-2 lead">{{item.product_name}} was sold to {{user.first_name}} {{user.last_name}} ({{user.username}}) for {{item.product_price}} SAR
             </p>
-            <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-success">Delete product</a>
-            <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-success">Keep product</a>
+            <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-primary">Delete product</a>
+            <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-primary">Keep product</a>
             <p class="style-text-2 my-3"><strong>Note: </strong>Please delete the product if it is out of stock to prevent getting any further orders.</p>
         </div>
     </div>
