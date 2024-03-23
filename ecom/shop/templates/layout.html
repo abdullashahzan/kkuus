@@ -76,8 +76,8 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active notification_panel" href="" data-bs-toggle="dropdown"
-                            aria-expanded="false"><i class="bi bi-person-circle lead mx-2"></i> Account {% if
-                            notifications %}<span class="notification_badge"></span>{% endif %}</a>
+                            aria-expanded="false"><i class="bi bi-person-circle lead mx-2"></i> Account 
+                            {% if notifications %}<span class="notification_badge"></span>{% endif %}</a>
                         <ul class="dropdown-menu">
                             {% if user.is_authenticated %}
                             <li class="mx-3">
@@ -87,9 +87,11 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" href="{% url 'shop:wishlist' %}"> Wishlist</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop:notifications' %}"> Notifications {% if
-                                    notifications %}<span class="bg-danger rounded text-light style-text-2 p-1 mx-1">
-                                        New</span>{% endif %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:notifications' %}"> Notifications 
+                                {% if notifications %}
+                                <span class="bg-danger rounded text-light style-text-2 p-1 mx-1">
+                                        New</span>
+                                {% endif %}</a></li>
                             <li><a class="dropdown-item" href="{% url 'shop:profile' %}"> Settings</a></li>
                             <li>
                                 <hr class="dropdown-divider">
