@@ -41,7 +41,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['unstore.pythonanywhere.com', '127.0.0.1']
 
 # Current application version
-version = 2.2
+version = 2.3
 
 # Application definition
 
