@@ -55,6 +55,8 @@
                 <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
                     Add to wishlist</button>
                 {% endif %}
+                {% else %}
+                <p class="text-danger style-text-2">Please login to purchase this item</p>
                 {% endif %}
                 <p class="style-text-2 text-muted">{{item.num_orders}} Buyer(s) have purchased so far</p>
                 <hr>

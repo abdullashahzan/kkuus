@@ -47,7 +47,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-3 mb-2 shadow">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-3 mb-3 shadow">
         <div class="container-fluid" style="min-height: 0;">
             <a class="style-text-4" href="{% url 'shop:homepage' %}"
                 style="color: #f7f7f7; text-decoration: none; font-size: 2rem;"
@@ -126,30 +126,29 @@
         </div>
     </nav>
 
-    <div class="searchContainer m-1 mt-4 d-block d-sm-none">
+    <div class="searchContainer d-block d-sm-none mb-2 mt-4">
         <form action="{% url 'shop:search_item' %}"
             class="d-flex justify-content-center align-items-center style-text-2" method="post">
             {% csrf_token %}
-            <input type="text" class="form-control mx-2 lead" placeholder="Search for an item"
-                aria-label="Search for an item" aria-describedby="basic-addon2" name="search">
-            <input type="submit" class="btn btn-outline-primary lead">
+            <input type="text" class="border border-primary form-control mx-2 lead" placeholder="Search for an item"
+                aria-label="Search for an item" aria-describedby="basic-addon2" name="search" style="font-size: 1.1rem;">
         </form>
     </div>
 
     <div class="d-block d-sm-none mynavbar navbar navbar-expand-lg">
-        <div class="mx-2 mt-2 style-text">
+        <div class="mx-2 style-text">
             <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:index' %}">Home</a>
+            <a class="btn btn-primary shadow mb-3 notification_panel" style="text-decoration: none;" href="{% url 'shop:notifications' %}">Notifications {% if notifications %}<span
+                class="notification_badge animate__animated animate__headShake"></span>{% endif %}</a>
             <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:myOrders' %}">My orders</a>
             <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:new_listing' %}">Sell new product</a>
             <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:my_shop' %}">My shop</a>
             {% if user.is_authenticated %}
             <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:wishlist' %}">Wishlist</a>
-            <a class="btn btn-primary shadow mb-3 notification_panel" style="text-decoration: none;" href="{% url 'shop:notifications' %}">Notifications {% if notifications %}<span
-                class="notification_badge animate__animated animate__headShake"></span>{% endif %}</a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:profile' %}">Settings</a>
-            <a class="btn btn-danger shadow mb-3" href="{% url 'shop:logout_user' %}">Logout</a>
+            <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:profile' %}">My account</a>
+            <a class="btn btn-danger shadow mb-3 mx-2" href="{% url 'shop:logout_user' %}">Logout</a>
             {% else %}
-            <a href="{% url 'shop:login_user' %}" class="btn btn-primary shadow mb-3" style="text-decoration: none;">Login</a>
+            <a href="{% url 'shop:login_user' %}" class="btn btn-success shadow mb-3 mx-2" style="text-decoration: none;">Login</a>
             {% endif %}
         </div>
     </div>
@@ -178,24 +177,24 @@
                 }
 
                 .bottom-outer {
-                    transform-origin: 134px 222px;
+                    transform-origin: 144px 222px;
                     animation: rotate 30s linear infinite;
                 }
 
                 .bottom-inner {
-                    transform-origin: 134px 222px;
+                    transform-origin: 164px 422px;
                     animation: rotate 20s linear infinite;
                 }
             </style>
         </defs>
-        <rect x="0" y="0" width="300" height="300" fill="#fff" />
-        <path class="top-outer" fill="#F9F6EE" stroke="#F9F6EE" stroke-width="1"
+        <rect x="0" y="0" width="100" height="100" fill="#fff" />
+        <path class="top-outer" fill="#EDEAE0" stroke="#EDEAE0" stroke-width="1"
             d="M68 1c23,0 67,17 69,39 4,38 5,52 -5,69 -20,36 -68,46 -120,-9 -27,-28 -7,-101 56,-99z" />
-        <path class="top-inner" fill="#F9F6EE" stroke="#F9F6EE" stroke-width="1"
+        <path class="top-inner" fill="#EDEAE0" stroke="#EDEAE0" stroke-width="1"
             d="M69 22c33,-7 52,21 54,37 3,26 -1,28 -8,40 -15,25 -48,25 -85,-14 -19,-20 -4,-53 39,-63z" />
-        <path class="bottom-outer" fill="#F9F6EE" stroke="#F9F6EE" stroke-width="1"
+        <path class="bottom-outer" fill="#EDEAE0" stroke="#EDEAE0" stroke-width="1"
             d="M158 158c30,13 56,50 44,75 -9,18 -22,46 -42,55 -20,10 -48,2 -73,-19 -29,-25 -27,-55 -9,-79 17,-22 43,-48 80,-32z" />
-        <path class="bottom-inner" fill="#F9F6EE" stroke="#F9F6EE" stroke-width="1"
+        <path class="bottom-inner" fill="#EDEAE0" stroke="#EDEAE0" stroke-width="1"
             d="M136 180c32,-9 45,13 46,29 3,27 8,29 0,42 -14,25 -52,24 -79,0 -21,-18 -2,-61 33,-71z" />
     </svg>
 
@@ -226,9 +225,11 @@
         const app = initializeApp(firebaseConfig);
     </script>
 
+    <!--
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
         data-id="kkuunofficialstore" data-description="Support me on Buy me a coffee!" data-color="#0d6efd"
         data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+        -->
 </body>
 
 </html>

@@ -16,6 +16,9 @@
         <div class="col-md-6 d-flex justify-content-start align-items-center p-5 animate__animated animate__slideInUp">
             <article>
                 <h1 class="style-heading mb-4">Create your new listing</h1>
+                {% if message %}
+                    <p class="style-text" style="color: red;">{{message}}</p>
+                    {% endif %}
                 <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row mb-3">
@@ -77,10 +80,8 @@
                                 Post for 1 month <br>
                             </label>
                         </div>
+                        <p class="text-muted">Posting for more than 1 week is not available now due to low server storage, but soon will be made available for everyone.</p>
                     </div>
-                    {% if message %}
-                    <p class="style-text" style="color: red;">{{message}}</p>
-                    {% endif %}
                     <button type="submit" class="btn btn-primary" style="float: right;"><i
                             class="bi bi-cash-stack lead mx-1"></i> <span class="style-text lead mx-2">Put up for
                             sale</span></button>

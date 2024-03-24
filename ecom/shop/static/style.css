@@ -12,6 +12,16 @@ body {
     background: #f7f7f7;
 }
 
+.sellDiv {
+    position: fixed;
+    bottom: 1.4rem;
+    right: 1rem;
+}
+
+.sellDiv i {
+    font-size: 2rem;
+}
+
 .mynavbar {
     overflow-x: auto;
     white-space: nowrap;

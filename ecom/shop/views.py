@@ -13,6 +13,7 @@ from .scripts import *
 from django.db.models import Avg
 from django.conf import settings
 import requests
+from ecom.settings import version
 
 def login_user(request):
     message = ""
@@ -92,7 +93,11 @@ def get_image(request, firebase_path):
         if blob:
             content_type = blob.content_type
             image_data = blob.download_as_bytes()
-            return HttpResponse(image_data, content_type=content_type)
+            response = HttpResponse(image_data, content_type=content_type)
+
+            # Set cache-control headers to cache the image in the browser's cache
+            response['Cache-Control'] = 'max-age=3600'  # Cache image for 1 hour (adjust as needed)
+            return response
         else:
             return HttpResponse("Image not found", status=404)
     except Exception as e:
@@ -152,7 +157,14 @@ def new_listing(request):
         product_description = request.POST['product_description']
         price = request.POST['price']
         plan = request.POST['flexRadioDefault']
-        uploaded_file = request.FILES['product_images']
+        try:
+            uploaded_file = request.FILES['product_images']
+        except:
+            return render(request, "sell_product.html", {"message": "Please upload the photo of your product"})
+        try:
+            float(price)
+        except:
+            return render(request, "sell_product.html", {"message": "Please type a number inside price field"})
         if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
             unique_filename = str(uuid.uuid4())
             firebase_path = f'product_images/{unique_filename}/'
@@ -436,7 +448,7 @@ def profile(request):
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     this_user = User.objects.get(username=request.user.username)
     this_user_profile = UserProfile.objects.get(user=request.user)
-    return render(request, "profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error, "notifications":notifications})
+    return render(request, "profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error, "notifications":notifications, "version": version})
 
 def developer(request):
     users = User.objects.all().count()
@@ -454,3 +466,5 @@ def developer(request):
 
 def page_404(request, exception):
     return render(request, "page404.html", status=404)
+
+

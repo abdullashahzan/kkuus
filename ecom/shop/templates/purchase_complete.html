@@ -16,8 +16,11 @@
             <h1 class="style-heading">Purchase completed successfully!</h1>
             <p class="style-text-2 lead">{{item.product_name}} was sold to {{user.first_name}} {{user.last_name}} ({{user.username}}) for {{item.product_price}} SAR
             </p>
-            <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-primary">Delete product</a>
-            <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-primary">Keep product</a>
+            <form action="{% url 'shop:delete_listing' item.id %}">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-primary my-2" value="Delete product" onclick="this.disabled=true; this.value='Submitting...'; this.form.submit();">
+                <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-primary">Keep product</a>
+            </form>
             <p class="style-text-2 my-3"><strong>Note: </strong>Please delete the product if it is out of stock to prevent getting any further orders.</p>
         </div>
     </div>

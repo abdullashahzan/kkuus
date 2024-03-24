@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
             submitButton.disabled = true;
             
             // Optional: Display a loading indicator
-            submitButton.innerHTML = "Submitting...";
+            submitButton.innerHTML = "Please wait...";
             
             // Prevent the default form submission behavior
             event.preventDefault();
