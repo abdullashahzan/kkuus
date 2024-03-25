@@ -52,7 +52,8 @@
                     Available at: <strong>{{address}}</strong>
                 </p>
                 {% if whatsapp %}
-                <a href="https://wa.me/{{whatsapp}}?text=Hello there!I would like to know if the product {{item.product_name}} is still available?" target="_blank" class="text-primary"><i class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
+                <a href="https://wa.me/{{whatsapp}}?text=Hello there!I would like to know if the product {{item.product_name}} is still available?
+                unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank" class="text-primary"><i class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
                 {% endif %}
                 {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
                 <button class="btn btn-primary my-3" onclick="openModal()">Place order</button>
