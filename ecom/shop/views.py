@@ -39,7 +39,8 @@ def signup_user(request):
         password = request.POST['password']
         password2 = request.POST['password2']
         address = request.POST['address']
-        if first != "" and second != ""and email is not None and username is not None and password is not None and password2 is not None and address is not None:
+        whatsapp = request.POST['whatsapp']
+        if first != "" and second != ""and email is not None and username is not None and password is not None and password2 is not None and address is not None and whatsapp != "":
             if password == password2:
                 try:
                     user = User.objects.create_user(username=username, password=password)
@@ -47,7 +48,7 @@ def signup_user(request):
                     user.last_name = second
                     user.email = email
                     user.save()
-                    UserProfile(user=user, address=address).save()
+                    UserProfile(user=user, address=address, whatsapp=whatsapp).save()
                     UserWishlist(username=username).save()
                     login(request, user)
                     next_url = request.GET.get('next', 'shop:index')
@@ -249,7 +250,11 @@ def buy(request, item_id):
         bought_users_username = []
         for i in bought_users:
             bought_users_username.append(i.username)
-        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username})
+        user = User.objects.get(username=item.username)
+        user_profile = UserProfile.objects.get(user=user)
+        address = user_profile.address
+        whatsapp = user_profile.whatsapp
+        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "address": address, "whatsapp": whatsapp})
     return render(request, "buy_product.html", {"item": item})
 
 @require_POST

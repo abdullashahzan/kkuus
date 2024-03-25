@@ -11,9 +11,9 @@
             <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
                 <article>
                     <h1 class="style-heading mb-4">Discover joy in every click, sign up today!</h1>
-                    <form action="{% url 'shop:signup_user' %}" method="post">
+                    <form action="{% url 'shop:signup_user' %}" method="post" class="style-text">
                         {% csrf_token %}
-                        <div class="row mb-2 style-text">
+                        <div class="row mb-2">
                             <div class="col-md-6">
                                 <label for="first" class="form-label">First name</label>
                                 <input type="text" class="form-control" name="first">
@@ -21,6 +21,12 @@
                             <div class="col-md-6">
                                 <label for="second" class="form-label">Second name</label>
                                 <input type="text" class="form-control" name="second">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label for="whatsapp" class="form-label">Whatsapp no.</label>
+                                <input type="text" class="form-control" name="whatsapp" placeholder="e.g. +966509338765">
                             </div>
                         </div>
                         <div class="row mb-2">
@@ -33,7 +39,7 @@
                         <div class="row mb-2">
                             <div class="col-md-12">
                                 <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" name="email">
+                                <input type="email" class="form-control" name="email" placeholder="e.g. my_email@gmail.com">
                             </div>
                         </div>
                         <div class="row mb-2">
@@ -49,7 +55,9 @@
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <label for="address" class="form-label">Student housing address</label>
-                                <input type="address" class="form-control" name="address" placeholder="e.g. BR7, Building 5, Room no. 403">
+                                <input type="address" class="form-control" name="address" placeholder="e.g. BR7, Building 5, Room no. 403" aria-describedby="address_help">
+                                <div id="address_help" class="form-text">Address format should be like this: <br> BUILDING
+                                    CODE, BUILDING NUMBER, ROOM NUMBER</div>
                             </div>
                         </div>
                         {% if message %}
@@ -70,9 +78,9 @@
                 <div class="card-body">
                     <article>
                         <h1 class="style-heading mb-4">Discover joy in every click, sign up today!</h1>
-                        <form action="{% url 'shop:signup_user' %}" method="post">
+                        <form action="{% url 'shop:signup_user' %}" method="post" class="style-text">
                             {% csrf_token %}
-                            <div class="row mb-2 style-text">
+                            <div class="row mb-2">
                                 <div class="col-md-6">
                                     <label for="first" class="form-label">First name</label>
                                     <input type="text" class="form-control" name="first">
@@ -80,6 +88,12 @@
                                 <div class="col-md-6">
                                     <label for="second" class="form-label">Second name</label>
                                     <input type="text" class="form-control" name="second">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label for="whatsapp" class="form-label">Whatsapp no.</label>
+                                    <input type="text" class="form-control" name="whatsapp" placeholder="e.g. +966509338765">
                                 </div>
                             </div>
                             <div class="row mb-2">
@@ -108,7 +122,9 @@
                             <div class="row mb-4">
                                 <div class="col-md-12">
                                     <label for="address" class="form-label">Student housing address</label>
-                                    <input type="address" class="form-control" name="address" placeholder="e.g. BR7, Building 5, Room no. 403">
+                                    <input type="address" class="form-control" name="address" placeholder="e.g. BR7, Building 5, Room no. 403" aria-describedby="address_help">
+                                    <div id="address_help" class="form-text">Address format should be like this: <br> BUILDING
+                                        CODE, BUILDING NUMBER, ROOM NUMBER</div>
                                 </div>
                             </div>
                             {% if message %}

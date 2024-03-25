@@ -39,13 +39,21 @@
         <div class="col-md-4">
             <img class="widthlock" src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}">
         </div>
-        <div class="col-md-8 my-2">
+        <div class="col-md-8 my-4">
             <article>
                 <h1 class="style-heading">{{item.product_name}}</h1>
-                <h2 class="style-text-3 text-primary"><strong>SAR </strong>{{item.product_price}}</h2>
+                <h5 class="text-muted style-text-2">Sold by abood12</h5>
+                <h2 class="style-text-3 text-primary mt-4"><strong>SAR </strong>{{item.product_price}}</h2>
                 <h5 class="style-text-2">Ratings: {{item.ratings}} / 5.0 <span class="text-muted"
                         style="font-size: 0.9rem;">
                         ({{item.num_raters}} people voted)</span></h5>
+                <p class="style-text-2 text-muted">
+                    {{item.num_orders}} Buyer(s) have purchased so far <br>
+                    Available at: <strong>{{address}}</strong>
+                </p>
+                {% if whatsapp %}
+                <a href="https://wa.me/{{whatsapp}}?text=Hello there!I would like to know if the product {{item.product_name}} is still available?" target="_blank" class="text-primary"><i class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
+                {% endif %}
                 {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
                 <button class="btn btn-primary my-3" onclick="openModal()">Place order</button>
                 {% if item.id in wishlist %}
@@ -56,9 +64,7 @@
                     Add to wishlist</button>
                 {% endif %}
                 {% else %}
-                <p class="text-danger style-text-2">Please login to purchase this item</p>
                 {% endif %}
-                <p class="style-text-2 text-muted">{{item.num_orders}} Buyer(s) have purchased so far</p>
                 <hr>
                 <h5 class="lead"><strong>Product description:</strong></h5>
                 <p class="style-text-2">{{item.product_description}}</p>
