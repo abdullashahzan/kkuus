@@ -47,10 +47,14 @@
                 <h5 class="style-text-2">Ratings: {{item.ratings}} / 5.0 <span class="text-muted"
                         style="font-size: 0.9rem;">
                         ({{item.num_raters}} people voted)</span></h5>
+                {% if user.is_authenticated %}
                 <p class="style-text-2 text-muted">
                     {{item.num_orders}} Buyer(s) have purchased so far <br>
                     Available at: <strong>{{address}}</strong>
                 </p>
+                {% else %}
+                <p class="text-danger">Please log in to purchase this item.</p>
+                {% endif %}
                 {% if whatsapp %}
                 <a href="https://wa.me/{{whatsapp}}?text=Hello there!I would like to know if the product {{item.product_name}} is still available?
                 unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank" class="text-primary"><i class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
