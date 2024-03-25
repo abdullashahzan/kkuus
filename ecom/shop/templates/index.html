@@ -48,7 +48,7 @@
                     {% endif %}
                     {% endif %}
                 </div>
-                <div class="card-footer style-text-2 text-light bg-primary d-none d-md-block" style="width: 100%;">Posted on
+                <div class="card-footer style-text-2 text-light bg-primary d-none d-lg-block" style="width: 100%;">Posted on
                     {{item.timestamp}}</div>
             </div>
         </div>
@@ -72,8 +72,6 @@
         {% endfor %}
     </div>
 </div>
-
-<a href="{% url 'shop:new_listing' %}" class="sellDiv shadow btn btn-primary rounded-circle"><i class="bi bi-shop my-2 mx-1"></i></a>
 
 <script>
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();

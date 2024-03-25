@@ -26,6 +26,16 @@
     </div>
 </div>
 <div class="container" style="min-height: 100vh;">
+    <div class="row d-block d-lg-none mb-3">
+        <div class="col-12 col-md-5">
+        <div class="card shadow animate__animated animate__slideInUp p-3 shadow">
+            <h3 class="style-heading">Sell an item</h3>
+            <hr>
+            <p class="style-text-2">Do you have something to sell? Sell anything in an instant for free.</p>
+            <a href="{% url 'shop:new_listing' %}" class="btn btn-primary">Create new listing</a>
+        </div>
+    </div>
+    </div>
     {% if item %}
     <div class="row">
         <h1 class="style-text-3 mt-3">Items listed by you:</h1>
@@ -65,7 +75,7 @@
             </div>
         </div>
         {% empty %}
-        <div class="row d-none d-md-flex align-items-center p-4" style="min-height: 70vh;">
+        <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 90vh;">
             <div class="col-md-7 animate__animated animate__tada">
                 <h1 class="style-text-3">Your shop seems empty...</h1>
                 <p class="text-muted style-text">You don't have anything for sale</p>
@@ -74,7 +84,7 @@
                 <img class="widthlock" src="{% static 'media/undraw_void_-3-ggu.svg' %}" alt="Void">
             </div>
         </div>
-        <div class="container d-flex d-sm-none justify-content-center align-items-center" style="min-height: 50vh;">
+        <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
             <div class="col-12 col-md-5">
                 <div class="card shadow animate__animated animate__slideInUp">
                     <img class="widthlock p-2" src="{% static 'media/undraw_void_-3-ggu.svg' %}" alt="empty">
