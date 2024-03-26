@@ -16,8 +16,7 @@ from .scripts import *
 from django.db.models import Avg
 from django.conf import settings
 import requests
-from ecom.settings import version, FCM_Key
-from pyfcm import FCMNotification
+from ecom.settings import version
 
 def login_user(request):
     message = ""
@@ -576,9 +575,17 @@ def firebase_messaging_sw(request):
 
     firebase.initializeApp(firebaseConfig);
     const messaging = firebase.messaging();
-    messaging.onMessage((payload) => {
-        console.log('Message received. ', payload);
-        // ...
+
+    // Handle background messages
+    messaging.onBackgroundMessage((payload) => {
+        console.log('Message received in background:', payload);
+        // Customize notification display and handling here
+        const notificationTitle = payload.notification.title;
+        const notificationOptions = {
+            body: payload.notification.body,
+            // Customize additional options as needed
+        };
+        self.registration.showNotification(notificationTitle, notificationOptions);
     });
     """
 
@@ -599,24 +606,22 @@ def save_fcm_token(request):
         return JsonResponse({'error': 'Only POST requests are allowed'})
 
 def process_purchase(request):
-    # Process purchase logic here
-
-    # Retrieve FCM tokens of users who need to be notified
     tokens = FCMToken.objects.all()
 
-    message_title = "Your notification title"
-    message_body = "Your notification message"
-    data_message = {
-        "body": message_body,
-        "title": message_title,
-        # You can add more custom data here if needed
-    }
-
-    # Send notification to each token
-    for token in tokens:
-        push_service = FCMNotification(api_key=FCM_Key)
-        result = push_service.notify_single_device(registration_id=token.token, data_message=data_message)
-        print(result)
+    send_notification(tokens.first().token, "Hello, world!", "Hey there!")
     return JsonResponse({'message': 'Purchase processed successfully'})
+
+def send_notification(device_token, title, body, data=None):
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title=title,
+            body=body,
+        ),
+        data=data,
+        token=device_token,
+    )
+    response = messaging.send(message)
+    print("Successfully sent notification:", response)
+
 
 

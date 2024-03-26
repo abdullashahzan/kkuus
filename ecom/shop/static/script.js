@@ -115,36 +115,22 @@ messaging.getToken({ vapidKey: 'BI6I-N5Wyy7XV5XLnHSa6DmvxPqJaHgb0kU2ir4--MA_4w69
         console.log('Error getting token:', error);
     });
 
-// Check if the browser supports service workers
-if ('serviceWorker' in navigator) {
-    // Register service worker
-    navigator.serviceWorker.register('/firebase-messaging-sw.js')
-    .then(function(registration) {
-        console.log('Service Worker registered with scope:', registration.scope);
-        
-        // Subscribe to push notifications
-        registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: 'BI6I-N5Wyy7XV5XLnHSa6DmvxPqJaHgb0kU2ir4--MA_4w69A4y1o7108p-5g7DPny7edALN_z_DkkziBKa1nK0' // Replace 'YOUR_PUBLIC_KEY' with your actual VAPID key
-        })
-        .then(function(subscription) {
-            console.log('Push notification subscription:', subscription);
-            // Send subscription information to your server for future use
-            saveTokenToServer(subscription); // Call saveTokenToServer function with the subscription object
-        })
-        .catch(function(error) {
-            console.error('Push subscription error:', error);
-        });
-    })
-    .catch(function(error) {
-        console.error('Service Worker registration failed:', error);
-    });
-}
-
 // Handle incoming messages when app is in foreground
 messaging.onMessage((payload) => {
     console.log('Message received:', payload);
-    // Handle notification here, e.g., display a notification to the user
+    // Display notification to the user
+    if (Notification.permission === 'granted') {
+        var notification = new Notification(payload.notification.title, {
+            body: payload.notification.body,
+            // You can add additional options here if needed
+        });
+        
+        // You can add an event listener to handle user interaction with the notification
+        notification.addEventListener('click', function(event) {
+            // Handle notification click event
+            console.log('Notification clicked');
+        });
+    }
 });
 
 // Handle background messages by registering a service worker
@@ -155,3 +141,4 @@ navigator.serviceWorker.register('/firebase-messaging-sw.js')
     .catch((error) => {
         console.error('Service worker registration failed:', error);
     });
+
