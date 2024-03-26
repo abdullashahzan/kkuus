@@ -9,10 +9,10 @@
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
     <div class="row">
-        <div class="col-md-6 animate__animated animate__slideInLeft">
+        <div class="col-md-6 slideInLeft">
             <img class="widthlock" src="{% static 'media/undraw_successful_purchase_re_mpig.svg' %}" alt="purchase_successful">
         </div>
-        <div class="col-md-6 mt-3 p-3 animate__animated animate__slideInRight">
+        <div class="col-md-6 mt-3 p-3 slideInRight">
             <h1 class="style-heading">Purchase completed successfully!</h1>
             <p class="style-text-2 lead">{{item.product_name}} was sold to {{user.first_name}} {{user.last_name}} ({{user.username}}) for {{item.product_price}} SAR
             </p>

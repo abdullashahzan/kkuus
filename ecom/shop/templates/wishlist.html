@@ -15,7 +15,7 @@
     <div class="row" data-masonry='{"percentPosition": true }'>
         {% for item in items %}
         <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
-            <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex justify-content-center align-items-center">
+            <div class="shadow fadeInUp card my-2 d-flex justify-content-center align-items-center">
                 <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">
                 <div class="card-body" style="width: 100%;">
@@ -58,7 +58,7 @@
         </div>
         <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
             <div class="col-12 col-md-5">
-                <div class="card shadow animate__animated animate__slideInUp">
+                <div class="card shadow slideInUp">
                     <img class="widthlock p-2" src="{% static 'media/undraw_wishlist_re_m7tv.svg' %}" alt="empty">
                     <div class="card-body">
                         <article>

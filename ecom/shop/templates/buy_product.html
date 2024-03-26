@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-<div id="myModal" class="container-fluid animate__animated animate__slideInDown">
+<div id="myModal" class="container-fluid slideInDown">
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-6">
             <article>
@@ -32,7 +32,7 @@
     </div>
 </div>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-<div class="container animate__animated animate__fadeInUp">
+<div class="container fadeInUp">
     <div class="row p-4">
         <div class="col-md-4">
             <img class="widthlock" src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}">

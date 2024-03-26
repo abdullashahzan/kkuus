@@ -10,7 +10,8 @@
     <div class="row" data-masonry='{"percentPosition": true }'>
         {% for order in orders %}
         <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
-            <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex justify-content-center align-items-center">
+            <div class="shadow fadeInUp card mb-2 d-flex justify-content-center align-items-center">
+                <div class="card-header style-text" style="width: 100%;">Order status: <span class="text-primary">{{order.status}}</span></div>
                 <img class="heightlock" src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top"
                     alt="{{order.item.product_name}}">
                 <div class="card-body" style="width: 100%;">
@@ -28,17 +29,17 @@
         </div>
         {% empty %}
         <div class="row d-none d-lg-flex align-items-center" style="min-height: 75vh;">
-            <div class="col-md-7 animate__animated animate__backInLeft">
+            <div class="col-md-7 slideInLeft">
                 <h1 class="style-text-3">You don't have any orders...</h1>
                 <p class="text-muted style-text">Your purchased orders appear here</p>
             </div>
-            <div class="col-md-5 animate__animated animate__slideInLeft">
+            <div class="col-md-5 slideInLeft">
                 <img class="widthlock" src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="Void">
             </div>
         </div>
         <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
             <div class="col-12 col-md-5">
-                <div class="card shadow animate__animated animate__slideInUp">
+                <div class="card shadow slideInUp">
                     <img class="widthlock p-2" src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="empty">
                     <div class="card-body">
                         <article>

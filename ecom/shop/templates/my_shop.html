@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-<div id="myModal" class="container-fluid animate__animated animate__slideInDown">
+<div id="myModal" class="container-fluid slideInDown">
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-6">
             <article>
@@ -26,53 +26,41 @@
     </div>
 </div>
 <div class="container" style="min-height: 100vh;">
-    <div class="row d-block d-lg-none mb-3">
-        <div class="col-12 col-md-5">
-        <div class="card shadow animate__animated animate__slideInUp p-3 shadow">
-            <h3 class="style-heading">Sell an item</h3>
-            <hr>
-            <p class="style-text-2">Do you have something to sell? Sell anything in an instant for free.</p>
-            <a href="{% url 'shop:new_listing' %}" class="btn btn-primary">Create new listing</a>
-        </div>
-    </div>
-    </div>
-    {% if item %}
-    <div class="row">
-        <h1 class="style-text-3 mt-3">Items listed by you:</h1>
-    </div>
-    <hr>
-    {% endif %}
     <div class="row" data-masonry='{"percentPosition": true }'>
         {% for item in items %}
         <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
-            <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex align-items-center">
+            <div class="shadow fadeInUp card mb-3 d-flex align-items-center">
                 {% if item.new_orders != 0 %}
-                <div class="card-header style-text text-primary" style="width: 100%;"><a href="{% url 'shop:order_details' item.id %}">{{item.new_orders}} new order</a></div>
+                <div class="card-header style-text" style="width: 100%;"><a
+                        href="{% url 'shop:order_details' item.id %}" class="text-danger lead">{{item.new_orders}} new order!</a></div>
                 {% else %}
                 <div class="card-header style-text text-muted" style="width: 100%;">No new orders</div>
                 {% endif %}
                 <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">
                 <div class="card-body mt-2" style="width: 100%;">
-                    <h5 class="card-title text-primary" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
-                        class="text-primary style-text">{{item.product_name}}</a></h5>
+                    <h5 class="card-title text-primary" id="itemModal{{ item.id }}"><a
+                            href="{% url 'shop:buy' item.id %}"
+                            class="text-primary style-text">{{item.product_name}}</a></h5>
                     <hr>
                     <h5 class="card-title style-text">SAR {{item.product_price}}</h5>
                     {% if item.is_expired == True and item.is_renewed == False %}
                     <button class="btn btn-primary" onclick="openModalParameter('{{item.id}}')">Renew</button>
                     <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">Delete</a>
-                    {% elif item.is_expired  %}
+                    {% elif item.is_expired %}
                     <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">Delete</a>
                     {% else %}
                     <p class="text-muted style-text">Click here to enter buyer code</p>
                     <a href="{% url 'shop:confirmPurchase' item.id %}" class="btn btn-outline-primary">Enter code </a>
-                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-outline-danger delete-link">Delete</a>
+                    <a href="{% url 'shop:delete_listing' item.id %}"
+                        class="btn btn-outline-danger delete-link">Delete</a>
                     {% endif %}
                 </div>
                 {% if item.is_expired %}
                 <div class="card-footer style-text text-light bg-danger" style="width: 100%;">Item expired</div>
                 {% else %}
-                <div class="card-footer style-text text-light bg-primary" style="width: 100%;">Item expires on: <br>{{item.expiry}}</div>
+                <div class="card-footer style-text text-light bg-primary" style="width: 100%;">Item expires on:
+                    <br>{{item.expiry}}</div>
                 {% endif %}
             </div>
         </div>
@@ -82,26 +70,37 @@
                 <h1 class="style-text-3">Your shop seems empty...</h1>
                 <p class="text-muted style-text">You don't have anything for sale</p>
             </div>
-            <div class="col-md-5 d-flex justify-content-center align-items-center animate__animated ">
+            <div class="col-md-5 d-flex justify-content-center align-items-center">
                 <img class="widthlock" src="{% static 'media/undraw_void_-3-ggu.svg' %}" alt="Void">
             </div>
         </div>
         <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
             <div class="col-12 col-md-5">
-                <div class="card shadow animate__animated animate__slideInUp">
+                <div class="card shadow slideInUp">
                     <img class="widthlock p-2" src="{% static 'media/undraw_void_-3-ggu.svg' %}" alt="empty">
                     <div class="card-body">
                         <article>
                             <h1 class="style-text-3 my-3">Your shop seems empty...</h1>
                             <hr>
                             <p class="text-muted style-text">You have not put up anything for sale</p>
-                            <a href="{% url 'shop:new_listing' %}" class="btn btn-outline-primary style-text-2">Sell something</a>
+                            <a href="{% url 'shop:new_listing' %}" class="btn btn-outline-primary style-text-2">Sell
+                                something</a>
                         </article>
                     </div>
                 </div>
             </div>
         </div>
         {% endfor %}
+    </div>
+    <div class="row d-block d-lg-none mb-3">
+        <div class="col-12 col-md-5">
+            <div class="card shadow slideInUp p-3 shadow">
+                <h3 class="style-heading">Sell an item</h3>
+                <hr>
+                <p class="style-text-2">Do you have something to sell? Sell anything in an instant for FREE.</p>
+                <a href="{% url 'shop:new_listing' %}" class="btn btn-primary">Create new listing</a>
+            </div>
+        </div>
     </div>
 </div>
 

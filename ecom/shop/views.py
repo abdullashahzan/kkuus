@@ -16,7 +16,8 @@ from .scripts import *
 from django.db.models import Avg
 from django.conf import settings
 import requests
-from ecom.settings import version
+from ecom.settings import version, FCM_Key
+from pyfcm import FCMNotification
 
 def login_user(request):
     message = ""
@@ -109,6 +110,10 @@ def get_image(request, firebase_path):
 
 def homepage(request):
     check_data()
+    ordered_items = UserListings.objects.filter(username=request.user.username)
+    new_item_orders = 0
+    for item in ordered_items:
+        new_item_orders += item.new_orders
     items = UserListings.objects.filter(is_expired=False).order_by('-timestamp')
     bought_items = UserOrder.objects.filter(username=request.user.username, status='requested')
     completed_items = UserOrder.objects.filter(username=request.user.username, status='Completed')
@@ -124,21 +129,29 @@ def homepage(request):
         user_wishlist_list = []
         for i in user_wishlist:
             user_wishlist_list.append(i.id)
-        return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed})
+        return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders})
     return render(request, "index.html", {"items": items})
 
 def notifications(request):
+    ordered_items = UserListings.objects.filter(username=request.user.username)
+    new_item_orders = 0
+    for item in ordered_items:
+        new_item_orders += item.new_orders
     notifications = UserNotification.objects.filter(username=request.user.username).order_by('-date')
     for notification in notifications:
         notification.unread = False
         notification.save()
-    return render(request, "notifications.html", {"notifications": notifications})
+    return render(request, "notifications.html", {"notifications": notifications, "new_orders": new_item_orders})
 
 def delete_notification(request, notification_id):
     UserNotification.objects.get(id=notification_id).delete()
     return redirect(reverse('shop:notifications'))
 
 def wishlist(request):
+    ordered_items = UserListings.objects.filter(username=request.user.username)
+    new_item_orders = 0
+    for item in ordered_items:
+        new_item_orders += item.new_orders
     user_wishlist = get_user_wishlist(request.user.username)
     bought_items = UserOrder.objects.filter(username=request.user.username, status='requested')
     completed_items = UserOrder.objects.filter(username=request.user.username, status='Completed')
@@ -152,7 +165,7 @@ def wishlist(request):
         completed.append(completed_item.item.id)
     for i in user_wishlist:
         user_wishlist_list.append(i.id)
-    return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications})
+    return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders})
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
@@ -247,6 +260,10 @@ def renew_item(request, item_id):
     return redirect(reverse('shop:my_shop'))
 
 def buy(request, item_id):
+    ordered_items = UserListings.objects.filter(username=request.user.username)
+    new_item_orders = 0
+    for item in ordered_items:
+        new_item_orders += item.new_orders
     item = UserListings.objects.get(id=item_id)
     if request.user.is_authenticated:
         user_wishlist = get_user_wishlist(request.user.username)
@@ -261,7 +278,7 @@ def buy(request, item_id):
         user = User.objects.get(username=item.username)
         user_profile = UserProfile.objects.get(user=user)
         whatsapp = user_profile.whatsapp
-        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "whatsapp": whatsapp})
+        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "whatsapp": whatsapp, "new_orders": new_item_orders})
     return render(request, "buy_product.html", {"item": item})
 
 @require_POST
@@ -293,11 +310,13 @@ def delete_comment(request, comment_id, item_id):
 
 def order_details(request, item_id):
     item = UserListings.objects.get(id=item_id)
-    purchased_by = UserOrder.objects.filter(item=item, status="requested")
+    purchased_by = UserOrder.objects.filter(item=item)
     details = []
     for object in purchased_by:
         user = User.objects.get(username = object.username)
-        details.append(UserProfile.objects.get(user=user))
+        order_status = object.status
+        detail = [UserProfile.objects.get(user=user), order_status]
+        details.append(detail)
     return render(request, "ordered_by.html", {"item": item, "orders":details})
 
 def purchase(request, item_id):
@@ -333,7 +352,7 @@ def purchase(request, item_id):
         notification_body = f"{buyer_name} ({buyer_username}) has ordered {purchased_item} for {purchased_item_price} SAR. Please deliver the order immediately to {buyer_address}. Contact buyer: {buyer_whatsapp}."
         UserNotification(username=item.username, title=notification_title, body=notification_body, task="show_shop").save()
         notification_title = f"Your order was placed successfully"
-        notification_body = f"{item.username} will be arriving shortly with your order. Seller contact info: {seller_whatsapp}, Seller address info: {seller_address}"
+        notification_body = f"We have notified the seller about your order. Please wait for order acceptance from the seller. In case if the seller is not responding, here are the seller details: Whatsapp no: {seller_whatsapp}, Address info: {seller_address}"
         UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_order").save()
         return redirect(reverse('shop:myOrders'))
     else:
@@ -372,12 +391,42 @@ def confirm_purchase(request, item_id):
     return render(request, "confirm_purchase.html", {"item": item, "message":message})
 
 def myOrders(request):
+    ordered_items = UserListings.objects.filter(username=request.user.username)
+    new_item_orders = 0
+    for item in ordered_items:
+        new_item_orders += item.new_orders
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
-    ordered_items = UserOrder.objects.filter(username=request.user.username, status="requested")
-    return render(request, "my_orders.html", {'orders': ordered_items, "notifications":notifications})
+    ordered_items = UserOrder.objects.filter(username=request.user.username)
+    return render(request, "my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders})
+
+def acceptOrder(request, item_id, username):
+    item = UserListings.objects.get(id=item_id)
+    order = UserOrder.objects.filter(username=username, item=item).first()
+    order.status = "accepted"
+    order.save()
+    notification_title = f"Your order for {item.product_name} was accepted by {item.username}"
+    notification_body = f"{item.username} has accepted your order."
+    UserNotification(username=username, title=notification_title, body=notification_body).save()
+    referring_url = request.META.get('HTTP_REFERER')
+    return redirect(referring_url or reverse("shop:order_details"))
+
+def rejectOrder(request, item_id, username):
+    item = UserListings.objects.get(id=item_id)
+    item.new_orders -= 1
+    order = UserOrder.objects.filter(username=username, item=item).first()
+    notification_title = f"Your order for {item.product_name} was rejected"
+    notification_body = f"{item.username} has rejected your order maybe because your address was not correct or the product is out of stock."
+    UserNotification(username=username, title=notification_title, body=notification_body).save()
+    order.delete()
+    referring_url = request.META.get('HTTP_REFERER')
+    return redirect(referring_url or reverse("shop:order_details"))
 
 @require_POST
 def search_item(request):
+    ordered_items = UserListings.objects.filter(username=request.user.username)
+    new_item_orders = 0
+    for item in ordered_items:
+        new_item_orders += item.new_orders
     item = request.POST['search']
     item = str(item).strip().lower()
     items_found = []
@@ -387,7 +436,7 @@ def search_item(request):
         cleaned_desc = str(listing.product_description).strip().lower()
         if item in cleaned_name or item in cleaned_desc:
             items_found.append(listing)
-    return render(request, "search_items.html", {"items": items_found})
+    return render(request, "search_items.html", {"items": items_found, "new_orders": new_item_orders})
 
 @require_POST
 def update_address(request):
@@ -508,5 +557,62 @@ def developer(request):
 def page_404(request, exception):
     return render(request, "page404.html", status=404)
 
+def sample(request):
+    return render(request, "firebase_notifications.html")
+
+def firebase_messaging_sw(request):
+    firebase_script = """
+    importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js');
+    importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js');
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBSCpcctpJNIr26-D73N9-M6Jhxe3pZnk0",
+        authDomain: "kku-unofficial-store.firebaseapp.com",
+        projectId: "kku-unofficial-store",
+        storageBucket: "kku-unofficial-store.appspot.com",
+        messagingSenderId: "920854395385",
+        appId: "1:920854395385:web:2c52cbe92d41289d912528"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+    """
+
+    response = HttpResponse(firebase_script, content_type="application/javascript")
+    return response
+
+def save_fcm_token(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        token = data.get('token')
+        username = request.user.username
+        print(token, username)
+        fcm_token, created = FCMToken.objects.get_or_create(username=username)
+        fcm_token.token = token
+        fcm_token.save()
+        return JsonResponse({'message': 'Token saved successfully'})
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'})
+
+def process_purchase(request):
+    # Process purchase logic here
+
+    # Retrieve FCM tokens of users who need to be notified
+    tokens = FCMToken.objects.all()
+
+    message_title = "Your notification title"
+    message_body = "Your notification message"
+    data_message = {
+        "body": message_body,
+        "title": message_title,
+        # You can add more custom data here if needed
+    }
+
+    # Send notification to each token
+    for token in tokens:
+        push_service = FCMNotification(api_key=FCM_Key)
+        result = push_service.notify_single_device(registration_id=token.token, data_message=data_message)
+        print(result)
+    return JsonResponse({'message': 'Purchase processed successfully'})
 
 

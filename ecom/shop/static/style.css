@@ -173,6 +173,21 @@ nav.custom_nav {
     border-radius: 100rem;
 }
 
+.shop_panel {
+    position: relative;
+}
+
+.shop_badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: red;
+    padding: 0.1rem 0.5rem;
+    font-family: var(--family4);
+    font-size: 0.8rem;
+    border-radius: 100rem;
+}
+
 .bignum {
     color: #198754;
     font-size: 1.5rem;
@@ -181,3 +196,72 @@ nav.custom_nav {
 textarea {
     resize: none;
 }
+
+.fadeInUp {
+    animation: fadeInUp 0.7s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+    
+}
+
+.slideInUp {
+    animation: slideInUp 0.7s ease-in-out;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(10px);
+    }
+    to {
+        transform: translateY(0px);
+    }
+}
+
+.slideInDown {
+    animation: slideInDown 0.7s ease-in-out;
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-10px);
+    }
+    to {
+        transform: translateY(0px);
+    }
+}
+
+.slideInLeft {
+    animation: slideInLeft 0.7s ease-in-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-20px);
+    }
+    to {
+        transform: translateX(0px);
+    }
+}
+
+.slideInRight {
+    animation: slideInRight 0.7s ease-in-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(20px);
+    }
+    to {
+        transform: translateX(0px);
+    }
+}
+

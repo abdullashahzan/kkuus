@@ -5,11 +5,11 @@
 <main>
     <div class="container">
         <div class="row" style="min-height: 80vh;">
-            <div class="col-md-6 d-flex justify-content-center align-items-center animate__animated animate__slideInLeft">
+            <div class="col-md-6 d-flex justify-content-center align-items-center slideInLeft">
                 <img class="widthlock" src="{% static 'media/undraw_certification_re_ifll.svg' %}"
                     alt="Picture">
             </div>
-            <div class="col-md-6 d-flex justify-content-start align-items-center p-5 animate__animated animate__slideInUp">
+            <div class="col-md-6 d-flex justify-content-start align-items-center p-5 slideInUp">
                 <article>
                     <h1 class="mb-4 style-heading">Please ask the buyer to give the 6 digit code to complete the purchase</h1>
                     <form action="{% url 'shop:confirmPurchase' item.id %}" method="post">

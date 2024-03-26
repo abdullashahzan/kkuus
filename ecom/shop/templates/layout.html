@@ -37,6 +37,10 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8650665056742555"
         crossorigin="anonymous"></script>
+    
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js"></script>
 
     <!-- LOGO -->
     <link rel="icon" type="image/png" href="../static/media/logo/svg/logo-no-background.svg">
@@ -53,23 +57,6 @@
                 style="color: #f7f7f7; text-decoration: none; font-size: 2rem;"
                 title="E-commerce application for students of King Khalid University">KKU <span class="style-text-4"
                     style="font-size: 1.6rem;">unofficial store</span></a>
-            <div class="d-block d-lg-none text-light mt-2">
-                {% if user.is_authenticated %}
-                <i class="bi bi-door-open"></i>
-                <a href="{% url 'shop:logout_user' %}" class="text-light style-text text-decoration-none">Logout</a>
-                {% else %}
-                <i class="bi bi-person"></i>
-                <a href="{% url 'shop:login_user' %}" class="text-light style-text text-decoration-none">Sign in</a>
-                {% endif %}
-            </div>
-            <!--
-            <button class="navbar-toggler notification_panel" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="bi bi-list"></span>{% if notifications %}<span
-                    class="notification_badge animate__animated animate__headShake"></span>{% endif %}
-            </button>
-            -->
             <div class="collapse navbar-collapse style-text" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -135,58 +122,42 @@
         </div>
     </nav>
 
-    <div class="searchContainer d-block d-lg-none py-3 text-center">
-        <form action="{% url 'shop:search_item' %}" class="container-fluid style-text-2" method="post">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-10 col-md-11">
-                    <input type="text" class="shadow form-control lead" placeholder="Search for an item" name="search"
-                        style="font-size: 1.1rem;">
-                </div>
-                <div class="col-2 col-md-1">
-                    <a href="{% url 'shop:notifications' %}" class="btn btn-primary notification_panel">
-                        <i class="bi bi-bell-fill lead"></i>
-                        {% if notifications %}
-                        <span class="notification_badge animate__animated animate__headShake"></span>
-                        {% endif %}
-                    </a>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!--
-    <div class="d-block d-lg-none mynavbar navbar navbar-expand-lg">
+    <div class="d-block d-lg-none mynavbar navbar navbar-expand-lg mt-2">
         <div class="mx-2 style-text">
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:index' %}">Home</a>
-            <a class="btn btn-primary shadow mb-3 notification_panel" style="text-decoration: none;"
-                href="{% url 'shop:notifications' %}">Notifications {% if notifications %}<span
-                    class="notification_badge animate__animated animate__headShake"></span>{% endif %}</a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:myOrders' %}">My
-                orders</a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none;"
-                href="{% url 'shop:new_listing' %}">Sell new product</a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:my_shop' %}">My
-                shop</a>
+            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;" href="{% url 'shop:index' %}">
+                <i class="bi bi-house-fill"></i> <span class="align-middle">Home</span></a>
+            <button class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;" onclick="openModal()">
+                <i class="bi bi-search"></i> <span class="align-middle">Search</span></button>
+            <a class="btn btn-primary shadow mb-3 notification_panel" style="text-decoration: none; height: 2.6rem;"
+                href="{% url 'shop:notifications' %}">
+                <i class="bi bi-chat-left-dots-fill"></i> Notifications 
+                {% if notifications %}
+                <span class="notification_badge animate__animated animate__headShake"></span>
+                {% endif %}</a>
+            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;"
+                href="{% url 'shop:new_listing' %}"><i class="bi bi-cart-plus-fill"></i>
+                <span class="align-middle">Create new listing</span></a>
             {% if user.is_authenticated %}
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none;"
-                href="{% url 'shop:wishlist' %}">Wishlist</a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none;" href="{% url 'shop:profile' %}">My
-                account</a>
-            <a class="btn btn-danger shadow mb-3 mx-2" href="{% url 'shop:logout_user' %}">Logout</a>
+            <a class="btn btn-danger shadow mb-3 mx-2" href="{% url 'shop:logout_user' %}" style="text-decoration: none; height: 2.6rem;">
+                <i class="bi bi-door-open"></i> Logout</a>
             {% else %}
             <a href="{% url 'shop:login_user' %}" class="btn btn-success shadow mb-3 mx-2"
-                style="text-decoration: none;">Login</a>
+                style="text-decoration: none; height: 2.6rem;"><i class="bi bi-person"></i> Login</a>
             {% endif %}
         </div>
     </div>
-    -->
+
 
     <div class="d-lg-none navbar navbar-expand-lg bg-primary fixed-bottom container-fluid py-0 
-        border border-primary rounded-top d-block animate__animated animate__slideInUp" id="hiddenDiv">
+        border border-primary rounded-top d-block animate__animated" id="hiddenDiv">
         <div class="row pt-2 mx-1">
-            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:my_shop' %}">
-                <p class="style-text-2"><i class="bi bi-shop" style="font-size: 2rem;"></i> <br> My shop</p>
+            <a class="col-3 text-center text-light text-decoration-none shop_panel" href="{% url 'shop:my_shop' %}">
+                <p class="style-text-2"><i class="bi bi-shop" style="font-size: 2rem;"></i> <br> 
+                    My shop
+                    {% if new_orders %}
+                        <span class="shop_badge animate__animated animate__headShake">{{new_orders}}</span>
+                    {% endif %}
+                </p>
             </a>
             <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:myOrders' %}">
                 <p class="style-text-2"><i class="bi bi-receipt" style="font-size: 2rem;"></i> <br> Orders</p>

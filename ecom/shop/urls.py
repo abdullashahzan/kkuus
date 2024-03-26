@@ -27,6 +27,8 @@ urlpatterns = [
     path('postComment/<str:item_id>', views.comment, name='postComment'),
     path('deleteComment/<str:comment_id>/<str:item_id>', views.delete_comment, name='delete_comment'),
     path('myOrders', views.myOrders, name='myOrders'),
+    path('myOrders/accept/<str:item_id>/<str:username>', views.acceptOrder, name='acceptOrder'),
+    path('myOrders/reject/<str:item_id>/<str:username>', views.rejectOrder, name='rejectOrder'),
     path('myShop/renew/<str:item_id>', views.renew_item, name='renew_item'),
     path('search/', views.search_item, name='search_item'),
     path('OrderDetails/<str:item_id>', views.order_details, name='order_details'),
@@ -35,4 +37,9 @@ urlpatterns = [
     path('updateInfo/', views.update_info, name='update_info'),
     path('updatePassword/', views.update_password, name='update_password'),
     path('deleteAccount/', views.delete_account, name='delete_account'),
+
+    path('sample/', views.sample, name="sample"),
+    path('firebase-messaging-sw.js', views.firebase_messaging_sw, name='firebase-messaging-sw'),
+    path('save-fcm-token/', views.save_fcm_token, name='save_fcm_token'),
+    path('samplePurchase/', views.process_purchase, name='samplePurchase'),
 ]
