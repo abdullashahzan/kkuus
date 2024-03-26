@@ -41,7 +41,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['unstore.pythonanywhere.com', '127.0.0.1']
 
 # Current application version
-version = 2.5
+version = 2.6
 
 # Firebase server key
 FCM_Key = "AAAA1mcy-fk:APA91bECQRXKWyx4wvbpvNt2S_pprkWOfJVPBYRBc99UhCJwcbsRpBBdZ9JI7HmZ4Cy14WbS7dQl06eXVsgq3VEAq2TeHD2QS5XTTOwrfBr6tQAeKtL6BVCFx5hKIQ9nm8c9B0kjnScX"

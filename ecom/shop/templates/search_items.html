@@ -6,6 +6,29 @@
 {% endblock %}
 
 {% block body %}
+<div id="myModal" class="container-fluid slideInDown">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-6">
+            <article>
+                <h1 class="style-text-3">Search for an item</h1>
+                <p class="lead style-text">
+                    Type the name or description about the product
+                </p>
+                <form action="{% url 'shop:search_item' %}" method="post" class="style-text">
+                    {% csrf_token %}
+                    <input type="text" class="form-control mb-3 shadow" placeholder="Search for an item" name="search">
+                    <button type="submit" class="btn btn-outline-primary"
+                        onclick="this.disabled=true; this.value='Searching...'; this.form.submit();">
+                        Search product</button>
+                    <button class="btn btn-outline-danger" type="button" onclick="closeModal()">Cancel</button>
+                </form>
+            </article>
+        </div>
+        <div class="col-md-6 d-flex justify-content-center align-items-center my-4">
+            <img class="widthlock" src="{% static 'media/search.svg' %}" alt="image">
+        </div>
+    </div>
+</div>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="container">
     <div class="row" data-masonry='{"percentPosition": true }'>
@@ -43,13 +66,27 @@
             </div>
         </div>
         {% empty %}
-        <div class="row d-flex align-items-center p-4" style="min-height: 70vh;">
-            <div class="col-md-7 animate__animated animate__bounceIn">
+        <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 90vh;">
+            <div class="col-md-7 animate__animated animate__tada">
                 <h1 class="style-text-3">No products found</h1>
                 <p class="text-muted style-text">Please modify your search to obtain more search results</p>
             </div>
             <div class="col-md-5 d-flex justify-content-center align-items-center">
-                <img class="widthlock" src="{% static 'media/undraw_empty_cart_co35.svg' %}" alt="Empty">
+                <img class="widthlock" src="{% static 'media/undraw_empty_cart_co35.svg' %}" alt="Void">
+            </div>
+        </div>
+        <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
+            <div class="col-12 col-md-5">
+                <div class="card shadow">
+                    <img class="widthlock p-2" src="{% static 'media/undraw_empty_cart_co35.svg' %}" alt="empty">
+                    <div class="card-body">
+                        <article>
+                            <h1 class="style-text-3 my-3">No products found</h1>
+                            <hr>
+                            <p class="text-muted style-text">Please modify your search to obtain more search results</p>
+                        </article>
+                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -93,6 +130,7 @@
             });
         }
     });
+    $('#searchButton').prop('disabled', false);
 </script>
 
 {% endblock %}

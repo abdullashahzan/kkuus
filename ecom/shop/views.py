@@ -146,6 +146,7 @@ def delete_notification(request, notification_id):
     UserNotification.objects.get(id=notification_id).delete()
     return redirect(reverse('shop:notifications'))
 
+@login_required(login_url="shop:login_user")
 def wishlist(request):
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
@@ -525,6 +526,7 @@ def delete_account(request):
     logout(request)
     return redirect(reverse("shop:login_user"))
 
+@login_required(login_url="shop:login_user")
 def profile(request):
     try:
         address_error = get_address()
@@ -556,11 +558,15 @@ def developer(request):
 def page_404(request, exception):
     return render(request, "page404.html", status=404)
 
+"""
+Future work
+
+
 def sample(request):
     return render(request, "firebase_notifications.html")
 
 def firebase_messaging_sw(request):
-    firebase_script = """
+    firebase_script = 
     importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js');
     importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js');
 
@@ -578,7 +584,6 @@ def firebase_messaging_sw(request):
 
     // Handle background messages
     messaging.onBackgroundMessage((payload) => {
-        console.log('Message received in background:', payload);
         // Customize notification display and handling here
         const notificationTitle = payload.notification.title;
         const notificationOptions = {
@@ -587,7 +592,7 @@ def firebase_messaging_sw(request):
         };
         self.registration.showNotification(notificationTitle, notificationOptions);
     });
-    """
+    
 
     response = HttpResponse(firebase_script, content_type="application/javascript")
     return response
@@ -597,7 +602,6 @@ def save_fcm_token(request):
         data = json.loads(request.body.decode('utf-8'))
         token = data.get('token')
         username = request.user.username
-        print(token, username)
         fcm_token, created = FCMToken.objects.get_or_create(username=username)
         fcm_token.token = token
         fcm_token.save()
@@ -607,7 +611,6 @@ def save_fcm_token(request):
 
 def process_purchase(request):
     tokens = FCMToken.objects.all()
-
     send_notification(tokens.first().token, "Hello, world!", "Hey there!")
     return JsonResponse({'message': 'Purchase processed successfully'})
 
@@ -621,7 +624,6 @@ def send_notification(device_token, title, body, data=None):
         token=device_token,
     )
     response = messaging.send(message)
-    print("Successfully sent notification:", response)
-
+"""
 
 

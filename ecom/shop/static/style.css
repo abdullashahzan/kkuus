@@ -204,7 +204,7 @@ textarea {
 @keyframes fadeInUp {
     0% {
         opacity: 0;
-        transform: translateY(5px);
+        transform: translateY(2rem);
     }
     100% {
         opacity: 1;
@@ -219,7 +219,7 @@ textarea {
 
 @keyframes slideInUp {
     from {
-        transform: translateY(10px);
+        transform: translateY(7rem);
     }
     to {
         transform: translateY(0px);
@@ -232,7 +232,7 @@ textarea {
 
 @keyframes slideInDown {
     from {
-        transform: translateY(-10px);
+        transform: translateY(-1rem);
     }
     to {
         transform: translateY(0px);
@@ -265,3 +265,15 @@ textarea {
     }
 }
 
+.slideOutDown {
+    animation: slideOutDown 0.7s ease-in-out;
+}
+
+@keyframes slideOutDown {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(7rem);
+    }
+}

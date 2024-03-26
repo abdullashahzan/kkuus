@@ -64,6 +64,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+/*
+
+// Future Work
 
 var csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 function saveTokenToServer(token) {
@@ -85,6 +88,7 @@ function saveTokenToServer(token) {
         console.error('Error saving token on the server:', error);
     });
 }
+
 // Initialize Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBSCpcctpJNIr26-D73N9-M6Jhxe3pZnk0",
@@ -141,4 +145,6 @@ navigator.serviceWorker.register('/firebase-messaging-sw.js')
     .catch((error) => {
         console.error('Service worker registration failed:', error);
     });
+
+*/
 
