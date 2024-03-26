@@ -24,6 +24,7 @@ class UserListings(models.Model):
     num_raters = models.IntegerField(default=0)
     ratings = models.FloatField(default=0, null=True)
     num_orders = models.IntegerField(default=0)
+    new_orders = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.username} listed {self.product_name}"
@@ -52,6 +53,7 @@ class UserOrder(models.Model):
     key = models.CharField(max_length=10)
     status = models.CharField(max_length=20)
     address = models.CharField(max_length=100)
+    whatsapp = models.CharField(max_length=15, null=True)
 
     def __str__(self):
         return f"{self.username} ordered {self.item.product_name}"
@@ -66,3 +68,4 @@ class UserNotification(models.Model):
 
     def __str__(self):
         return f"Notification {self.title} sent to {self.username}"
+

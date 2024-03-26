@@ -5,7 +5,7 @@ function openModalParameter(item_id) {
     document.querySelector('.redirect_link').action = `/myShop/renew/${item_id}`;
 }
 
-function openModal(){
+function openModal() {
     document.getElementById('myModal').style.display = 'block';
 }
 
@@ -13,22 +13,43 @@ function closeModal() {
     document.getElementById('myModal').style.display = 'none';
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+let lastScrollTop = 0;
+const hiddenDiv = document.getElementById("hiddenDiv");
+
+window.addEventListener("scroll", function () {
+    let currentScroll = window.scrollY;
+    if (currentScroll > lastScrollTop) {
+        // Scroll down
+        hiddenDiv.classList.remove("animate__slideInUp");
+        hiddenDiv.classList.add("animate__slideOutDown");
+        hiddenDiv.addEventListener("animationend", function () {
+            hiddenDiv.classList.remove("d-none");
+            hiddenDiv.classList.add("d-block");
+        });
+    } else {
+        // Scroll up
+        hiddenDiv.classList.remove("animate__slideOutDown");
+        hiddenDiv.classList.add("animate__slideInUp");
+    }
+    lastScrollTop = currentScroll;
+});
+
+document.addEventListener("DOMContentLoaded", function () {
     var forms = document.querySelectorAll("form");
 
-    forms.forEach(function(form) {
-        form.addEventListener("submit", function(event) {
+    forms.forEach(function (form) {
+        form.addEventListener("submit", function (event) {
             var submitButton = form.querySelector("button[type='submit']");
             submitButton.disabled = true;
-            
+
             // Optional: Display a loading indicator
             submitButton.innerHTML = "Please wait...";
-            
+
             // Prevent the default form submission behavior
             event.preventDefault();
-            
+
             // Manually submit the form after a short delay (optional)
-            setTimeout(function() {
+            setTimeout(function () {
                 form.submit();
             }, 200); // Adjust the delay as needed
         });

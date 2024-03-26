@@ -8,14 +8,15 @@ import string
 import secrets
 
 def generate_random_key():
-    alphabet = string.ascii_letters + string.digits
-    return ''.join(secrets.choice(alphabet) for _ in range(6))
+    #alphabet = string.ascii_letters + string.digits
+    numbers = string.digits
+    return ''.join(secrets.choice(numbers) for _ in range(6))
 
-def send_email(subject, recipient_list, title, body, special_keys):
-    subject = subject
+def send_email(task, recipient_list, special_keys):
+    subject = task
     from_email = 'kkuunofficialstore@gmail.com'
     recipient_list = recipient_list
-    html_content = render_to_string('email_template.html', {'Title': title, 'Body': body, 'specialKeys':special_keys})
+    html_content = render_to_string('email_template.html', {'task': task,'specialKeys':special_keys})
     text_content = strip_tags(html_content)
     email = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
     email.attach_alternative(html_content, "text/html")

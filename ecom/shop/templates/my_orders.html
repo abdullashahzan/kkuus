@@ -16,9 +16,13 @@
                 <div class="card-body" style="width: 100%;">
                     <h5 class="card-title text-primary style-text">{{order.item.product_name}}</h5>
                     <hr>
-                    <p class="style-text"><strong>Code: </strong> <span class="text-primary lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller. <br>This code is used to identify buyer and prevent fraud.</span>
+                    <p class="style-text"><strong>Code: </strong> <span class="text-primary lead">{{order.key}}</span><br><span class="text-muted">Please show this key to seller.</span>
                     </p>
-                    <p class="style-text"><span class="text-muted">Location:</span><br>{{order.address}}</p>
+                    <p class="style-text">
+                        <span class="text-primary">Seller details:</span><br>
+                        <strong>Address:</strong> {{order.address}} <br>
+                        <strong>Whatsapp:</strong> {{order.whatsapp}}
+                    </p>
                 </div>
             </div>
         </div>

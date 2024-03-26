@@ -35,30 +35,50 @@
             background-color: #0d6efd;
             padding: 2rem;
         }
+
+        .text-white {
+            color: #f7f7f7;
+        }
     </style>
 </head>
 
 
 <body>
     <div class="container">
+        {% if task == 'New Order' %}
         <article>
-            <h1 class="style-heading">{{Title}}</h1>
-            {% if specialKeys == 'purchase' %}
+            <h1 class="style-heading">{{specialKeys.0}} has ordered {{specialKeys.3}}</h1>
             <p class="style-text">
-                They would be coming to your location soon to collect their item. Please do not forget to ask
-                <strong>Buyer's code</strong> to verify their identity and complete purchase. <br><br>
+                <strong style="font-size: 2rem;">Buyer details</strong><br><br>
+                Name: <span class="text-white">{{specialKeys.0}}</span><br>
+                Username: <span class="text-white">{{specialKeys.1}}</span><br>
+                Whatsapp: <a href="https://wa.me/{{specialKeys.5}}" class="text-white">{{specialKeys.5}}</a><br>
+                Address: <span class="text-white">{{specialKeys.4}}</span>
+                <br><br>
+                <strong style="font-size: 2rem;">Product details</strong><br><br>
+                Product: <span class="text-white">{{specialKeys.2}}</span><br>
+                Price: <span class="text-white">{{specialKeys.3}} SAR</span>
+                <br><br>
                 <a href="https://unstore.pythonanywhere.com/myShop/" class="btn" target="_blank">Click here to go to
                     your shop</a>
             </p>
-            {% else %}
-            <p class="style-text">{{Body}}</p>
-            {% endif %}
-            <br>
             <p class="style-footer">
-                regards <br>
+                Regards <br>
                 <strong>KKU unofficial store</strong>
             </p>
         </article>
+        {% elif task == "Order Completed" %}
+        <article>
+            <h1 class="style-heading">Order was completed successfully!</h1>
+            <p class="style-text">
+                Your order for {{specialKeys.0}} was completed successfully. Thank you for shopping with us :)
+            </p>
+            <p class="style-footer">
+                Regards <br>
+                <strong>KKU unofficial store</strong>
+            </p>
+        </article>
+        {% endif %}
     </div>
 </body>
 

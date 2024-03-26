@@ -46,8 +46,10 @@
         {% for item in items %}
         <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
             <div class="shadow animate__animated animate__fadeInUp card my-2 d-flex align-items-center">
-                {% if item.num_orders != 0 %}
-                <div class="card-header style-text text-primary" style="width: 100%;">{{item.num_orders}} people have placed order</div>
+                {% if item.new_orders != 0 %}
+                <div class="card-header style-text text-primary" style="width: 100%;"><a href="{% url 'shop:order_details' item.id %}">{{item.new_orders}} new order</a></div>
+                {% else %}
+                <div class="card-header style-text text-muted" style="width: 100%;">No new orders</div>
                 {% endif %}
                 <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">

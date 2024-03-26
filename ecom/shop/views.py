@@ -3,12 +3,15 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from .models import *
-import uuid
-from firebase_admin import storage
+import uuid, json
+def index(request):
+    return render(request , 'index.html')
+from firebase_admin import storage, messaging
 from .scripts import *
 from django.db.models import Avg
 from django.conf import settings
@@ -197,10 +200,15 @@ def delete_image(firebase_path):
 def delete_listing(request, listing_id):
     listing_details = UserListings.objects.get(id=listing_id)
     delete_image(listing_details.firebase_path)
-    listing_details.delete()
     notification_title = f"{listing_details.product_name} was removed from marketplace successfully!"
     notification_body = f"Your product is now no longer available on marketplace."
     UserNotification(username=request.user.username, title=notification_title, body=notification_body).save()
+    notification_title = f"Unfortunately {listing_details.product_name} was sold to someone else"
+    notification_body = f"{listing_details.product_name} has been delisted from the marketplace since it was purchased by someone else."
+    all_users = UserOrder.objects.filter(item=listing_details, status="requested")
+    for user in all_users:
+        UserNotification(username=user.username, title=notification_title, body=notification_body).save()
+    listing_details.delete()
     return redirect(reverse('shop:my_shop'))
 
 @login_required(login_url="shop:login_user")
@@ -252,9 +260,8 @@ def buy(request, item_id):
             bought_users_username.append(i.username)
         user = User.objects.get(username=item.username)
         user_profile = UserProfile.objects.get(user=user)
-        address = user_profile.address
         whatsapp = user_profile.whatsapp
-        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "address": address, "whatsapp": whatsapp})
+        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "whatsapp": whatsapp})
     return render(request, "buy_product.html", {"item": item})
 
 @require_POST
@@ -264,7 +271,7 @@ def comment(request, item_id):
     ratings = int(request.POST['inlineRadioOptions'])
     heading = request.POST['heading']
     comment = request.POST['comment']
-    if ratings is not None and heading != "" and comment is not None:
+    if ratings is not None and heading != "" and comment != "":
         UserComment(item=item, username=username, ratings=ratings, heading=heading, comment=comment).save()
         new_avg_rating = UserComment.objects.filter(item=item).aggregate(avg_rating=Avg('ratings'))['avg_rating']
         item.ratings = format(new_avg_rating, '.2f')
@@ -284,25 +291,49 @@ def delete_comment(request, comment_id, item_id):
     referring_url = request.META.get('HTTP_REFERER')
     return redirect(referring_url or reverse("shop:homepage"))
 
+def order_details(request, item_id):
+    item = UserListings.objects.get(id=item_id)
+    purchased_by = UserOrder.objects.filter(item=item, status="requested")
+    details = []
+    for object in purchased_by:
+        user = User.objects.get(username = object.username)
+        details.append(UserProfile.objects.get(user=user))
+    return render(request, "ordered_by.html", {"item": item, "orders":details})
+
 def purchase(request, item_id):
     item = UserListings.objects.get(id=item_id)
+    buyer_object = UserProfile.objects.get(user=request.user)
     recipient_list = [User.objects.get(username=item.username).email]
-    title = f"{request.user.username} would like to purchase your item."
-    body = ""
-    special_keys = "purchase"
-    message = send_email("Purchase notification", recipient_list, title, body, special_keys)
+
+    buyer_name = f"{request.user.first_name} {request.user.last_name}"
+    buyer_username = request.user.username
+    purchased_item = item.product_name
+    purchased_item_price = item.product_price
+    buyer_address = buyer_object.address
+    buyer_whatsapp = buyer_object.whatsapp
+    special_keys = [buyer_name, buyer_username, purchased_item, purchased_item_price, buyer_address, buyer_whatsapp]
+    task = "New Order"
+    message = send_email(task, recipient_list, special_keys)
+
+    seller_user = User.objects.get(username=item.username)
+    seller_object = UserProfile.objects.get(user=seller_user)
+
+    seller_address = seller_object.address
+    seller_whatsapp = seller_object.whatsapp
+
     if message == "success":
         key = generate_random_key()
         get_user = User.objects.get(username=item.username)
         address= UserProfile.objects.get(user=get_user).address
-        UserOrder(username=request.user.username, item=item, key=key, status="requested", address=address).save()
-        item.num_orders += 1
+        whatsapp = UserProfile.objects.get(user=get_user).whatsapp
+        UserOrder(username=request.user.username, item=item, key=key, status="requested", address=address, whatsapp=whatsapp).save()
+        item.new_orders += 1
         item.save()
-        notification_title = f"{request.user.username} has bought {item.product_name}"
-        notification_body = f"{request.user.first_name} {request.user.last_name} will be arriving soon to collect their order. Don't forget to ask for their code to verify it's them that is buying the product!"
+        notification_title = f"{request.user.username} would like to purchase {item.product_name}"
+        notification_body = f"{buyer_name} ({buyer_username}) has ordered {purchased_item} for {purchased_item_price} SAR. Please deliver the order immediately to {buyer_address}. Contact buyer: {buyer_whatsapp}."
         UserNotification(username=item.username, title=notification_title, body=notification_body, task="show_shop").save()
-        notification_title = f"Please collect your item immediately from {address}, your code is {key}"
-        notification_body = f"Even though you have purchased the item, there is a slight chance that someone else might have ordered it as well. It is advised to collect your order as soon as possible."
+        notification_title = f"Your order was placed successfully"
+        notification_body = f"{item.username} will be arriving shortly with your order. Seller contact info: {seller_whatsapp}, Seller address info: {seller_address}"
         UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_order").save()
         return redirect(reverse('shop:myOrders'))
     else:
@@ -320,18 +351,23 @@ def confirm_purchase(request, item_id):
             message = "Invalid code"
         if order is not None:
             recipient_list = [User.objects.get(username=item.username).email, request.user.email]
-            title = f"Your order was completed successfully."
-            body = f"Your order for {item.product_name} was completed successfully. Thank you for shopping with us :)"
-            special_keys = ""
-            message = send_email("Purchase notification", recipient_list, title, body, special_keys)
+            special_keys = [item.product_name]
+            task = "Order Completed"
+            try:
+                message = send_email(task, recipient_list, special_keys)
+            except:
+                message = "Email could not be sent"
+                return render(request, "confirm_purchase.html", {"item": item, "message":message})
             user = User.objects.get(username=order.username)
             notification_title = f"{item.product_name} was sold successfully to {order.username}."
             notification_body = f"Your order has been completed."
             UserNotification(username=request.user.username, title=notification_title, body=notification_body).save()
             notification_title = f"{item.product_name} was successfully purchased by you."
             UserNotification(username=order.username, title=notification_title, body=notification_body).save()
-            order.status = "Completed"
-            order.save()
+            item.new_orders -= 1
+            item.num_orders += 1
+            item.save()
+            order.delete()
             return render(request, "purchase_complete.html", {"item":item, "user": user})
     return render(request, "confirm_purchase.html", {"item": item, "message":message})
 
@@ -471,5 +507,6 @@ def developer(request):
 
 def page_404(request, exception):
     return render(request, "page404.html", status=404)
+
 
 

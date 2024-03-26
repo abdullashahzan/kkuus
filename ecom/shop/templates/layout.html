@@ -85,7 +85,7 @@
                             aria-expanded="false"><i class="bi bi-cash lead mx-2"></i> Sell </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'shop:new_listing' %}">Sell new product</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My shop</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My products</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -182,8 +182,8 @@
     </div>
     -->
 
-    <div
-        class="d-block d-lg-none navbar navbar-expand-lg bg-primary fixed-bottom container-fluid py-0 border border-primary rounded-top">
+    <div class="d-lg-none navbar navbar-expand-lg bg-primary fixed-bottom container-fluid py-0 
+        border border-primary rounded-top d-block animate__animated animate__slideInUp" id="hiddenDiv">
         <div class="row pt-2 mx-1">
             <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:my_shop' %}">
                 <p class="style-text-2"><i class="bi bi-shop" style="font-size: 2rem;"></i> <br> My shop</p>
@@ -270,6 +270,7 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+
     </script>
 
     <!--

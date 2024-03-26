@@ -13,11 +13,9 @@
                 <h1 class="style-text-3">Confirm purchase?</h1>
                 <p class="lead style-text">
                     You are almost there! By clicking confirm purchase, seller will be notified about your purchase.
-                    Keep in mind you have just notified the seller about your interest, to complete the purchase,
-                    please visit seller's place and collect your order.
                 </p>
                 <p class="style-text"><strong>Do not forget to show him your buyer code!</strong></p>
-                <p class="style-text"><strong>Note:</strong> You can get address of the seller and buyer code from <a
+                <p class="style-text"><strong>Note:</strong> You can get details of your order from <a
                         href="{% url 'shop:myOrders' %}" class="text-primary">My orders</a>.</p>
                 <form action="{% url 'shop:purchase' item.id %}" method="post">
                     {% csrf_token %}
@@ -42,21 +40,21 @@
         <div class="col-md-8 my-4">
             <article>
                 <h1 class="style-heading">{{item.product_name}}</h1>
-                <h5 class="text-muted style-text-2">Sold by abood12</h5>
-                <h2 class="style-text-3 text-primary mt-4"><strong>SAR </strong>{{item.product_price}}</h2>
+                <h5 class="text-muted style-text-2">Sold by {{item.username}}</h5>
+                <h2 class="style-text-3 text-primary mt-2"><strong>SAR </strong>{{item.product_price}}</h2>
                 <h5 class="style-text-2">Ratings: {{item.ratings}} / 5.0 <span class="text-muted"
                         style="font-size: 0.9rem;">
                         ({{item.num_raters}} people voted)</span></h5>
                 {% if user.is_authenticated %}
                 <p class="style-text-2 text-muted">
                     {{item.num_orders}} Buyer(s) have purchased so far <br>
-                    Available at: <strong>{{address}}</strong>
                 </p>
                 {% else %}
                 <p class="text-danger">Please log in to purchase this item.</p>
                 {% endif %}
                 {% if whatsapp %}
-                <a href="https://wa.me/{{whatsapp}}?text=Hello there!I would like to know if the product {{item.product_name}} is still available?
+                <a href="https://wa.me/{{whatsapp}}?text=Hello there! I would like to know if the product *{{item.product_name}}* is still available?
+                
                 unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank" class="text-primary"><i class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
                 {% endif %}
                 {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
