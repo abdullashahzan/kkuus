@@ -576,6 +576,10 @@ def firebase_messaging_sw(request):
 
     firebase.initializeApp(firebaseConfig);
     const messaging = firebase.messaging();
+    messaging.onMessage((payload) => {
+        console.log('Message received. ', payload);
+        // ...
+    });
     """
 
     response = HttpResponse(firebase_script, content_type="application/javascript")
