@@ -622,30 +622,22 @@ def process_purchase(request):
 
     tokens = FCMToken.objects.all()
     for token in tokens:
-        send_notification(token.token, title, body, image_url)
+        send_notification(token.token, title, body)
     return JsonResponse({'message': 'Notification sent successfully'})
 
-"""
+
 def send_notification(device_token, title, body, data=None):
     message = messaging.Message(
         notification=messaging.Notification(
             title=title,
             body=body,
         ),
-        data=data,
+        data={
+            'score': '850',
+            'time': '2:45',
+        },
         token=device_token,
     )
     response = messaging.send(message)
-"""
 
-def send_notification(device_token, title, body, image_url):
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title=title,
-            body=body,
-            image=image_url,
-        ),
-        token=device_token,
-    )
-    response = messaging.send(message)
 
