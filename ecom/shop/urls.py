@@ -40,9 +40,9 @@ urlpatterns = [
     path('updatePassword/', views.update_password, name='update_password'),
     path('deleteAccount/', views.delete_account, name='delete_account'),
 
-    path('EnableUserNotifications', views.preEnableNotifications, name='preEnableNotifications'),
-    path('enableNotifications', views.enableNotifications, name='enableNotifications'),
-    path('firebase-messaging-sw.js', views.firebase_messaging_sw, name='firebase-messaging-sw'),
+    path('EnableUserNotifications/', views.preEnableNotifications, name='preEnableNotifications'),
+    path('enableNotifications/', views.enableNotifications, name='enableNotifications'),
+    path('firebase-messaging-sw.js/', views.firebase_messaging_sw, name='firebase-messaging-sw'),
     path('save-fcm-token/', views.save_fcm_token, name='save_fcm_token'),
     path('samplePurchase/', views.process_purchase, name='samplePurchase'),
 
