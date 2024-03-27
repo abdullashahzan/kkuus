@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
-from django.conf import settings
-from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 app_name = 'shop'
 urlpatterns = [
@@ -42,8 +41,10 @@ urlpatterns = [
 
     path('EnableUserNotifications/', views.preEnableNotifications, name='preEnableNotifications'),
     path('enableNotifications/', views.enableNotifications, name='enableNotifications'),
-    path('firebase-messaging-sw.js/', views.firebase_messaging_sw, name='firebase-messaging-sw'),
+    #path('firebase-messaging-sw.js/', views.firebase_messaging_sw, name='firebase-messaging-sw'),
     path('save-fcm-token/', views.save_fcm_token, name='save_fcm_token'),
     path('samplePurchase/', views.process_purchase, name='samplePurchase'),
 
 ]
+
+urlpatterns += staticfiles_urlpatterns()
