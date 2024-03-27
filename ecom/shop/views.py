@@ -591,19 +591,17 @@ def firebase_messaging_sw(request):
     firebase.initializeApp(firebaseConfig);
     const messaging = firebase.messaging();
 
-    // Set up an event listener to handle messages received while the app is in the foreground.
-    self.addEventListener('message', event => {
-    // Customize this alert as needed
-    alert(`New notification: ${event.data.notification.title}`);
-    });
-
-    // Handle background messages
     messaging.onBackgroundMessage((payload) => {
-        // Customize notification display and handling here
         const notificationTitle = payload.notification.title;
         const notificationOptions = {
             body: payload.notification.body,
-            // Customize additional options as needed
+            actions: [
+                {
+                    action: 'open_url',
+                    title: 'View',
+                    url: 'https://unstore.pythonanywhere.com/home/'
+                }
+            ]
         };
         self.registration.showNotification(notificationTitle, notificationOptions);
     });
@@ -624,7 +622,6 @@ def save_fcm_token(request):
 def process_purchase(request):
     title = 'Sample title'
     body = 'Sample body'
-    image_url = request.build_absolute_uri(static('media/logo/png/logo-color.png'))
 
     tokens = FCMToken.objects.all()
     for token in tokens:
@@ -638,10 +635,6 @@ def send_notification(device_token, title, body, data=None):
             title=title,
             body=body,
         ),
-        data={
-            'score': '850',
-            'time': '2:45',
-        },
         token=device_token,
     )
     response = messaging.send(message)

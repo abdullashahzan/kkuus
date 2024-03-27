@@ -46,4 +46,4 @@ urlpatterns = [
     path('save-fcm-token/', views.save_fcm_token, name='save_fcm_token'),
     path('samplePurchase/', views.process_purchase, name='samplePurchase'),
 
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]

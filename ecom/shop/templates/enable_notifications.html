@@ -101,15 +101,6 @@
                 console.log('Error getting token:', error);
             });
 
-        messaging.onMessage((payload) => {
-            console.log('Message received:', payload);
-            if (Notification.permission === 'granted') {
-                var notification = new Notification(payload.notification.title, {
-                    body: payload.notification.body,
-                });
-            }
-        });
-
         navigator.serviceWorker.register('/firebase-messaging-sw.js')
             .then((registration) => {
                 console.log('Service worker registered:', registration);
@@ -117,8 +108,6 @@
             .catch((error) => {
                 console.error('Service worker registration failed:', error);
             });
-
-
     </script>
 </body>
 
