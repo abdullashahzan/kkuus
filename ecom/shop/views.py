@@ -591,6 +591,20 @@ def firebase_messaging_sw(request):
     firebase.initializeApp(firebaseConfig);
     const messaging = firebase.messaging();
 
+    messaging.onBackgroundMessage((payload) => {
+        const notificationTitle = payload.notification.title;
+        const notificationOptions = {
+            body: payload.notification.body,
+            actions: [
+                {
+                    action: 'open_url',
+                    title: 'View',
+                    url: 'https://unstore.pythonanywhere.com/home/'
+                }
+            ]
+        };
+        self.registration.showNotification(notificationTitle, notificationOptions);
+    });
     
     """
     response = HttpResponse(firebase_script, content_type="application/javascript")
@@ -626,19 +640,5 @@ def send_notification(device_token, title, body, data=None):
     )
     response = messaging.send(message)
 
-"""
-messaging.onBackgroundMessage((payload) => {
-        const notificationTitle = payload.notification.title;
-        const notificationOptions = {
-            body: payload.notification.body,
-            actions: [
-                {
-                    action: 'open_url',
-                    title: 'View',
-                    url: 'https://unstore.pythonanywhere.com/home/'
-                }
-            ]
-        };
-        self.registration.showNotification(notificationTitle, notificationOptions);
-    });
-"""
+
+
