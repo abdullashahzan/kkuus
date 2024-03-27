@@ -120,7 +120,7 @@
 
         navigator.serviceWorker.getRegistrations().then(registrations => {
             registrations.forEach(registration => {
-                if (registration.scope === 'https://unstore.pythonanywhere.com/') {
+                if (registration.scope === 'https://unstore.pythonanywhere.com/firebase-cloud-messaging-push-scope') {
                     registration.unregister().then(() => {
                         console.log('Service worker unregistered successfully');
                     }).catch(error => {
