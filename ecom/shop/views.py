@@ -516,6 +516,9 @@ def get_password_error():
 def delete_account(request):
     username = request.user.username
     user_object = User.objects.get(username=username)
+    fcmToken = FCMToken.objects.filter(username=username)
+    for tokens in fcmToken:
+        tokens.delete()
     listings = UserListings.objects.filter(username=username)
     for listing in listings:
         listing.delete()
@@ -592,7 +595,7 @@ def firebase_messaging_sw(request):
     const messaging = firebase.messaging();
 
     messaging.onBackgroundMessage((payload) => {
-        const notificationTitle = payload.notification.title;
+        // const notificationTitle = payload.notification.title;
         const notificationOptions = {
             body: payload.notification.body,
             actions: [
