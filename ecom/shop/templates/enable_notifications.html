@@ -92,37 +92,24 @@
         messaging.getToken({ vapidKey: 'BI6I-N5Wyy7XV5XLnHSa6DmvxPqJaHgb0kU2ir4--MA_4w69A4y1o7108p-5g7DPny7edALN_z_DkkziBKa1nK0' }) // Replace 'YOUR_VAPID_KEY' with your actual VAPID key
             .then((currentToken) => {
                 if (currentToken) {
-                    console.log('Token:', currentToken);
-                    // Send this token to your server to associate with the user
                     saveTokenToServer(currentToken);
                 } else {
                     console.log('No registration token available. Request permission to generate one.');
-                    // Show permission request UI
                 }
             })
             .catch((error) => {
                 console.log('Error getting token:', error);
             });
 
-        // Handle incoming messages when app is in foreground
         messaging.onMessage((payload) => {
             console.log('Message received:', payload);
-            // Display notification to the user
             if (Notification.permission === 'granted') {
                 var notification = new Notification(payload.notification.title, {
                     body: payload.notification.body,
-                    // You can add additional options here if needed
-                });
-
-                // You can add an event listener to handle user interaction with the notification
-                notification.addEventListener('click', function (event) {
-                    // Handle notification click event
-                    console.log('Notification clicked');
                 });
             }
         });
 
-        // Handle background messages by registering a service worker
         navigator.serviceWorker.register('/firebase-messaging-sw.js')
             .then((registration) => {
                 console.log('Service worker registered:', registration);

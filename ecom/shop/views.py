@@ -591,6 +591,12 @@ def firebase_messaging_sw(request):
     firebase.initializeApp(firebaseConfig);
     const messaging = firebase.messaging();
 
+    // Set up an event listener to handle messages received while the app is in the foreground.
+    self.addEventListener('message', event => {
+    // Customize this alert as needed
+    alert(`New notification: ${event.data.notification.title}`);
+    });
+
     // Handle background messages
     messaging.onBackgroundMessage((payload) => {
         // Customize notification display and handling here
