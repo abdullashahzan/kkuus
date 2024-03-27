@@ -12,7 +12,7 @@ from .models import *
 import uuid, json
 def index(request):
     return render(request , 'index.html')
-from firebase_admin import storage, messaging
+from firebase_admin import storage
 from .scripts import *
 from django.db.models import Avg
 from django.conf import settings
@@ -222,9 +222,12 @@ def delete_listing(request, listing_id):
     UserNotification(username=request.user.username, title=notification_title, body=notification_body).save()
     notification_title = f"Unfortunately {listing_details.product_name} was sold to someone else"
     notification_body = f"{listing_details.product_name} has been delisted from the marketplace since it was purchased by someone else."
-    all_users = UserOrder.objects.filter(item=listing_details, status="requested")
+    all_users = UserOrder.objects.filter(item=listing_details)
     for user in all_users:
         UserNotification(username=user.username, title=notification_title, body=notification_body).save()
+        all_devices = FCMToken.objects.filter(username=user.username)
+        for device in all_devices:
+            send_notification(device.token, notification_title, notification_body)
     listing_details.delete()
     return redirect(reverse('shop:my_shop'))
 
@@ -359,9 +362,15 @@ def purchase(request, item_id):
         notification_title = f"{request.user.username} would like to purchase {item.product_name}"
         notification_body = f"{buyer_name} ({buyer_username}) has ordered {purchased_item} for {purchased_item_price} SAR. Please deliver the order immediately to {buyer_address}. Contact buyer: {buyer_whatsapp}."
         UserNotification(username=item.username, title=notification_title, body=notification_body, task="show_shop").save()
+        notify_users = FCMToken.objects.filter(username=item.username)
+        for notify in notify_users:
+            send_notification(notify.token, notification_title, notification_body)
         notification_title = f"Your order was placed successfully"
         notification_body = f"We have notified the seller about your order. Please wait for order acceptance from the seller. In case if the seller is not responding, here are the seller details: Whatsapp no: {seller_whatsapp}, Address info: {seller_address}"
         UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_order").save()
+        notify_users = FCMToken.objects.filter(username=request.user.username)
+        for notify in notify_users:
+            send_notification(notify.token, notification_title, notification_body)
         return redirect(reverse('shop:myOrders'))
     else:
         return HttpResponse("The email was not sent :(")
@@ -415,6 +424,9 @@ def acceptOrder(request, item_id, username):
     notification_title = f"Your order for {item.product_name} was accepted by {item.username}"
     notification_body = f"{item.username} has accepted your order."
     UserNotification(username=username, title=notification_title, body=notification_body).save()
+    notify_users = FCMToken.objects.filter(username=username)
+    for notify in notify_users:
+        send_notification(notify.token, notification_title, notification_body)
     referring_url = request.META.get('HTTP_REFERER')
     return redirect(referring_url or reverse("shop:order_details"))
 
@@ -425,6 +437,9 @@ def rejectOrder(request, item_id, username):
     notification_title = f"Your order for {item.product_name} was rejected"
     notification_body = f"{item.username} has rejected your order maybe because your address was not correct or the product is out of stock."
     UserNotification(username=username, title=notification_title, body=notification_body).save()
+    notify_users = FCMToken.objects.filter(username=username)
+    for notify in notify_users:
+        send_notification(notify.token, notification_title, notification_body)
     order.delete()
     referring_url = request.META.get('HTTP_REFERER')
     return redirect(referring_url or reverse("shop:order_details"))
@@ -595,16 +610,9 @@ def firebase_messaging_sw(request):
     const messaging = firebase.messaging();
 
     messaging.onBackgroundMessage((payload) => {
-        // const notificationTitle = payload.notification.title;
+        const notificationTitle = payload.notification.title;
         const notificationOptions = {
             body: payload.notification.body,
-            actions: [
-                {
-                    action: 'open_url',
-                    title: 'View',
-                    url: 'https://unstore.pythonanywhere.com/home/'
-                }
-            ]
         };
         self.registration.showNotification(notificationTitle, notificationOptions);
     });
@@ -632,16 +640,6 @@ def process_purchase(request):
         send_notification(token.token, title, body)
     return JsonResponse({'message': 'Notification sent successfully'})
 
-
-def send_notification(device_token, title, body, data=None):
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title=title,
-            body=body,
-        ),
-        token=device_token,
-    )
-    response = messaging.send(message)
 
 
 
