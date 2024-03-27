@@ -27,6 +27,14 @@
         </div>
         <div class="col-md-9 p-3">
             <article class="mb-4">
+                <h3 class="style-heading">Enable notification on this device</h3>
+                <hr>
+                <div class="style-text" style="min-height: 5vh;">
+                    <a href="{% url 'shop:preEnableNotifications' %}" class="btn btn-primary">Enable</a>
+                    <p class="text-muted mt-2">If you are not receiving notification on this device or have not enabled notifications for this device, please click here to enable it.</p>
+                </div>
+            </article>
+            <article class="mb-4">
                 <h3 class="style-heading">Update address</h3>
                 <hr>
                 <form action="{% url 'shop:update_address' %}" class=" style-text-2" method="post">

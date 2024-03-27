@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from django.templatetags.static import static
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -54,8 +55,7 @@ def signup_user(request):
                     UserProfile(user=user, address=address, whatsapp=whatsapp).save()
                     UserWishlist(username=username).save()
                     login(request, user)
-                    next_url = request.GET.get('next', 'shop:index')
-                    return redirect(next_url)
+                    return redirect(reverse('shop:preEnableNotifications'))
                 except IntegrityError:
                     message = "Username or email is already taken"
                 except:
@@ -169,35 +169,39 @@ def wishlist(request):
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
-    if request.method == "POST":
-        product_name = request.POST['product_name']
-        product_description = request.POST['product_description']
-        price = request.POST['price']
-        plan = request.POST['flexRadioDefault']
-        try:
-            uploaded_file = request.FILES['product_images']
-        except:
-            return render(request, "sell_product.html", {"message": "Please upload the photo of your product"})
-        try:
-            float(price)
-        except:
-            return render(request, "sell_product.html", {"message": "Please type a number inside price field"})
-        if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
-            unique_filename = str(uuid.uuid4())
-            firebase_path = f'product_images/{unique_filename}/'
-            firebase_bucket = storage.bucket()
-            blob = firebase_bucket.blob(firebase_path)
-            blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
-            expiry_date = set_expiry(plan)
-            UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False).save()
-            notification_title = f"{product_name} was listed successfully in marketplace!"
-            notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-            UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
-            return redirect(reverse('shop:homepage'))
+    hasFCM = FCMToken.objects.filter(username=request.user.username)
+    if hasFCM.exists():
+        if request.method == "POST":
+            product_name = request.POST['product_name']
+            product_description = request.POST['product_description']
+            price = request.POST['price']
+            plan = request.POST['flexRadioDefault']
+            try:
+                uploaded_file = request.FILES['product_images']
+            except:
+                return render(request, "sell_product.html", {"message": "Please upload the photo of your product"})
+            try:
+                float(price)
+            except:
+                return render(request, "sell_product.html", {"message": "Please type a number inside price field"})
+            if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
+                unique_filename = str(uuid.uuid4())
+                firebase_path = f'product_images/{unique_filename}/'
+                firebase_bucket = storage.bucket()
+                blob = firebase_bucket.blob(firebase_path)
+                blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
+                expiry_date = set_expiry(plan)
+                UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False).save()
+                notification_title = f"{product_name} was listed successfully in marketplace!"
+                notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+                UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
+                return redirect(reverse('shop:homepage'))
+            else:
+                return render(request, "sell_product.html", {"message": "Please fill all fields"})
         else:
-            return render(request, "sell_product.html", {"message": "Please fill all fields"})
+            return render(request, "sell_product.html")
     else:
-        return render(request, "sell_product.html")
+        return redirect(reverse('shop:preEnableNotifications'))
 
 def delete_image(firebase_path):
     firebase_path = f'product_images/{firebase_path}/'
@@ -226,10 +230,14 @@ def delete_listing(request, listing_id):
 
 @login_required(login_url="shop:login_user")
 def my_shop(request):
-    check_data()
-    items = UserListings.objects.filter(username=request.user.username)
-    notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
-    return render(request, 'my_shop.html', {"items": items, "notifications":notifications})
+    hasFCM = FCMToken.objects.filter(username=request.user.username)
+    if hasFCM.exists():
+        check_data()
+        items = UserListings.objects.filter(username=request.user.username)
+        notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
+        return render(request, 'my_shop.html', {"items": items, "notifications":notifications})
+    else:
+        return redirect(reverse('shop:preEnableNotifications'))
 
 @require_POST
 def add_to_wishlist(request, item_id):
@@ -558,7 +566,11 @@ def developer(request):
 def page_404(request, exception):
     return render(request, "page404.html", status=404)
 
+@login_required(login_url="shop:login_user")
+def preEnableNotifications(request):
+    return render(request, "pre_enable_notification.html")
 
+@login_required(login_url="shop:login_user")
 def enableNotifications(request):
     return render(request, "enable_notifications.html")
 
@@ -598,19 +610,23 @@ def save_fcm_token(request):
         data = json.loads(request.body.decode('utf-8'))
         token = data.get('token')
         username = request.user.username
-        fcm_token, created = FCMToken.objects.get_or_create(username=username)
-        fcm_token.token = token
-        fcm_token.save()
-        return JsonResponse({'message': 'Token saved successfully'})
+        FCMToken(username=username, token=token).save()
+        return redirect(reverse("shop:homepage"))
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'})
 
 def process_purchase(request):
+    title = 'Sample title'
+    body = 'Sample body'
+    image_url = request.build_absolute_uri(static('media/logo/png/logo-color.png'))
+    click_action_url = 'https://unstore.pythonanywhere.com'
+
     tokens = FCMToken.objects.all()
     for token in tokens:
-        send_notification(token.token, "Hello, world!", "Hey there!")
-    return JsonResponse({'message': 'Purchase processed successfully'})
+        send_notification(token.token, title, body, image_url, click_action_url)
+    return JsonResponse({'message': 'Notification sent successfully'})
 
+"""
 def send_notification(device_token, title, body, data=None):
     message = messaging.Message(
         notification=messaging.Notification(
@@ -621,5 +637,25 @@ def send_notification(device_token, title, body, data=None):
         token=device_token,
     )
     response = messaging.send(message)
+"""
 
+def send_notification(device_token, title, body, image_url, click_action_url):
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title=title,
+            body=body,
+            image=image_url,  # Add image URL here
+        ),
+        android=messaging.AndroidConfig(
+            priority='high',
+            notification=messaging.AndroidNotification(
+                click_action=click_action_url,
+                icon=image_url,
+            ),
+        ),
+        token=device_token,
+    )
+    response = messaging.send(message)
+    print(response)
+    print("Done")
 
