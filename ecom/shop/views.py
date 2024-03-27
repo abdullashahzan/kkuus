@@ -94,6 +94,7 @@ def send_notification(device_token, title, body):
         ),
         token=device_token,
     )
+    response = messaging.send(message)
 
 def index(request):
     return HttpResponseRedirect(reverse('shop:homepage'))
