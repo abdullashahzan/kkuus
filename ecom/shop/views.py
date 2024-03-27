@@ -619,11 +619,10 @@ def process_purchase(request):
     title = 'Sample title'
     body = 'Sample body'
     image_url = request.build_absolute_uri(static('media/logo/png/logo-color.png'))
-    click_action_url = 'https://unstore.pythonanywhere.com'
 
     tokens = FCMToken.objects.all()
     for token in tokens:
-        send_notification(token.token, title, body, image_url, click_action_url)
+        send_notification(token.token, title, body, image_url)
     return JsonResponse({'message': 'Notification sent successfully'})
 
 """
@@ -639,23 +638,14 @@ def send_notification(device_token, title, body, data=None):
     response = messaging.send(message)
 """
 
-def send_notification(device_token, title, body, image_url, click_action_url):
+def send_notification(device_token, title, body, image_url):
     message = messaging.Message(
         notification=messaging.Notification(
             title=title,
             body=body,
-            image=image_url,  # Add image URL here
-        ),
-        android=messaging.AndroidConfig(
-            priority='high',
-            notification=messaging.AndroidNotification(
-                click_action=click_action_url,
-                icon=image_url,
-            ),
+            image=image_url,
         ),
         token=device_token,
     )
     response = messaging.send(message)
-    print(response)
-    print("Done")
 
