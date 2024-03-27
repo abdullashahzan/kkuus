@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="8;url=/home">
     <title>Enable Notifications</title>
 
     <!-- style.css -->
@@ -32,25 +31,16 @@
 <body>
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="row style-text-2 text-center">
-            <h1>Redirecting in <div id="countdown" class="text-primary my-1">8</div> seconds</h1>
-            <p class="text-muted">Do not leave this page.</p>
+            <article>
+                <h1>Please enable notifications</h1>
+                <p class="text-muted">If you did not receive any pop up for notification, your browser must be blocking
+                    it. After you have enabled notification click on the button to be redirected to homepage.</p>
+                <a href="{% url 'shop:index' %}" class="btn btn-primary">Done</a>
+            </article>
         </div>
     </div>
 
     <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
-
-    <script>
-        var countdownElement = document.getElementById('countdown');
-        var countdownValue = 7;
-        var countdownInterval = setInterval(function () {
-            countdownElement.textContent = countdownValue;
-            countdownValue--;
-            if (countdownValue < 0) {
-                clearInterval(countdownInterval);
-                countdownElement.textContent = "ZEROOOOOOOOO!";
-            }
-        }, 1000);
-    </script>
 
     <script type="module">
         var csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
@@ -104,7 +94,7 @@
         // Request permission for push notifications and get token
         requestPermission().then((permissionGranted) => {
             if (permissionGranted) {
-                messaging.getToken({ vapidKey: 'BOkX5E9wd8wzhPoDIz9hGmdv6LhLXm_EZrEJxkr9wRa9jjnBflc2nzzNwnwm2oGpOiNb8uD0emVRIh9wipRpZds' })
+                messaging.getToken({ vapidKey:'BOkX5E9wd8wzhPoDIz9hGmdv6LhLXm_EZrEJxkr9wRa9jjnBflc2nzzNwnwm2oGpOiNb8uD0emVRIh9wipRpZds' })
                     .then((currentToken) => {
                         if (currentToken) {
                             saveTokenToServer(currentToken);
