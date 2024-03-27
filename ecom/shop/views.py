@@ -12,7 +12,7 @@ from .models import *
 import uuid, json
 def index(request):
     return render(request , 'index.html')
-from firebase_admin import storage
+from firebase_admin import storage, messaging
 from .scripts import *
 from django.db.models import Avg
 from django.conf import settings
@@ -85,6 +85,15 @@ def check_email_availability(request, email):
 def logout_user(request):
     logout(request)
     return redirect('shop:login_user')
+
+def send_notification(device_token, title, body):
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title=title,
+            body=body,
+        ),
+        token=device_token,
+    )
 
 def index(request):
     return HttpResponseRedirect(reverse('shop:homepage'))
@@ -639,7 +648,5 @@ def process_purchase(request):
     for token in tokens:
         send_notification(token.token, title, body)
     return JsonResponse({'message': 'Notification sent successfully'})
-
-
 
 

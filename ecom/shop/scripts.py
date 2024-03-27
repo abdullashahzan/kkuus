@@ -1,6 +1,6 @@
 from .models import *
 from datetime import datetime, timedelta
-from firebase_admin import storage, messaging
+from firebase_admin import storage
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -25,15 +25,6 @@ def send_email(task, recipient_list, special_keys):
         return f"success"
     except:
         return f"failed"
-
-def send_notification(device_token, title, body):
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title=title,
-            body=body,
-        ),
-        token=device_token,
-    )
 
 def get_user_wishlist(username):
     wishlist = UserWishlist.objects.get(username=username)
