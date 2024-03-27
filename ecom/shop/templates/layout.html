@@ -37,11 +37,6 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8650665056742555"
         crossorigin="anonymous"></script>
-    
-    <!-- Add Firebase SDK FUTURE WORK
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js"></script>
-    -->
 
     <!-- LOGO -->
     <link rel="icon" type="image/png" href="../static/media/logo/svg/logo-no-background.svg">
@@ -231,24 +226,27 @@
     <!-- Firebase -->
     <script type="module">
         // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
-
+      
         // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
-            apiKey: "AIzaSyBSCpcctpJNIr26-D73N9-M6Jhxe3pZnk0",
-            authDomain: "kku-unofficial-store.firebaseapp.com",
-            projectId: "kku-unofficial-store",
-            storageBucket: "kku-unofficial-store.appspot.com",
-            messagingSenderId: "920854395385",
-            appId: "1:920854395385:web:2c52cbe92d41289d912528"
+          apiKey: "AIzaSyBSCpcctpJNIr26-D73N9-M6Jhxe3pZnk0",
+          authDomain: "kku-unofficial-store.firebaseapp.com",
+          projectId: "kku-unofficial-store",
+          storageBucket: "kku-unofficial-store.appspot.com",
+          messagingSenderId: "920854395385",
+          appId: "1:920854395385:web:2c52cbe92d41289d912528",
+          measurementId: "G-2T7WF92CT8"
         };
-
+      
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-
-    </script>
+        const analytics = getAnalytics(app);
+      </script>
 
     <!--
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"

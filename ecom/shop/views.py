@@ -558,15 +558,12 @@ def developer(request):
 def page_404(request, exception):
     return render(request, "page404.html", status=404)
 
-"""
-Future work
 
-
-def sample(request):
-    return render(request, "firebase_notifications.html")
+def enableNotifications(request):
+    return render(request, "enable_notifications.html")
 
 def firebase_messaging_sw(request):
-    firebase_script = 
+    firebase_script = """
     importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js');
     importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js');
 
@@ -592,8 +589,7 @@ def firebase_messaging_sw(request):
         };
         self.registration.showNotification(notificationTitle, notificationOptions);
     });
-    
-
+    """
     response = HttpResponse(firebase_script, content_type="application/javascript")
     return response
 
@@ -611,7 +607,8 @@ def save_fcm_token(request):
 
 def process_purchase(request):
     tokens = FCMToken.objects.all()
-    send_notification(tokens.first().token, "Hello, world!", "Hey there!")
+    for token in tokens:
+        send_notification(token.token, "Hello, world!", "Hey there!")
     return JsonResponse({'message': 'Purchase processed successfully'})
 
 def send_notification(device_token, title, body, data=None):
@@ -624,6 +621,5 @@ def send_notification(device_token, title, body, data=None):
         token=device_token,
     )
     response = messaging.send(message)
-"""
 
 
