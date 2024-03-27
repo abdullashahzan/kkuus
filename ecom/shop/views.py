@@ -602,35 +602,6 @@ def preEnableNotifications(request):
 def enableNotifications(request):
     return render(request, "enable_notifications.html")
 
-def firebase_messaging_sw(request):
-    firebase_script = """
-    importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js');
-    importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js');
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyBSCpcctpJNIr26-D73N9-M6Jhxe3pZnk0",
-        authDomain: "kku-unofficial-store.firebaseapp.com",
-        projectId: "kku-unofficial-store",
-        storageBucket: "kku-unofficial-store.appspot.com",
-        messagingSenderId: "920854395385",
-        appId: "1:920854395385:web:2c52cbe92d41289d912528"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const messaging = firebase.messaging();
-
-    messaging.onBackgroundMessage((payload) => {
-        const notificationTitle = payload.notification.title;
-        const notificationOptions = {
-            body: payload.notification.body,
-        };
-        self.registration.showNotification(notificationTitle, notificationOptions);
-    });
-    
-    """
-    response = HttpResponse(firebase_script, content_type="application/javascript")
-    return response
-
 def save_fcm_token(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))

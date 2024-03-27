@@ -33,7 +33,7 @@
 <div class="container">
     <div class="row" data-masonry='{"percentPosition": true }'>
         {% for item in items %}
-        <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
+        <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
             <div class="shadow animate__animated animate__zoomIn card my-2 d-flex justify-content-center align-items-center">
                 <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">

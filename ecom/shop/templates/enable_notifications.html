@@ -94,7 +94,7 @@
         // Request permission for push notifications and get token
         requestPermission().then((permissionGranted) => {
             if (permissionGranted) {
-                messaging.getToken({ vapidKey:'BOkX5E9wd8wzhPoDIz9hGmdv6LhLXm_EZrEJxkr9wRa9jjnBflc2nzzNwnwm2oGpOiNb8uD0emVRIh9wipRpZds' })
+                messaging.getToken({ vapidKey: 'BOkX5E9wd8wzhPoDIz9hGmdv6LhLXm_EZrEJxkr9wRa9jjnBflc2nzzNwnwm2oGpOiNb8uD0emVRIh9wipRpZds' })
                     .then((currentToken) => {
                         if (currentToken) {
                             saveTokenToServer(currentToken);
@@ -117,6 +117,18 @@
             .catch((error) => {
                 console.error('Service worker registration failed:', error);
             });
+
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(registration => {
+                if (registration.scope === 'https://unstore.pythonanywhere.com/firebase-cloud-messaging-push-scope') {
+                    registration.unregister().then(() => {
+                        console.log('Service worker unregistered successfully');
+                    }).catch(error => {
+                        console.error('Failed to unregister service worker:', error);
+                    });
+                }
+            });
+        });
     </script>
 </body>
 

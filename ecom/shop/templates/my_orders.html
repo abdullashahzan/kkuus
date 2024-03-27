@@ -9,7 +9,7 @@
 <div class="container p-4">
     <div class="row" data-masonry='{"percentPosition": true }'>
         {% for order in orders %}
-        <div class="col-sm-2 col-xs-2 col-md-4 col-lg-3 g-3">
+        <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
             <div class="shadow fadeInUp card mb-2 d-flex justify-content-center align-items-center">
                 <div class="card-header style-text" style="width: 100%;">Order status: <span class="text-primary">{{order.status}}</span></div>
                 <img class="heightlock" src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top"
