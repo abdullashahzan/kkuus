@@ -87,14 +87,22 @@ def logout_user(request):
     return redirect('shop:login_user')
 
 def send_notification(device_token, title, body):
+    """
     message = messaging.Message(
         notification=messaging.Notification(
             title=title,
             body=body,
         ),
         token=device_token,
-    )
-    response = messaging.send(message)
+    )"""
+    payload = {
+        'notification': {
+            'title': title,
+            'body': body,
+        },
+        'token': device_token,
+    }
+    response = messaging.send(payload)
 
 def index(request):
     return HttpResponseRedirect(reverse('shop:homepage'))

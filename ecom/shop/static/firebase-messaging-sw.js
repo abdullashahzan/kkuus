@@ -13,15 +13,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-let appeared = 0;
-
 messaging.onBackgroundMessage((payload) => {
-    if (appeared == 0) {
-        const notificationTitle = payload.notification.title;
-        const notificationOptions = {
-            body: payload.notification.body,
-        };
-        self.registration.showNotification(notificationTitle, notificationOptions);
-        appeared += 1
-    }
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+    };
+    self.registration.showNotification(notificationTitle, notificationOptions);
 });
