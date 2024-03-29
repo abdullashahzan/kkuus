@@ -24,8 +24,8 @@
         crossorigin="anonymous"></script>
 
     <!-- Add Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging-compat.js"></script>
 </head>
 
 <body>
@@ -35,7 +35,7 @@
                 <h1>Please enable notifications</h1>
                 <p class="text-muted">If you did not receive any pop up for notification, your browser must be blocking
                     it. After you have enabled notification click on the button to be redirected to homepage.</p>
-                <a href="{% url 'shop:index' %}" id="myButton" class="btn btn-primary disabled">Enable Button in <span
+                <a href="" id="myButton" class="btn btn-primary disabled">Enable Button in <span
                         id="countdown">10</span> seconds</a>
             </article>
         </div>
@@ -54,7 +54,7 @@
                 clearInterval(intervalId);
                 button.classList.remove('disabled');
                 countdownElement.textContent = '0';
-                button.textContent = 'Done';
+                button.textContent = 'Retry';
             }
         }
         const intervalId = setInterval(updateCountdown, 1000);
