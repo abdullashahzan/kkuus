@@ -110,7 +110,6 @@
         // Initialize Firebase Messaging
         const messaging = firebase.messaging();
 
-        // Request permission for push notifications and gwindow.location.href = "https://unstore.pythonanywhere.com/home/";et token
         requestPermission().then((permissionGranted) => {
             if (permissionGranted) {
                 messaging.getToken({ vapidKey: 'BOkX5E9wd8wzhPoDIz9hGmdv6LhLXm_EZrEJxkr9wRa9jjnBflc2nzzNwnwm2oGpOiNb8uD0emVRIh9wipRpZds' })
