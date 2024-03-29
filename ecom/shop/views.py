@@ -94,15 +94,20 @@ def send_notification(device_token, title, body):
             body=body,
         ),
         token=device_token,
-    )"""
+    )
     payload = {
         'notification': {
             'title': title,
             'body': body,
         },
         'token': device_token,
-    }
-    response = messaging.send(payload)
+    }"""
+    message = messaging.Message(
+    data={
+        'title': '850',
+        'body': '2:45',
+    })
+    response = messaging.send(message)
 
 def index(request):
     return HttpResponseRedirect(reverse('shop:homepage'))
