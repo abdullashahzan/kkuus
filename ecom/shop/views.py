@@ -86,16 +86,29 @@ def logout_user(request):
     logout(request)
     return redirect('shop:login_user')
 
-def send_notification(device_token, title, body):
+def send_notification(device_token, title, body, link=None):
+    """
     message = messaging.Message(
     data={
         'title': title,
         'body': body,
-        'icon': 'https://unstore.pythonanywhere.com/static/media/logo/png/logo-color.png'
+        'icon': 'https://unstore.pythonanywhere.com/static/media/logo/png/logo-color.png',
         },
         token=device_token,
     )
-    response = messaging.send(message)
+    response = messaging.send(message)"""
+    payload = {
+        'token': device_token,
+        'notification': {
+            'title': title,
+            'body': body,
+            'icon': 'https://unstore.pythonanywhere.com/static/media/logo/png/logo-color.png'
+        },
+        'data': {
+            'link': link if link else '',
+        },
+    }
+    response = messaging.send(payload)
 
 def index(request):
     return HttpResponseRedirect(reverse('shop:homepage'))
