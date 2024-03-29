@@ -35,7 +35,7 @@
                 <h1>Please enable notifications</h1>
                 <p class="text-muted">If you did not receive any pop up for notification, your browser must be blocking
                     it. After you have enabled notification click on the button to be redirected to homepage.</p>
-                <a href="{% url 'shop:index' %}" id="myButton" class="btn btn-primary">Enable Button in <span
+                <a href="{% url 'shop:index' %}" id="myButton" class="btn btn-primary disabled">Enable Button in <span
                         id="countdown">10</span> seconds</a>
             </article>
         </div>
@@ -52,9 +52,9 @@
             countdownElement.textContent = countdown;
             if (countdown <= 0) {
                 clearInterval(intervalId);
-                button.disabled = false;
+                button.classList.remove('disabled');
                 countdownElement.textContent = '0';
-                button.textContent = 'Home';
+                button.textContent = 'Done';
             }
         }
         const intervalId = setInterval(updateCountdown, 1000);
@@ -74,8 +74,10 @@
             }).then(response => {
                 if (response.ok) {
                     console.log('Token saved successfully on the server');
+                    window.location.href = "https://unstore.pythonanywhere.com/home/";
                 } else {
                     console.error('Failed to save token on the server');
+                    window.location.href = "https://unstore.pythonanywhere.com/home/";
                 }
             }).catch(error => {
                 console.error('Error saving token on the server:', error);
@@ -109,7 +111,7 @@
         // Initialize Firebase Messaging
         const messaging = firebase.messaging();
 
-        // Request permission for push notifications and get token
+        // Request permission for push notifications and gwindow.location.href = "https://unstore.pythonanywhere.com/home/";et token
         requestPermission().then((permissionGranted) => {
             if (permissionGranted) {
                 messaging.getToken({ vapidKey: 'BOkX5E9wd8wzhPoDIz9hGmdv6LhLXm_EZrEJxkr9wRa9jjnBflc2nzzNwnwm2oGpOiNb8uD0emVRIh9wipRpZds' })
@@ -128,14 +130,15 @@
             console.error('Error requesting permission:', error);
         });
 
+        /*
         navigator.serviceWorker.register('/firebase-messaging-sw.js')
             .then((registration) => {
-                registration.unregister();
                 console.log('Service worker registered:', registration);
             })
             .catch((error) => {
                 console.error('Service worker registration failed:', error);
             });
+        */
 
     </script>
 </body>
