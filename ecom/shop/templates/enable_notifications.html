@@ -33,8 +33,10 @@
         <div class="row style-text-2 text-center">
             <article>
                 <h1>Please enable notifications</h1>
+                <hr>
                 <p class="text-muted">If you did not receive any pop up for notification, your browser must be blocking
                     it. After you have enabled notification click on the button to be redirected to homepage.</p>
+                <p class="text-muted"><strong>Note: </strong>You cannot have 2 accounts on same device for this process.</p>
                 <a href="" id="myButton" class="btn btn-primary disabled">Enable Button in <span
                         id="countdown">10</span> seconds</a>
             </article>
@@ -91,6 +93,7 @@
                     return true;
                 } else {
                     console.log('Notification permission denied.');
+                    setInterval(requestPermission, 1000);
                     return false;
                 }
             });

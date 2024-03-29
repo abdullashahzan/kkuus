@@ -75,7 +75,16 @@
             </div>
         </div>
         {% empty %}
-        <div class="container d-flex justify-content-center align-items-center mt-2" style="min-height: 50vh;">
+        <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 80vh;">
+            <div class="col-md-7 animate__animated animate__bounceIn">
+                <h1 class="style-text-3">No products for sale...</h1>
+                <p class="text-muted style-text">Marketplace seems empty today</p>
+            </div>
+            <div class="col-md-5 d-flex justify-content-center align-items-center">
+                <img class="widthlock" src="{% static 'media/undraw_empty_re_opql.svg' %}" alt="empty">
+            </div>
+        </div>
+        <div class="container d-flex d-lg-none justify-content-center align-items-center mt-2" style="min-height: 50vh;">
             <div class="col-12 col-md-5">
                 <div class="card shadow">
                     <img class="widthlock" src="{% static 'media/undraw_empty_re_opql.svg' %}" alt="empty">

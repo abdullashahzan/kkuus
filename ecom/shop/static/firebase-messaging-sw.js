@@ -13,20 +13,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-self.addEventListener('notificationclick', function(event) {
-    const link = event.data.link;
-    if (link) {
-        event.waitUntil(clients.openWindow(link));
-    }
-    event.close();
-});
-
 messaging.onBackgroundMessage((payload) => {
-    const notificationTitle = payload.notification.title;
+    const notificationTitle = payload.data.title;
     const notificationOptions = {
-        body: payload.notification.body,
-        icon: payload.notification.icon,
+        body: payload.data.body,
+        icon: payload.data.icon,
     };
     self.registration.showNotification(notificationTitle, notificationOptions);
 });
-

@@ -132,8 +132,6 @@
 
     <div class="d-block d-lg-none mynavbar navbar navbar-expand-lg mt-2">
         <div class="mx-2 style-text">
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;" href="{% url 'shop:index' %}">
-                <i class="bi bi-house-fill"></i> <span class="align-middle">Home</span></a>
             <button class="btn btn-primary shadow mb-3" id="searchButton" style="text-decoration: none; height: 2.6rem;" onclick="openModal()" disabled>
                 <i class="bi bi-search"></i> <span class="align-middle">Search</span></button>
             <a class="btn btn-primary shadow mb-3 notification_panel" style="text-decoration: none; height: 2.6rem;"
@@ -142,6 +140,8 @@
                 {% if notifications %}
                 <span class="notification_badge animate__animated animate__headShake"></span>
                 {% endif %}</a>
+            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;" href="{% url 'shop:wishlist' %}">
+                <i class="bi bi-bag"></i> <span class="align-middle">Wishlist</span></a>
             <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem; margin-right: 0.7rem;"
                 href="{% url 'shop:new_listing' %}"><i class="bi bi-cart-plus-fill"></i>
                 <span class="align-middle">Create new listing</span></a>
@@ -152,8 +152,11 @@
     <div class="d-lg-none navbar navbar-expand-lg bg-primary fixed-bottom container-fluid py-0 
         border border-primary rounded-top d-block animate__animated" id="hiddenDiv">
         <div class="row pt-2 mx-1">
+            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:homepage' %}">
+                <p class="style-text-2"><i class="bi bi-house-fill" style="font-size: 1.7rem;"></i> <br> Home</p>
+            </a>
             <a class="col-3 text-center text-light text-decoration-none shop_panel" href="{% url 'shop:my_shop' %}">
-                <p class="style-text-2"><i class="bi bi-shop" style="font-size: 2rem;"></i> <br> 
+                <p class="style-text-2"><i class="bi bi-shop" style="font-size: 1.7rem;"></i> <br> 
                     My shop
                     {% if new_orders %}
                         <span class="shop_badge animate__animated animate__headShake">{{new_orders}}</span>
@@ -161,13 +164,10 @@
                 </p>
             </a>
             <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:myOrders' %}">
-                <p class="style-text-2"><i class="bi bi-receipt" style="font-size: 2rem;"></i> <br> Orders</p>
-            </a>
-            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:wishlist' %}">
-                <p class="style-text-2"><i class="bi bi-bag" style="font-size: 2rem;"></i> <br> Wishlist</p>
+                <p class="style-text-2"><i class="bi bi-receipt" style="font-size: 1.7rem;"></i> <br> Orders</p>
             </a>
             <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:profile' %}">
-                <p class="style-text-2"><i class="bi bi-person-circle" style="font-size: 2rem;"></i> <br> Account</p>
+                <p class="style-text-2"><i class="bi bi-person-circle" style="font-size: 1.7rem;"></i> <br> Account</p>
             </a>
         </div>
     </div>
