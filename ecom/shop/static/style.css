@@ -12,6 +12,10 @@ body {
     background: #f7f7f7;
 }
 
+.this-active {
+    background: linear-gradient(to bottom, #0d6efd 50%, rgba(0, 0, 0, 0.2));
+}
+
 .sellDiv {
     position: fixed;
     bottom: 1.4rem;

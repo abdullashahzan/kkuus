@@ -54,7 +54,7 @@
                 title="E-commerce application for students of King Khalid University">KKU <span class="style-text-4"
                     style="font-size: 1.6rem;">unofficial store</span>
             </a>
-            <div class="d-block d-lg-none mt-2 style-text">
+            <div class="d-block d-lg-none mt-1 style-text">
                 {% if user.is_authenticated %}
                 <a href="{% url 'shop:logout_user' %}" class="text-light text-decoration-none">
                     <i class="bi bi-door-open lead"></i> <span class="align-middle">Logout</span>
@@ -150,12 +150,12 @@
 
 
     <div class="d-lg-none navbar navbar-expand-lg bg-primary fixed-bottom container-fluid py-0 
-        border border-primary rounded-top d-block animate__animated" id="hiddenDiv">
-        <div class="row pt-2 mx-1">
-            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:homepage' %}">
+        border border-primary rounded-top d-block animate__animated px-2" id="hiddenDiv">
+        <div class="row pt-2">
+            <a class="col-3 text-center text-light text-decoration-none home-bar" href="{% url 'shop:homepage' %}">
                 <p class="style-text-2"><i class="bi bi-house-fill" style="font-size: 1.7rem;"></i> <br> Home</p>
             </a>
-            <a class="col-3 text-center text-light text-decoration-none shop_panel" href="{% url 'shop:my_shop' %}">
+            <a class="col-3 text-center text-light text-decoration-none shop_panel myshop-bar" href="{% url 'shop:my_shop' %}">
                 <p class="style-text-2"><i class="bi bi-shop" style="font-size: 1.7rem;"></i> <br> 
                     My shop
                     {% if new_orders %}
@@ -163,10 +163,10 @@
                     {% endif %}
                 </p>
             </a>
-            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:myOrders' %}">
+            <a class="col-3 text-center text-light text-decoration-none orders-bar" href="{% url 'shop:myOrders' %}">
                 <p class="style-text-2"><i class="bi bi-receipt" style="font-size: 1.7rem;"></i> <br> Orders</p>
             </a>
-            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:profile' %}">
+            <a class="col-3 text-center text-light text-decoration-none account-bar" href="{% url 'shop:profile' %}">
                 <p class="style-text-2"><i class="bi bi-person-circle" style="font-size: 1.7rem;"></i> <br> Account</p>
             </a>
         </div>
