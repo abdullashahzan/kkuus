@@ -10,8 +10,6 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from .models import *
 import uuid, json
-def index(request):
-    return render(request , 'index.html')
 from firebase_admin import storage, messaging
 from .scripts import *
 from django.db.models import Avg
