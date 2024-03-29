@@ -91,7 +91,7 @@ def send_notification(device_token, title, body):
     data={
         'title': title,
         'body': body,
-        'icon': 'unstore.pythonanywhere.com/static/media/logo/logo-color.png'
+        'icon': 'https://unstore.pythonanywhere.com/static/media/logo/png/logo-color.png'
         },
         token=device_token,
     )
