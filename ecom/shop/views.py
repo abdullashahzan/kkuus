@@ -87,18 +87,11 @@ def logout_user(request):
     return redirect('shop:login_user')
 
 def send_notification(device_token, title, body):
-    """
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title=title,
-            body=body,
-        ),
-        token=device_token,
-    )"""
     message = messaging.Message(
     data={
         'title': title,
         'body': body,
+        'icon': 'unstore.pythonanywhere.com/static/media/logo/logo-color.png'
         },
         token=device_token,
     )
