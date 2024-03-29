@@ -105,7 +105,8 @@ def send_notification(device_token, title, body, link=None):
             'icon': 'https://unstore.pythonanywhere.com/static/media/logo/png/logo-color.png'
         },
         'data': {
-            'link': link if link else '',
+            #'link': link if link else '',
+            'link': 'https://unstore.pythonanywhere.com/static/media/logo/png/logo-color.png',
         },
     }
     response = messaging.send(payload)

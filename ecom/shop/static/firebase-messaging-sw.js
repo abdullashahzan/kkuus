@@ -14,18 +14,18 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 self.addEventListener('notificationclick', function(event) {
-    const link = event.notification.data.link;
+    const link = event.data.link;
     if (link) {
         event.waitUntil(clients.openWindow(link));
     }
-    event.notification.close();
+    event.close();
 });
 
 messaging.onBackgroundMessage((payload) => {
-    const notificationTitle = payload.data.title;
+    const notificationTitle = payload.notification.title;
     const notificationOptions = {
-        body: payload.data.body,
-        icon: payload.data.icon,
+        body: payload.notification.body,
+        icon: payload.notification.icon,
     };
     self.registration.showNotification(notificationTitle, notificationOptions);
 });
