@@ -16,6 +16,7 @@ from django.db.models import Avg
 from django.conf import settings
 import requests
 from ecom.settings import version, PAYPAL_RECIEVER_EMAIL
+from paypal.standard.forms import PayPalPaymentsForm
 
 def login_user(request):
     message = ""
@@ -176,6 +177,39 @@ def wishlist(request):
         user_wishlist_list.append(i.id)
     return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders})
 
+def CheckOut(request, item):
+    if item == "2 weeks":
+        host = request.get_host()
+        paypal_checkout = {
+            'business': PAYPAL_RECIEVER_EMAIL,
+            'amount': 1,
+            'item_name': "Put up ad for 2 weeks",
+            'invoice': uuid.uuid4(),
+            'currency_code': 'SAR',
+            'notify_url': f"http://{host}{reverse('paypal-ipn')}",
+            'return_url': f"http://{host}{reverse('shop:index')}",
+            'cancel_url': f"http://{host}{reverse('shop:index')}",
+        }
+        paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+        context = {
+            'paypal': paypal_payment
+        }
+        return render(request, 'checkout.html', context)
+
+@login_required(login_url="shop:login_user")
+def list_item(username, product_name, product_description, price, uploaded_file, plan):
+    unique_filename = str(uuid.uuid4())
+    firebase_path = f'product_images/{unique_filename}/'
+    firebase_bucket = storage.bucket()
+    blob = firebase_bucket.blob(firebase_path)
+    blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
+    expiry_date = set_expiry(plan)
+    UserListings(username=username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False).save()
+    notification_title = f"{product_name} was listed successfully in marketplace!"
+    notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+    UserNotification(username=username, title=notification_title, body=notification_body, task="show_shop").save()
+    return
+
 @login_required(login_url="shop:login_user")
 def new_listing(request):
     hasFCM = FCMToken.objects.filter(username=request.user.username)
@@ -194,17 +228,9 @@ def new_listing(request):
             except:
                 return render(request, "sell_product.html", {"message": "Please type a number inside price field"})
             if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
-                unique_filename = str(uuid.uuid4())
-                firebase_path = f'product_images/{unique_filename}/'
-                firebase_bucket = storage.bucket()
-                blob = firebase_bucket.blob(firebase_path)
-                blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
-                expiry_date = set_expiry(plan)
-                UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False).save()
-                notification_title = f"{product_name} was listed successfully in marketplace!"
-                notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-                UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
-                return redirect(reverse('shop:homepage'))
+                if int(plan) <= 3:
+                    list_item(request.user.username, product_name, product_description, float(price), uploaded_file, plan)
+                    return redirect(reverse('shop:homepage'))
             else:
                 return render(request, "sell_product.html", {"message": "Please fill all fields"})
         else:
@@ -619,30 +645,4 @@ def process_purchase(request):
     for token in tokens:
         send_notification(token.token, title, body)
     return JsonResponse({'message': 'Notification sent successfully'})
-
-from paypal.standard.forms import PayPalPaymentsForm
-
-def CheckOut(request):
-
-
-    host = request.get_host()
-
-    paypal_checkout = {
-        'business': PAYPAL_RECIEVER_EMAIL,
-        'amount': 0,
-        'item_name': "sneakers",
-        'invoice': uuid.uuid4(),
-        'currency_code': 'USD',
-        'notify_url': f"http://{host}{reverse('paypal-ipn')}",
-        'return_url': f"http://{host}{reverse('shop:index')}",
-        'cancel_url': f"http://{host}{reverse('shop:index')}",
-    }
-
-    paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-
-    context = {
-        'paypal': paypal_payment
-    }
-    return render(request, 'checkout.html', context)
-
 

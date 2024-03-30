@@ -76,3 +76,4 @@ class FCMToken(models.Model):
     def __str__(self):
         return f"{self.username} has a registered token"
 
+
