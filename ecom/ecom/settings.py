@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -151,3 +152,7 @@ EMAIL_HOST_PASSWORD = 'xzpk eiih bsjl nnsp'
 
 TIME_ZONE = 'Asia/Riyadh'
 USE_TZ = True
+
+PAYPAL_RECIEVER_EMAIL = "abdullah.shahzan@gmail.com"
+PAYPAL_TEST = False
+

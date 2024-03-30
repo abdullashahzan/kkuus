@@ -26,20 +26,23 @@
                         <div class="row mb-2">
                             <div class="col-md-12">
                                 <label for="whatsapp" class="form-label">Whatsapp no.</label>
-                                <input type="text" class="form-control" name="whatsapp" placeholder="e.g. +966509338765">
+                                <input type="text" class="form-control" name="whatsapp"
+                                    placeholder="e.g. +966509338765">
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-12">
                                 <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" name="username" id="userInput" aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
+                                <input type="text" class="form-control" name="username" id="userInput"
+                                    aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
                                 <div id="checkUsernameAvailability" class="form-text"></div>
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-12">
                                 <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" name="email" placeholder="e.g. my_email@gmail.com">
+                                <input type="email" class="form-control" name="email"
+                                    placeholder="e.g. my_email@gmail.com">
                             </div>
                         </div>
                         <div class="row mb-2">
@@ -55,8 +58,10 @@
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <label for="address" class="form-label">Student housing address</label>
-                                <input type="address" class="form-control" name="address" placeholder="e.g. BR7, Building 5, Room no. 403" aria-describedby="address_help">
-                                <div id="address_help" class="form-text">Address format should be like this: <br> BUILDING
+                                <input type="address" class="form-control" name="address"
+                                    placeholder="e.g. BR7, Building 5, Room no. 403" aria-describedby="address_help">
+                                <div id="address_help" class="form-text">Address format should be like this: <br>
+                                    BUILDING
                                     CODE, BUILDING NUMBER, ROOM NUMBER</div>
                             </div>
                         </div>
@@ -64,7 +69,8 @@
                         <p class="style-text" style="color: red;">{{message}}</p>
                         {% endif %}
                         <button type="submit" class="btn btn-primary my-2">Register</button><br>
-                        <a href="{% url 'shop:login_user' %}" type="submit" class="btn btn-light btn-outline-primary">Already
+                        <a href="{% url 'shop:login_user' %}" type="submit"
+                            class="btn btn-light btn-outline-primary">Already
                             have an account</a>
                     </form>
                 </article>
@@ -93,45 +99,63 @@
                             <div class="row mb-2">
                                 <div class="col-md-12">
                                     <label for="whatsapp" class="form-label">Whatsapp no.</label>
-                                    <input type="text" class="form-control" name="whatsapp" placeholder="e.g. +966509338765">
+                                    <input type="text" class="form-control" name="whatsapp"
+                                        placeholder="e.g. +966509338765">
+                                    <div id="address_help" class="form-text">Make sure you write correct country code
+                                        with a "+" in
+                                        the begining. This number will be displayed to sellers or buyers to contact you.
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-md-12">
                                     <label for="username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" name="username" id="userInput" aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
+                                    <input type="text" class="form-control" name="username" id="userInput"
+                                        aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
                                     <div id="checkUsernameAvailability" class="form-text"></div>
                                 </div>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-md-12">
                                     <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" name="email">
+                                    <input type="email" class="form-control" name="email" aria-describedby="email_help">
+                                    <div id="address_help" class="form-text">Please make sure your email is active. We
+                                        use it
+                                        to send you details about your orders.
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-md-6">
                                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                                    <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                                    <input type="password" name="password" class="form-control"
+                                        id="exampleInputPassword1">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="exampleInputPassword2" class="form-label">Confirm password</label>
-                                    <input type="password" name="password2" class="form-control" id="exampleInputPassword2">
+                                    <input type="password" name="password2" class="form-control"
+                                        id="exampleInputPassword2">
                                 </div>
                             </div>
                             <div class="row mb-4">
                                 <div class="col-md-12">
                                     <label for="address" class="form-label">Student housing address</label>
-                                    <input type="address" class="form-control" name="address" placeholder="e.g. BR7, Building 5, Room no. 403" aria-describedby="address_help">
-                                    <div id="address_help" class="form-text">Address format should be like this: <br> BUILDING
-                                        CODE, BUILDING NUMBER, ROOM NUMBER</div>
+                                    <input type="address" class="form-control" name="address"
+                                        placeholder="e.g. BR7, Room no. 403"
+                                        aria-describedby="address_help">
+                                    <div id="address_help" class="form-text">Address format should be like this: <br>
+                                        BUILDING CODE, ROOM NUMBER. This service is only available for male students of King
+                                        Khalid University living in
+                                        student housing.
+                                    </div>
                                 </div>
                             </div>
                             {% if message %}
                             <p class="style-text" style="color: red;">{{message}}</p>
                             {% endif %}
                             <button type="submit" class="btn btn-primary my-2">Register</button><br>
-                            <a href="{% url 'shop:login_user' %}" type="submit" class="btn btn-light btn-outline-primary">Already
+                            <a href="{% url 'shop:login_user' %}" type="submit"
+                                class="btn btn-light btn-outline-primary">Already
                                 have an account</a>
                         </form>
                     </article>
@@ -145,7 +169,7 @@
     let timeoutId;
     let functionCalled = false;
 
-    function delayFunction(){
+    function delayFunction() {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
             if (!functionCalled) {
@@ -157,7 +181,7 @@
     }
 
     function checkUsername() {
-        
+
         var messageBox = document.getElementById('checkUsernameAvailability');
         var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         var userInput = document.getElementById('userInput');

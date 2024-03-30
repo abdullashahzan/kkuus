@@ -44,6 +44,8 @@ urlpatterns = [
     path('save-fcm-token/', views.save_fcm_token, name='save_fcm_token'),
     path('samplePurchase/', views.process_purchase, name='samplePurchase'),
 
+    path('checkout/', views.CheckOut, name='checkout'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()

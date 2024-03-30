@@ -8,6 +8,9 @@
 {% block body %}
 <div id="myModal" class="container-fluid slideInDown">
     <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-6 d-flex justify-content-center align-items-center my-4">
+            <img class="widthlock" src="{% static 'media/search.svg' %}" alt="image">
+        </div>
         <div class="col-md-6">
             <article>
                 <h1 class="style-text-3">Search for an item</h1>
@@ -23,9 +26,6 @@
                     <button class="btn btn-outline-danger" type="button" onclick="closeModal()">Cancel</button>
                 </form>
             </article>
-        </div>
-        <div class="col-md-6 d-flex justify-content-center align-items-center my-4">
-            <img class="widthlock" src="{% static 'media/search.svg' %}" alt="image">
         </div>
     </div>
 </div>

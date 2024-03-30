@@ -12,24 +12,24 @@
 {% block body %}
 <div id="myModal" class="container-fluid slideInDown">
     <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-6 d-flex justify-content-center align-items-center my-4">
+            <img class="widthlock" src="{% static 'media/search.svg' %}" alt="image">
+        </div>
         <div class="col-md-6">
             <article>
                 <h1 class="style-text-3">Search for an item</h1>
-                <p class="lead style-text">
+                <p class="lead style-text text-muted">
                     Type the name or description about the product
                 </p>
                 <form action="{% url 'shop:search_item' %}" method="post" class="style-text">
                     {% csrf_token %}
-                    <input type="text" class="form-control mb-3 shadow" placeholder="Search for an item" name="search">
+                    <input type="text" class="form-control mb-3 shadow" placeholder="Type here.." name="search">
                     <button type="submit" class="btn btn-outline-primary"
                         onclick="this.disabled=true; this.value='Searching...'; this.form.submit();">
                         Search product</button>
                     <button class="btn btn-outline-danger" type="button" onclick="closeModal()">Cancel</button>
                 </form>
             </article>
-        </div>
-        <div class="col-md-6 d-flex justify-content-center align-items-center my-4">
-            <img class="widthlock" src="{% static 'media/search.svg' %}" alt="image">
         </div>
     </div>
 </div>
@@ -40,7 +40,8 @@
         <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
             <div class="shadow fadeInUp card my-1 d-flex align-items-center">
                 {% if item.num_orders != 0 %}
-                <div class="card-header style-text text-primary" style="width: 100%;">Bought by {{item.num_orders}} user(s)</div>
+                <div class="card-header style-text text-primary" style="width: 100%;">Bought by {{item.num_orders}}
+                    user(s)</div>
                 {% endif %}
                 <img class="heightlock p-2" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
                     alt="{{item.product_name}}">
@@ -70,7 +71,8 @@
                     {% endif %}
                     {% endif %}
                 </div>
-                <div class="card-footer style-text-2 text-light bg-primary d-none d-lg-block" style="width: 100%;">Posted on
+                <div class="card-footer style-text-2 text-light bg-primary d-none d-lg-block" style="width: 100%;">
+                    Posted on
                     {{item.timestamp}}</div>
             </div>
         </div>
@@ -84,7 +86,8 @@
                 <img class="widthlock" src="{% static 'media/undraw_empty_re_opql.svg' %}" alt="empty">
             </div>
         </div>
-        <div class="container d-flex d-lg-none justify-content-center align-items-center mt-2" style="min-height: 50vh;">
+        <div class="container d-flex d-lg-none justify-content-center align-items-center mt-2"
+            style="min-height: 50vh;">
             <div class="col-12 col-md-5">
                 <div class="card shadow">
                     <img class="widthlock" src="{% static 'media/undraw_empty_re_opql.svg' %}" alt="empty">

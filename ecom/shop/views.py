@@ -15,7 +15,7 @@ from .scripts import *
 from django.db.models import Avg
 from django.conf import settings
 import requests
-from ecom.settings import version
+from ecom.settings import version, PAYPAL_RECIEVER_EMAIL
 
 def login_user(request):
     message = ""
@@ -619,5 +619,30 @@ def process_purchase(request):
     for token in tokens:
         send_notification(token.token, title, body)
     return JsonResponse({'message': 'Notification sent successfully'})
+
+from paypal.standard.forms import PayPalPaymentsForm
+
+def CheckOut(request):
+
+
+    host = request.get_host()
+
+    paypal_checkout = {
+        'business': PAYPAL_RECIEVER_EMAIL,
+        'amount': 0,
+        'item_name': "sneakers",
+        'invoice': uuid.uuid4(),
+        'currency_code': 'USD',
+        'notify_url': f"http://{host}{reverse('paypal-ipn')}",
+        'return_url': f"http://{host}{reverse('shop:index')}",
+        'cancel_url': f"http://{host}{reverse('shop:index')}",
+    }
+
+    paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+
+    context = {
+        'paypal': paypal_payment
+    }
+    return render(request, 'checkout.html', context)
 
 
