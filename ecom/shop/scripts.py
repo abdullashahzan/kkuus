@@ -54,6 +54,12 @@ def check_data():
         obj.is_expired = True
         obj.save()
 
+def delete_unpaid(username):
+    unpaid_items = UserListings.objects.filter(username=username, payment_done=False)
+    for item in unpaid_items:
+        delete_image(item.firebase_path)
+        item.delete()
+
 def set_expiry(days):
     current_datetime = datetime.now()
     expiry_date = current_datetime + timedelta(days=int(days))

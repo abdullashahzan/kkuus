@@ -20,6 +20,9 @@ urlpatterns = [
     path('addToWishlist/<str:item_id>', views.add_to_wishlist, name="addToWishlist"),
     path('removeFromWishlist/<str:item_id>', views.remove_from_wishlist, name="removeFromWishlist"),
     path('createNewListing/', views.new_listing, name='new_listing'),
+
+    path('createNewPaidListing/<str:invoice>/<str:plan>', views.paid_sale_successful, name='new_paid_listing'),
+    
     path('deleteListing/<str:listing_id>', views.delete_listing, name='delete_listing'),
     path('myShop/', views.my_shop, name='my_shop'),
     path('buy/<str:item_id>', views.buy, name='buy'),
@@ -43,8 +46,6 @@ urlpatterns = [
     path('enableNotifications/', views.enableNotifications, name='enableNotifications'),
     path('save-fcm-token/', views.save_fcm_token, name='save_fcm_token'),
     path('samplePurchase/', views.process_purchase, name='samplePurchase'),
-
-    path('checkout/', views.CheckOut, name='checkout'),
 
 ]
 

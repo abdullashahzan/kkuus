@@ -13,7 +13,7 @@ class UserProfile(models.Model):
 
 class UserListings(models.Model):
     username = models.CharField(max_length=128)
-    product_name = models.CharField(max_length=200)
+    product_name = models.CharField(max_length=200, unique=True)
     product_description = models.CharField(max_length=500)
     product_price = models.FloatField()
     firebase_path = models.CharField(max_length=150)
@@ -25,6 +25,7 @@ class UserListings(models.Model):
     ratings = models.FloatField(default=0, null=True)
     num_orders = models.IntegerField(default=0)
     new_orders = models.IntegerField(default=0)
+    payment_done = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.username} listed {self.product_name}"
@@ -75,5 +76,13 @@ class FCMToken(models.Model):
 
     def __str__(self):
         return f"{self.username} has a registered token"
+
+
+class Invoice(models.Model):
+    item = models.ForeignKey(UserListings, on_delete=models.CASCADE)
+    invoice = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"An invoice was made: {self.invoice}"
 
 
