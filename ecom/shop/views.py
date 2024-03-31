@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -178,22 +178,28 @@ def wishlist(request):
     return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders})
 
 def paid_sale_successful(request, invoice, plan):
-    validate_invoice = Invoice.objects.filter(invoice=invoice)
-    if validate_invoice.exists():
-        expiry_date = set_expiry(plan)
-        item_id = validate_invoice.first().item.id
-        item = UserListings.objects.get(id=item_id)
-        item.expiry = expiry_date
-        item.is_expired = False
-        item.payment_done = True
-        item.save()
-        notification_title = f"{item.product_name} was listed successfully in marketplace!"
-        notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-        UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
-        validate_invoice.first().delete()
-        return redirect(reverse('shop:index'))
+    if 'HTTP_REFERER' in request.META:
+        referring_url = request.META['HTTP_REFERER']
+        print(referring_url)
+        validate_invoice = Invoice.objects.filter(id=invoice)
+        if validate_invoice.exists():
+            expiry_date = set_expiry(plan)
+            item_id = validate_invoice.first().item.id
+            item = UserListings.objects.get(id=item_id)
+            item.expiry = expiry_date
+            item.is_expired = False
+            item.payment_done = True
+            item.save()
+            notification_title = f"{item.product_name} was listed successfully in marketplace!"
+            notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+            UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
+            validate_invoice.first().delete()
+            return redirect(reverse('shop:index'))
+        else:
+            return JsonResponse({"Error": "Invalid method of payment."})
     else:
-        return JsonResponse({"Error": "Invalid method of payment."})
+        return HttpResponseBadRequest("Direct access to this page is not allowed")
+    
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
@@ -239,7 +245,8 @@ def new_listing(request):
                     item.save()
                     host = request.get_host()
                     created_uuid = uuid.uuid4()
-                    Invoice(item=item, invoice=created_uuid).save()
+                    invoice = Invoice(item=item, invoice=created_uuid)
+                    invoice.save()
                     paypal_checkout = {
                         'business': PAYPAL_RECIEVER_EMAIL,
                         'amount': 2.00,
@@ -247,7 +254,7 @@ def new_listing(request):
                         'invoice': created_uuid,
                         'currency_code': 'USD',
                         'notify_url': f"https://{host}{reverse('paypal-ipn')}",
-                        'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':created_uuid, 'plan':14})}",
+                        'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':invoice.id, 'plan':14})}",
                         'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
                     }
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
@@ -262,20 +269,21 @@ def new_listing(request):
                     item.save()
                     host = request.get_host()
                     created_uuid = uuid.uuid4()
-                    Invoice(item=item, invoice=created_uuid).save()
+                    invoice = Invoice(item=item, invoice=created_uuid)
+                    invoice.save()
                     paypal_checkout = {
                         'business': PAYPAL_RECIEVER_EMAIL,
-                        'amount': 11.26,
+                        'amount': 3,
                         'item_name': "AD DURATION: 28 DAYS",
                         'invoice': created_uuid,
                         'currency_code': 'USD',
                         'notify_url': f"https://{host}{reverse('paypal-ipn')}",
-                        'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':created_uuid, 'plan':28})}",
+                        'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice': invoice.id, 'plan':28})}",
                         'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
                     }
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
                     context = {
-                        'price': 3.00,
+                        'price': 11.26,
                         'paypal': paypal_payment
                     }
                     return render(request, 'checkout.html', context)
@@ -516,6 +524,7 @@ def acceptOrder(request, item_id, username):
 def rejectOrder(request, item_id, username):
     item = UserListings.objects.get(id=item_id)
     item.new_orders -= 1
+    item.save()
     order = UserOrder.objects.filter(username=username, item=item).first()
     notification_title = f"Your order for {item.product_name} was rejected"
     notification_body = f"{item.username} has rejected your order maybe because your address was not correct or the product is out of stock."
