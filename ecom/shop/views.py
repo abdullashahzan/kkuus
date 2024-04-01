@@ -255,8 +255,10 @@ def new_listing(request):
                         'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
                     }
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-                    paypal_fee = format(7.51/1.5, '.2f')
-                    web_fee = format(7.51 - paypal_fee, '.2f')
+                    paypal_fee = 7.51/1.5
+                    paypal_fee = format(paypal_fee, '.2f')
+                    web_fee = 7.51 - paypal_fee
+                    web_fee = format(web_fee, '.2f')
                     context = {
                         'price': 7.51,
                         'paypal_fee': paypal_fee,
