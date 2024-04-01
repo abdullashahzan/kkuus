@@ -13,7 +13,7 @@ class UserProfile(models.Model):
 
 class UserListings(models.Model):
     username = models.CharField(max_length=128)
-    product_name = models.CharField(max_length=200, unique=True)
+    product_name = models.CharField(max_length=200)
     product_description = models.CharField(max_length=500)
     product_price = models.FloatField()
     firebase_path = models.CharField(max_length=150)
