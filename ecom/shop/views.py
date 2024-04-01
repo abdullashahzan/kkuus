@@ -222,7 +222,7 @@ def new_listing(request):
                 firebase_bucket = storage.bucket()
                 blob = firebase_bucket.blob(firebase_path)
                 blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
-                if request.user.username == "shahza":
+                if request.user.username == "shahzan":
                     expiry_date = set_expiry(plan)
                     UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
                     notification_title = f"{product_name} was listed successfully in marketplace!"
