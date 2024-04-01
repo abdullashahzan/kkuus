@@ -27,6 +27,16 @@
                 <div class="card-body">
                     <article>
                         <h1 class="style-text-3 my-3">Please pay SAR {{price}}</h1>
+                        {% with paypal_fee=price/1.5 %}
+                        {% with web_fee = price - (price/1.5) %}
+                        <p class="style-text-2 mb-3">
+                            <span style="font-size: 1.5rem;">Order details</span><br>
+                            <strong>Paypal Fee:</strong> {{paypal_fee}} (SAR) <br>
+                            <strong>Website Fee:</strong> {{web_fee}} (SAR) <br>
+                            <strong>Total:</strong> {{price}}
+                        </p>
+                        {% endwith %}
+                        {% endwith %}
                         <hr>
                         <p class="text-muted style-text">You will be redirected to paypal's secure payment gateway for the
                             transaction.

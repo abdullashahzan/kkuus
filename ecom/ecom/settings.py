@@ -151,5 +151,5 @@ TIME_ZONE = 'Asia/Riyadh'
 USE_TZ = True
 
 PAYPAL_RECIEVER_EMAIL = "abdullah.shahzan@gmail.com"
-PAYPAL_TEST = True
+PAYPAL_TEST = False
 

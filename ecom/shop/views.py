@@ -179,8 +179,6 @@ def wishlist(request):
 
 def paid_sale_successful(request, invoice, plan):
     if 'HTTP_REFERER' in request.META:
-        referring_url = request.META['HTTP_REFERER']
-        print(referring_url)
         validate_invoice = Invoice.objects.filter(id=invoice)
         if validate_invoice.exists():
             expiry_date = set_expiry(plan)
@@ -198,8 +196,7 @@ def paid_sale_successful(request, invoice, plan):
         else:
             return JsonResponse({"Error": "Invalid method of payment."})
     else:
-        return HttpResponseBadRequest("Direct access to this page is not allowed")
-    
+        return HttpResponseBadRequest("You naughty naughty :)")
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
@@ -225,7 +222,7 @@ def new_listing(request):
                 firebase_bucket = storage.bucket()
                 blob = firebase_bucket.blob(firebase_path)
                 blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
-                if request.user.username == "shahzan":
+                if request.user.username == "shahza":
                     expiry_date = set_expiry(plan)
                     UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
                     notification_title = f"{product_name} was listed successfully in marketplace!"
