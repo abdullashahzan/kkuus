@@ -255,8 +255,12 @@ def new_listing(request):
                         'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
                     }
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+                    paypal_fee = 7.51/1.5
+                    web_fee = 7.51 - paypal_fee
                     context = {
                         'price': 7.51,
+                        'paypal_fee': paypal_fee,
+                        'web_fee': web_fee,
                         'paypal': paypal_payment
                     }
                     return render(request, 'checkout.html', context)
@@ -279,8 +283,12 @@ def new_listing(request):
                         'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
                     }
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+                    paypal_fee = 11.26/1.5
+                    web_fee = 11.26 - paypal_fee
                     context = {
                         'price': 11.26,
+                        'paypal_fee': paypal_fee,
+                        'web_fee': web_fee,
                         'paypal': paypal_payment
                     }
                     return render(request, 'checkout.html', context)
