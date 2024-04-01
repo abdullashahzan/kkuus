@@ -7,6 +7,8 @@ function openModalParameter(item_id) {
         top: 0,
         behavior: 'smooth'
     });
+    let cards = document.querySelector('.card')
+    cards.style.filter = "blur(2px)";
 }
 
 function openModal() {
@@ -15,10 +17,14 @@ function openModal() {
         top: 0,
         behavior: 'smooth'
     });
+    let cards = document.querySelector('.card')
+    cards.style.filter = "blur(2px)";
 }
 
 function closeModal() {
     document.getElementById('myModal').style.display = 'none';
+    let cards = document.querySelector('.card')
+    cards.style.filter = "blur(0)";
 }
 
 let lastScrollTop = 0;
@@ -67,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
 window.addEventListener('scroll', revealCards);
 
 function revealCards() {
-    const cards = document.querySelectorAll('.card');
+    const cards = document.querySelectorAll('.item-card');
     
     cards.forEach(card => {
         const cardTop = card.getBoundingClientRect().top;
