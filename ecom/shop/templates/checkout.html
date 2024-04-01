@@ -10,6 +10,13 @@
     <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 90vh;">
         <div class="col-md-7 animate__animated animate__bounceIn">
             <h1 class="style-text-3">Please pay SAR {{price}}</h1>
+            <p class="style-text-2 mb-3">
+                <span style="font-size: 1.5rem;">Order details</span><br>
+                <strong>Paypal Fee:</strong> {{paypal_fee}} (SAR) <br>
+                <strong>Website Fee:</strong> {{web_fee}} (SAR) <br>
+                <strong>Total:</strong> {{price}}
+            </p>
+            <hr>
             <p class="text-muted style-text">You will be redirected to paypal's secure payment gateway for the
                 transaction.
             </p>
