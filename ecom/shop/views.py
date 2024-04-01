@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from .models import *
-import uuid, json
+import uuid, json, os
 from firebase_admin import storage, messaging
 from .scripts import *
 from django.db.models import Avg
@@ -18,6 +18,10 @@ from django.conf import settings
 import requests
 from ecom.settings import version, PAYPAL_RECIEVER_EMAIL
 from paypal.standard.forms import PayPalPaymentsForm
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from io import BytesIO
+import mimetypes
 
 def login_user(request):
     message = ""
@@ -217,18 +221,41 @@ def new_listing(request):
             plan = request.POST['flexRadioDefault']
             try:
                 uploaded_file = request.FILES['product_images']
+                if uploaded_file:
+                    allowed_types = ['image/jpeg', 'image/png']
+                    if uploaded_file.content_type not in allowed_types:
+                        return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
+                crop_x = float(request.POST.get('crop_x'))
+                crop_y = float(request.POST.get('crop_y'))
+                crop_width = float(request.POST.get('crop_width'))
+                crop_height = float(request.POST.get('crop_height'))
+                image = Image.open(uploaded_file)
+                cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
+                cropped_image_buffer = BytesIO()
+                cropped_image.save(cropped_image_buffer, format='JPEG')
+                cropped_image_buffer.seek(0)
+                unique_filename = str(uuid.uuid4())
+                _, extension = os.path.splitext(uploaded_file.name)
+                filename_with_extension = f"{unique_filename}{extension}"
+                cropped_uploaded_file = InMemoryUploadedFile(
+                    cropped_image_buffer,
+                    None,
+                    filename_with_extension,
+                    mimetypes.guess_type(filename_with_extension)[0],
+                    cropped_image_buffer.tell(),
+                    None
+                )
             except:
                 return render(request, "sell_product.html", {"message": "Please upload the photo of your product"})
             try:
                 float(price)
             except:
-                return render(request, "sell_product.html", {"message": "Please type a number inside price field"})
+                return render(request, "sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
             if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
-                unique_filename = str(uuid.uuid4())
                 firebase_path = f'product_images/{unique_filename}/'
                 firebase_bucket = storage.bucket()
                 blob = firebase_bucket.blob(firebase_path)
-                blob.upload_from_file(uploaded_file, content_type = uploaded_file.content_type)
+                blob.upload_from_file(cropped_uploaded_file, content_type = cropped_uploaded_file.content_type)
                 if request.user.username == "shahzan":
                     expiry_date = set_expiry(plan)
                     UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()

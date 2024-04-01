@@ -7,6 +7,14 @@
 
 {% block body %}
 
+<div id="imagePreviewModal" class="modal">
+    <div class="modal-content" style="height: auto; width: auto; max-width: 90%;">
+        <span class="close" style="cursor: pointer;"><i class="bi bi-x-circle-fill text-danger lead mx-2"></i></span>
+        <img id="preview" src="" alt="Preview" style="width: 100vh; height: auto; max-height: 70vh;">
+        <button type="button" id="cropButton" class="btn btn-primary">Crop Image</button>
+    </div>
+</div>
+
 <div class="container">
     <div class="row" style="min-height: 80vh;">
         <div class="col-md-6 d-flex justify-content-center align-items-center slideInLeft">
@@ -17,8 +25,8 @@
             <article>
                 <h1 class="style-heading mb-4">Create your new listing</h1>
                 {% if message %}
-                    <p class="style-text" style="color: red;">{{message}}</p>
-                    {% endif %}
+                <p class="style-text" style="color: red;">{{message}}</p>
+                {% endif %}
                 <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row mb-3">
@@ -49,32 +57,43 @@
                             <input type="file" name="product_images" class="custom-file-input" id="imageUpload"
                                 accept="image/*">
                             <span class="text-primary" id="selectedFiles">No file chosen</span>
+                            <!-- Add hidden input fields for cropping data -->
+                            <input type="hidden" id="x" name="crop_x">
+                            <input type="hidden" id="y" name="crop_y">
+                            <input type="hidden" id="width" name="crop_width">
+                            <input type="hidden" id="height" name="crop_height">
                         </div>
                     </div>
+                    <!-- Add an <img> element with id "preview" where the cropped image will be displayed -->
+                    <img id="preview" src="" alt="Preview" style="max-width: 100%; height: auto; display: none;">
                     <div class="row mb-4 mt-4 style-text">
                         <div class="style-text"><strong>Select your plan:</strong></div>
                         <div class="form-check col-4 m-2">
-                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault" value="4" checked>
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="4" checked>
                             <label class="form-check-label" for="flexRadioDefault">
                                 Post for 4 days <br> (FREE)
                             </label>
                         </div>
                         <div class="form-check col-4 m-2">
-                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault" value="14">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="14">
                             <label class="form-check-label" for="flexRadioDefault">
                                 Post for 14 days <br> (2 USD ~ 7.51 SAR)
                             </label>
                         </div>
                         <div class="form-check col-4 m-2">
-                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault" value="28">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="28">
                             <label class="form-check-label" for="flexRadioDefault">
                                 Post for 28 days <br> (3 USD ~ 11.26 SAR)
                             </label>
                         </div>
-                        <p class="text-muted">Posting for more than 1 month is not available now due to low server storage, but soon will be made available for everyone.</p>
+                        <p class="text-muted">Posting for more than 1 month is not available now due to low server
+                            storage, but soon will be made available for everyone.</p>
                     </div>
-                    <button type="submit" class="btn btn-primary mb-3"><i
-                            class="bi bi-cash-stack lead mx-1"></i> <span class="style-text lead mx-2">Put up for
+                    <button type="submit" class="btn btn-primary mb-3"><i class="bi bi-cash-stack lead mx-1"></i> <span
+                            class="style-text lead mx-2">Put up for
                             sale</span></button>
                 </form>
             </article>
@@ -105,6 +124,68 @@
             charCount.textContent = this.value.length;
         });
     });
+    // Add event listener to input file element
+    document.getElementById('imageUpload').addEventListener('change', function (event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function () {
+            var dataURL = reader.result;
+            var preview = document.getElementById('preview');
+            var modal = document.getElementById('imagePreviewModal');
+            // Set the src attribute of the preview image element
+            preview.src = dataURL;
+            // Show the modal
+            modal.style.display = 'flex';
+            // Destroy previous Cropper instance if exists
+            if (window.cropper) {
+                window.cropper.destroy();
+            }
+            // Initialize Cropper on the preview image
+            initCropper(preview);
+        };
+        // Read the selected file as a Data URL
+        reader.readAsDataURL(input.files[0]);
+    });
+
+    // Function to initialize Cropper
+    function initCropper(imageElement) {
+        window.cropper = new Cropper(imageElement, {
+            aspectRatio: 4 / 3, // Set desired aspect ratio
+            viewMode: 1,    // Set cropping mode
+            crop: function (event) {
+                // Update hidden input fields with cropping data
+                document.getElementById('x').value = event.detail.x;
+                document.getElementById('y').value = event.detail.y;
+                document.getElementById('width').value = event.detail.width;
+                document.getElementById('height').value = event.detail.height;
+            }
+        });
+
+        // Listen for crop button click
+        document.getElementById('cropButton').addEventListener('click', function () {
+            // Get the canvas element where Cropper has drawn the cropped image
+            var canvas = window.cropper.getCroppedCanvas();
+            // Convert the canvas to a data URL representing the cropped image
+            var croppedDataURL = canvas.toDataURL();
+            // Close the modal
+            document.getElementById('imagePreviewModal').style.display = 'none';
+            // You can use croppedDataURL to display the cropped image or send it to the server
+            // For now, I'm just logging it to the console
+            console.log(croppedDataURL);
+        });
+    }
+
+    // Get the modal
+    var modal = document.getElementById('imagePreviewModal');
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
 </script>
 
 {% endblock %}

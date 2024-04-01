@@ -29,12 +29,15 @@ body {
 .mynavbar {
     overflow-x: auto;
     white-space: nowrap;
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
-    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+    scrollbar-width: none;
+    /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;
+    /* Hide scrollbar for IE/Edge */
 }
 
 .mynavbar::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Webkit browsers (Chrome, Safari, Opera) */
+    display: none;
+    /* Hide scrollbar for Webkit browsers (Chrome, Safari, Opera) */
 }
 
 .nav-content {
@@ -54,19 +57,6 @@ body {
     width: 100%;
 }
 
-.item-card {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.hidden {
-    opacity: 0;
-}
-
-.visible {
-    opacity: 1;
-}
-
 .container {
     min-height: 100vh;
 }
@@ -77,8 +67,8 @@ body {
 }
 
 .heightlock {
-    height: 30vh;
-    max-width: 19rem;
+    min-height: 30vh;
+    width: 100%;
 }
 
 .widthlock {
@@ -170,6 +160,13 @@ nav.custom_nav {
     z-index: 10;
 }
 
+#imagePreviewModal {
+    display: none; 
+    justify-content: center; 
+    align-items: center; 
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
 .vertical-line {
     border-left: 2px solid #ccc;
     height: 100%;
@@ -223,11 +220,12 @@ textarea {
         opacity: 0;
         transform: translateY(2rem);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0px);
     }
-    
+
 }
 
 .slideInUp {
@@ -238,6 +236,7 @@ textarea {
     from {
         transform: translateY(7rem);
     }
+
     to {
         transform: translateY(0px);
     }
@@ -251,6 +250,7 @@ textarea {
     from {
         transform: translateY(-1rem);
     }
+
     to {
         transform: translateY(0px);
     }
@@ -264,6 +264,7 @@ textarea {
     from {
         transform: translateX(-20px);
     }
+
     to {
         transform: translateX(0px);
     }
@@ -277,6 +278,7 @@ textarea {
     from {
         transform: translateX(20px);
     }
+
     to {
         transform: translateX(0px);
     }
@@ -290,6 +292,7 @@ textarea {
     from {
         transform: translateY(0px);
     }
+
     to {
         transform: translateY(7rem);
     }

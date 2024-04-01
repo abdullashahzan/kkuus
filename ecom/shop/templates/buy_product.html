@@ -12,7 +12,7 @@
             <article>
                 <h1 class="style-text-3">Confirm purchase?</h1>
                 <p class="lead style-text">
-                    You are almost there! By clicking confirm purchase, seller will be notified about your purchase.
+                    You are almost there! By clicking confirm purchase, seller will be notified about your purchase. For now there is no online payment option, therefore all payments will be cash on delivery.
                 </p>
                 <p class="style-text"><strong>Do not forget to show him your buyer code!</strong></p>
                 <p class="style-text"><strong>Note:</strong> You can get details of your order from <a
@@ -20,7 +20,7 @@
                 <form action="{% url 'shop:purchase' item.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-primary"
-                        onclick="this.disabled=true; this.value='Submitting...'; this.form.submit();">Yes, go
+                        onclick="this.disabled=true; this.value='Gotcha 1 sec!'; this.form.submit();">Yes, go
                         ahead!</button>
                 </form>
                 <button class="btn btn-outline-danger mt-2" onclick="closeModal()">No, take me back</button>
@@ -86,7 +86,7 @@
                     <textarea class="form-control" name="comment" id="comment" rows="4"
                         placeholder="Write your opinion about the product..." style="resize: none;"></textarea>
                     <p class="style-text-2 text-primary"><span id="charCount">0</span> / 200</p>
-                    <label class="style-text mt-3" for="rating">How much do you rate the product? (Out of 5)</label>
+                    <label class="style-text mt-3" for="rating">How much do you rate this product? (Out of 5)</label>
                     <div class="rating my-2 style-text">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions" id="inlineRadio1"
