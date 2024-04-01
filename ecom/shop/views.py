@@ -201,7 +201,7 @@ def paid_sale_successful(request, invoice, plan):
 @login_required(login_url="shop:login_user")
 def new_listing(request):
     hasFCM = FCMToken.objects.filter(username=request.user.username)
-    if hasFCM.exists():
+    if not hasFCM.exists():
         delete_unpaid(request.user.username)
         if request.method == "POST":
             product_name = request.POST['product_name']
@@ -257,7 +257,7 @@ def new_listing(request):
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
                     paypal_fee = 7.51/1.5
                     paypal_fee = format(paypal_fee, '.2f')
-                    web_fee = 7.51 - paypal_fee
+                    web_fee = 7.51 - float(paypal_fee)
                     web_fee = format(web_fee, '.2f')
                     context = {
                         'price': 7.51,
@@ -285,9 +285,9 @@ def new_listing(request):
                         'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
                     }
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-                    paypal_fee = 7.51/1.5
+                    paypal_fee = 11.26/1.5
                     paypal_fee = format(paypal_fee, '.2f')
-                    web_fee = 7.51 - paypal_fee
+                    web_fee = 11.26 - float(paypal_fee)
                     web_fee = format(web_fee, '.2f')
                     context = {
                         'price': 11.26,
