@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.templatetags.static import static
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from .models import *
 import uuid, json
@@ -133,13 +134,19 @@ def homepage(request):
         cart.append(bought_item.item.id)
     for completed_item in completed_items:
         completed.append(completed_item.item.id)
+    paginator = Paginator(items, 20)
+    try:
+        page_number = request.GET['page']
+    except:
+        page_number = 1
+    page_obj = paginator.get_page(page_number)
     if request.user.is_authenticated:
         user_wishlist = get_user_wishlist(request.user.username)
         user_wishlist_list = []
         for i in user_wishlist:
             user_wishlist_list.append(i.id)
-        return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders})
-    return render(request, "index.html", {"items": items})
+        return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj})
+    return render(request, "index.html", {"items": items,'page_obj': page_obj})
 
 def notifications(request):
     ordered_items = UserListings.objects.filter(username=request.user.username)

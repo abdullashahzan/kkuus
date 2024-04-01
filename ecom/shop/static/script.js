@@ -64,3 +64,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+window.addEventListener('scroll', revealCards);
+
+function revealCards() {
+    const cards = document.querySelectorAll('.card');
+    
+    cards.forEach(card => {
+        const cardTop = card.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (cardTop < windowHeight * 0.9) {
+            card.classList.add('visible');
+        } else {
+            card.classList.remove('visible');
+        }
+    });
+}
+

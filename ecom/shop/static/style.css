@@ -54,6 +54,19 @@ body {
     width: 100%;
 }
 
+.card {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.hidden {
+    opacity: 0;
+}
+
+.visible {
+    opacity: 1;
+}
+
 .container {
     min-height: 100vh;
 }

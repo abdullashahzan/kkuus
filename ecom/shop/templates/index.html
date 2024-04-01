@@ -34,17 +34,18 @@
     </div>
 </div>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-<div class="container">
+<div class="container mb-4">
     <div class="row" data-masonry='{"percentPosition": true }'>
-        {% for item in items %}
+        {% for item in page_obj %}
         <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
-            <div class="shadow fadeInUp card my-1 d-flex align-items-center">
+            <div class="shadow fadeInUp card hidden my-1 d-flex align-items-center">
                 {% if item.num_orders != 0 %}
                 <div class="card-header style-text text-primary" style="width: 100%;">Bought by {{item.num_orders}}
                     user(s)</div>
                 {% endif %}
+                <div id="loader" class="loader"></div>
                 <img class="heightlock p-2" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
-                    alt="{{item.product_name}}">
+                    alt="{{item.product_name}}" id="image">
                 <div class="card-body mt-2" style="width: 100%;">
                     <h5 class="card-title text-primary" id="itemModal{{ item.id }}"><a
                             href="{% url 'shop:buy' item.id %}"
@@ -105,6 +106,25 @@
         </div>
         {% endfor %}
     </div>
+</div>
+
+<!-- Pagination links -->
+<div class="pagination d-flex justify-content-center align-items-center my-4 style-text">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a class="mx-1 btn btn-primary" title="First page" href="?page=1"><i class="bi bi-chevron-double-left"></i></a>
+            <a class="mx-1 btn btn-primary" title="Previous page" href="?page={{ page_obj.previous_page_number }}"><i class="bi bi-chevron-left"></i></a>
+        {% endif %}
+
+        <span class="current mx-3">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a class="mx-1 btn btn-primary" title="Next page" href="?page={{ page_obj.next_page_number }}"><i class="bi bi-chevron-right"></i></a>
+            <a class="mx-1 btn btn-primary" title="Last page" href="?page={{ page_obj.paginator.num_pages }}"><i class="bi bi-chevron-double-right"></i></a>
+        {% endif %}
+    </span>
 </div>
 
 <script>
