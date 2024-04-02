@@ -29,13 +29,13 @@
                 <p class="style-text" style="color: red;">{{message}}</p>
                 {% endif %}
                 <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data"
-                    class="style-text">
+                    class="style-text" id="myForm">
                     {% csrf_token %}
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <label for="product_name" class="form-label font-weight-bold">Name of your product:</label>
                             <input type="text" class="form-control style-text" name="product_name"
-                                placeholder="e.g. Chocolate">
+                                placeholder="e.g. Chocolate" id="product_name">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -51,7 +51,7 @@
                         <div class="col-md-12">
                             <label for="price" class="form-label font-weight-bold">Set a price for your product
                                 (SAR):</label>
-                            <input type="text" class="form-control style-text" name="price" placeholder="5.00">
+                            <input type="text" class="form-control style-text" name="price" id="price" placeholder="5.00">
                         </div>
                     </div>
                     <div class="row mb-3 mt-4 d-flex justify-content-center align-items-center">
@@ -68,10 +68,10 @@
                             <p class="text-primary my-2 mx-1" id="selectedFiles">No image chosen</p>
                             <p class="text-muted">Only JPEG and PNG image formats are supported</p>
                             <!-- Add hidden input fields for cropping data -->
-                            <input type="text" id="x" name="crop_x">
-                            <input type="text" id="y" name="crop_y">
-                            <input type="text" id="width" name="crop_width">
-                            <input type="text" id="height" name="crop_height">
+                            <input type="hidden" id="x" name="crop_x">
+                            <input type="hidden" id="y" name="crop_y">
+                            <input type="hidden" id="width" name="crop_width">
+                            <input type="hidden" id="height" name="crop_height">
                         </div>
                     </div>
                     <!-- Add an <img> element with id "preview" where the cropped image will be displayed -->
@@ -138,7 +138,7 @@
     // Function to initialize Cropper
     function initCropper(imageElement) {
         window.cropper = new Cropper(imageElement, {
-            aspectRatio: 4 / 3, // Set desired aspect ratio
+            aspectRatio: 1, // Set desired aspect ratio
             viewMode: 1,    // Set cropping mode
             crop: function (event) {
                 // Update hidden input fields with cropping data
@@ -213,6 +213,34 @@
     span.onclick = function () {
         modal.style.display = "none";
     }
+
+    // Function to save form data to localStorage
+    function saveFormData() {
+        const formData = {
+            name: document.getElementById('product_name').value,
+            email: document.getElementById('description').value,
+            message: document.getElementById('price').value
+        };
+
+        localStorage.setItem('formData', JSON.stringify(formData));
+    }
+
+    // Function to load form data from localStorage
+    function loadFormData() {
+        const savedData = localStorage.getItem('formData');
+        if (savedData) {
+            const formData = JSON.parse(savedData);
+            document.getElementById('product_name').value = formData.name;
+            document.getElementById('description').value = formData.email;
+            document.getElementById('price').value = formData.message;
+        }
+    }
+
+    // Listen for changes in the form fields and save data to localStorage
+    document.getElementById('myForm').addEventListener('change', saveFormData);
+
+    // Load form data from localStorage when the page loads
+    window.addEventListener('load', loadFormData);
 
 </script>
 

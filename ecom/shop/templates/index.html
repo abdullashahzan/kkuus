@@ -35,14 +35,19 @@
 </div>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="container mb-4">
-    <div class="row" data-masonry='{"percentPosition": true }'>
+    {% if new_orders %}
+    <div class="row bg-danger my-3 mx-1 animate__animated animate__flash">
+        <a href="{% url 'shop:my_shop' %}" class="style-text-2 text-light py-2 text-decoration-none lead">You have
+            {{new_orders}} new order!</a>
+    </div>
+    {% endif %}
+    <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
         {% for item in page_obj %}
         <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
-            <div class="shadow fadeInUp card mb-1 d-flex align-items-center">
+            <div class="shadow  card card-item hidden mb-1 d-flex align-items-center">
                 <div class="card-header style-text bg-primary text-light" style="width: 100%;">@{{item.username}}'s shop
                 </div>
-                <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock"
-                    alt="{{item.product_name}}">
+                <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock" alt="{{item.product_name}}">
                 <div class="card-body mt-2" style="width: 100%;">
                     <h4 class="text-primary" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
                             class="text-primary style-text-3">{{item.product_name}}</a></h4>
@@ -171,6 +176,30 @@
     });
     $('#searchButton').prop('disabled', false);
     $('.home-bar').addClass('this-active');
+
+    $(window).on('scroll', function () {
+        $('.card-item').each(function () {
+            var cardTop = $(this).offset().top;
+            var windowHeight = $(window).height();
+            var scrollTop = $(window).scrollTop();
+
+            // Check if the bottom of the card is above the viewport and the top of the card is below the viewport
+            var isAboveViewport = (cardTop + $(this).outerHeight()) < scrollTop;
+            var isBelowViewport = cardTop > (scrollTop + windowHeight);
+
+            // If the card is partially or fully visible in the viewport
+            if (!isAboveViewport && !isBelowViewport) {
+                $(this).removeClass('hidden');
+            } else {
+                $(this).addClass('hidden');
+            }
+        });
+    });
+
+    // Initially reveal the first 4 cards
+    $(document).ready(function () {
+        $('.card-item.hidden:lt(4)').removeClass('hidden');
+    });
 </script>
 
 {% endblock %}

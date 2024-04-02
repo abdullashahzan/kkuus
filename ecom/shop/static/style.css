@@ -113,6 +113,15 @@ body {
     -webkit-box-orient: vertical;
 }
 
+.card-item {
+    transition: transform 0.5s ease-in-out;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
 ul.horizontal-list li {
     display: inline-block;
     font-family: var(--family1);
@@ -165,9 +174,9 @@ nav.custom_nav {
 }
 
 #imagePreviewModal {
-    display: none; 
-    justify-content: center; 
-    align-items: center; 
+    display: none;
+    justify-content: center;
+    align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
 }
 
