@@ -214,7 +214,7 @@ def paid_sale_successful(request, invoice, plan):
 @login_required(login_url="shop:login_user")
 def new_listing(request):
     hasFCM = FCMToken.objects.filter(username=request.user.username)
-    if hasFCM.exists():
+    if not hasFCM.exists():
         delete_unpaid(request.user.username)
         if request.method == "POST":
             product_name = request.POST['product_name']
