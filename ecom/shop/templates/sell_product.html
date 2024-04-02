@@ -7,11 +7,11 @@
 
 {% block body %}
 
-<div id="imagePreviewModal" class="modal animate__animated animate__fadeIn">
+<div id="imagePreviewModal" class="modal animate__animated animate__bounceIn">
     <div class="modal-content" style="height: auto; width: auto; max-width: 90%;">
         <span class="close" style="cursor: pointer;"><i class="bi bi-x-circle-fill text-danger lead mx-2"></i></span>
         <img id="preview" src="" alt="Preview" style="width: 100vh; height: auto; max-height: 70vh;">
-        <button id="cropButton" class="btn btn-primary mt-2">Crop Image</button>
+        <button type="button" id="cropButton" class="btn btn-primary" onclick="this.disabled=true; this.value='Saving changes...';">Crop Image</button>
     </div>
 </div>
 
@@ -62,14 +62,6 @@
                             <input type="hidden" id="y" name="crop_y">
                             <input type="hidden" id="width" name="crop_width">
                             <input type="hidden" id="height" name="crop_height">
-                        </div>
-                    </div>
-                    <div class="row mb-3 mt-4">
-                        <div class="col-md-12">
-                            <label for="croppedPreview" class="form-label">Image preview</label>
-                            <!-- Small preview of cropped image -->
-                            <img id="croppedPreview" src="#" alt="Cropped Preview"
-                                style="max-width: 50vh; max-height: 50vh;">
                         </div>
                     </div>
                     <!-- Add an <img> element with id "preview" where the cropped image will be displayed -->
@@ -166,27 +158,17 @@
                 document.getElementById('y').value = event.detail.y;
                 document.getElementById('width').value = event.detail.width;
                 document.getElementById('height').value = event.detail.height;
-
-                // Update the src attribute of the cropped preview image
-                var canvas = cropper.getCroppedCanvas();
-                var croppedPreview = document.getElementById('croppedPreview');
-                croppedPreview.src = canvas.toDataURL();
             }
         });
 
         // Listen for crop button click
         document.getElementById('cropButton').addEventListener('click', function () {
-            this.value = "Saving changes...";
-            this.disabled = true;
             // Get the canvas element where Cropper has drawn the cropped image
             var canvas = window.cropper.getCroppedCanvas();
             // Convert the canvas to a data URL representing the cropped image
             var croppedDataURL = canvas.toDataURL();
             // Close the modal
             document.getElementById('imagePreviewModal').style.display = 'none';
-            // You can use croppedDataURL to display the cropped image or send it to the server
-            // For now, I'm just logging it to the console
-            console.log(croppedDataURL);
         });
     }
 

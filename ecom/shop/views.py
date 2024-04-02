@@ -20,8 +20,10 @@ from ecom.settings import version, PAYPAL_RECIEVER_EMAIL
 from paypal.standard.forms import PayPalPaymentsForm
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from io import BytesIO
 import mimetypes
+import tempfile
+
+
 
 def login_user(request):
     message = ""
@@ -231,20 +233,7 @@ def new_listing(request):
             crop_height = float(request.POST['crop_height'])
             image = Image.open(uploaded_file)
             cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
-            cropped_image_buffer = BytesIO()
-            cropped_image.save(cropped_image_buffer, format='JPEG')
-            cropped_image_buffer.seek(0)
-            unique_filename = str(uuid.uuid4())
-            _, extension = os.path.splitext(uploaded_file.name)
-            filename_with_extension = f"{unique_filename}{extension}"
-            cropped_uploaded_file = InMemoryUploadedFile(
-                cropped_image_buffer,
-                None,
-                filename_with_extension,
-                mimetypes.guess_type(filename_with_extension)[0],
-                cropped_image_buffer.tell(),
-                None
-            )
+            
             #except:
             #    return render(request, "sell_product.html", {"message": "Please upload the photo of your product"})
             try:
@@ -252,10 +241,16 @@ def new_listing(request):
             except:
                 return render(request, "sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
             if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
-                firebase_path = f'product_images/{unique_filename}/'
-                firebase_bucket = storage.bucket()
-                blob = firebase_bucket.blob(firebase_path)
-                blob.upload_from_file(cropped_uploaded_file, content_type = cropped_uploaded_file.content_type)
+                unique_filename = str(uuid.uuid4())
+                with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                    temp_file_name = temp_file.name
+                    cropped_image.save(temp_file_name, format='JPEG')
+
+                    # Upload cropped image to Firebase storage
+                    firebase_path = f'product_images/{unique_filename}/'
+                    firebase_bucket = storage.bucket()
+                    blob = firebase_bucket.blob(firebase_path)
+                    blob.upload_from_filename(temp_file_name, content_type='image/jpeg')
                 if request.user.username == "shahzan":
                     expiry_date = set_expiry(plan)
                     UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
