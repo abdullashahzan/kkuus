@@ -248,6 +248,17 @@ def new_listing(request):
             crop_height = coordinates.height
             coordinates.delete()
             image = Image.open(uploaded_file)
+            # Check and correct the orientation if needed
+            if hasattr(image, '_getexif'):
+                exif = image._getexif()
+                if exif is not None:
+                    orientation = exif.get(0x0112)
+                    if orientation == 3:
+                        image = image.rotate(180, expand=True)
+                    elif orientation == 6:
+                        image = image.rotate(270, expand=True)
+                    elif orientation == 8:
+                        image = image.rotate(90, expand=True)
             image = image.convert("RGB")
             cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
             cropped_image_name = str(uuid.uuid4()) + '.jpg'
