@@ -8,7 +8,8 @@
 {% block body %}
 
 <div id="imagePreviewModal" class="modal">
-    <div class="modal-content bg-light animate__animated animate__bounceIn" style="height: auto; width: auto; max-width: 90%;">
+    <div class="modal-content bg-light animate__animated animate__bounceIn"
+        style="height: auto; width: auto; max-width: 90%;">
         <span class="close" style="cursor: pointer;"><i class="bi bi-x-circle-fill text-danger lead mx-2"></i></span>
         <img id="preview" src="" alt="Preview" style="width: 100vh; height: auto; max-height: 70vh;">
         <button type="button" id="cropButton" class="btn text-primary">Crop Image</button>
@@ -27,7 +28,8 @@
                 {% if message %}
                 <p class="style-text" style="color: red;">{{message}}</p>
                 {% endif %}
-                <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data" class="style-text">
+                <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data"
+                    class="style-text">
                     {% csrf_token %}
                     <div class="row mb-3">
                         <div class="col-md-12">
@@ -47,14 +49,17 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="price" class="form-label font-weight-bold">Set a price for your product (SAR):</label>
+                            <label for="price" class="form-label font-weight-bold">Set a price for your product
+                                (SAR):</label>
                             <input type="text" class="form-control style-text" name="price" placeholder="5.00">
                         </div>
                     </div>
                     <div class="row mb-3 mt-4 d-flex justify-content-center align-items-center">
                         <div class="col-md-6">
                             <label for="croppedPreview" class="form-label font-weight-bold">Image preview:</label>
-                            <img id="croppedPreview" src="" alt="Your product image appears here" style="width: 100%; max-width: 100%; height: auto;" onerror="this.onerror=null; this.src='../static/media/logo/png/logo-color.png';">
+                            <img id="croppedPreview" src="" alt="Your product image appears here"
+                                style="width: 100%; max-width: 100%; height: auto;"
+                                onerror="this.onerror=null; this.src='../static/media/logo/png/logo-color.png';">
                         </div>
                         <div class="col-md-6 my-3">
                             <label for="imageUpload" class="btn btn-outline-primary">Select an Image</label>
@@ -154,10 +159,24 @@
             var croppedDataURL = canvas.toDataURL();
             // Set the src attribute of the cropped preview image
             document.getElementById('croppedPreview').src = croppedDataURL;
+
+            // Send cropping data to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/crop-image?x=' + document.getElementById('x').value + '&y=' + document.getElementById('y').value + '&width=' + document.getElementById('width').value + '&height=' + document.getElementById('height').value);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('Cropping data sent successfully');
+                } else {
+                    // Handle error response from server if needed
+                    console.error('Error sending cropping data to server');
+                }
+                document.getElementById('cropButton').disabled = false;
+                document.getElementById('cropButton').value = "Crop image";
+            };
+            xhr.send();
+
             // Close the modal
             document.getElementById('imagePreviewModal').style.display = 'none';
-            document.getElementById('cropButton').disabled = false;
-            document.getElementById('cropButton').value = "Crop image";
         });
     }
 

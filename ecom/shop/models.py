@@ -85,4 +85,14 @@ class Invoice(models.Model):
     def __str__(self):
         return f"An invoice was made: {self.invoice}"
 
+class CroppingImageCoordinatesCache(models.Model):
+    username = models.CharField(max_length=128)
+    x = models.FloatField()
+    y = models.FloatField()
+    width = models.FloatField()
+    height = models.FloatField()
+
+    def __str__(self):
+        return f"Cropping coordinates stored for {self.username}"
+
 

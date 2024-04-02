@@ -21,6 +21,7 @@ urlpatterns = [
     path('removeFromWishlist/<str:item_id>', views.remove_from_wishlist, name="removeFromWishlist"),
     path('createNewListing/', views.new_listing, name='new_listing'),
 
+    path('crop-image/', views.crop_image, name='crop_image'), 
     path('createNewPaidListing/<str:invoice>/<str:plan>', views.paid_sale_successful, name='new_paid_listing'),
     
     path('deleteListing/<str:listing_id>', views.delete_listing, name='delete_listing'),

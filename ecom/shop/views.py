@@ -211,6 +211,20 @@ def paid_sale_successful(request, invoice, plan):
     else:
         return HttpResponseBadRequest("You naughty naughty :)")
 
+def crop_image(request):
+    try:
+        old_query = CroppingImageCoordinatesCache.objects.filter(username=request.user.username)
+        for query in old_query:
+            query.delete()
+    except:
+        pass
+    x = request.GET.get('x')
+    y = request.GET.get('y')
+    width = request.GET.get('width')
+    height = request.GET.get('height')
+    CroppingImageCoordinatesCache(username=request.user.username, x=x, y=y, width=width, height=height).save()    
+    return JsonResponse({'success': True})
+
 @login_required(login_url="shop:login_user")
 def new_listing(request):
     hasFCM = FCMToken.objects.filter(username=request.user.username)
@@ -227,10 +241,12 @@ def new_listing(request):
                 allowed_types = ['image/jpeg', 'image/png']
                 if uploaded_file.content_type not in allowed_types:
                     return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
-            crop_x = float(request.POST['crop_x'])
-            crop_y = float(request.POST['crop_y'])
-            crop_width = float(request.POST['crop_width'])
-            crop_height = float(request.POST['crop_height'])
+            coordinates = CroppingImageCoordinatesCache.objects.get(username=request.user.username)
+            crop_x = coordinates.x
+            crop_y = coordinates.y
+            crop_width = coordinates.width
+            crop_height = coordinates.height
+            coordinates.delete()
             image = Image.open(uploaded_file)
             image = image.convert("RGB")
             cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
