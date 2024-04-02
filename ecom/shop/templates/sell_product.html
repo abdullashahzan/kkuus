@@ -11,8 +11,7 @@
     <div class="modal-content bg-light animate__animated animate__bounceIn" style="height: auto; width: auto; max-width: 90%;">
         <span class="close" style="cursor: pointer;"><i class="bi bi-x-circle-fill text-danger lead mx-2"></i></span>
         <img id="preview" src="" alt="Preview" style="width: 100vh; height: auto; max-height: 70vh;">
-        <button type="button" id="cropButton" class="btn text-primary"
-            onclick="this.disabled=true; this.value='Saving changes...';">Crop Image</button>
+        <button type="button" id="cropButton" class="btn text-primary">Crop Image</button>
     </div>
 </div>
 
@@ -147,6 +146,8 @@
 
         // Listen for crop button click
         document.getElementById('cropButton').addEventListener('click', function () {
+            document.getElementById('cropButton').disabled = true;
+            document.getElementById('cropButton').value = "Cropping image...";
             // Get the canvas element where Cropper has drawn the cropped image
             var canvas = window.cropper.getCroppedCanvas();
             // Convert the canvas to a data URL representing the cropped image
@@ -155,6 +156,8 @@
             document.getElementById('croppedPreview').src = croppedDataURL;
             // Close the modal
             document.getElementById('imagePreviewModal').style.display = 'none';
+            document.getElementById('cropButton').disabled = false;
+            document.getElementById('cropButton').value = "Crop image";
         });
     }
 
