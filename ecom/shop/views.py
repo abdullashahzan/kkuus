@@ -219,34 +219,34 @@ def new_listing(request):
             product_description = request.POST['product_description']
             price = request.POST['price']
             plan = request.POST['flexRadioDefault']
-            try:
-                uploaded_file = request.FILES['product_images']
-                if uploaded_file:
-                    allowed_types = ['image/jpeg', 'image/png']
-                    if uploaded_file.content_type not in allowed_types:
-                        return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
-                crop_x = float(request.POST.get('crop_x'))
-                crop_y = float(request.POST.get('crop_y'))
-                crop_width = float(request.POST.get('crop_width'))
-                crop_height = float(request.POST.get('crop_height'))
-                image = Image.open(uploaded_file)
-                cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
-                cropped_image_buffer = BytesIO()
-                cropped_image.save(cropped_image_buffer, format='JPEG')
-                cropped_image_buffer.seek(0)
-                unique_filename = str(uuid.uuid4())
-                _, extension = os.path.splitext(uploaded_file.name)
-                filename_with_extension = f"{unique_filename}{extension}"
-                cropped_uploaded_file = InMemoryUploadedFile(
-                    cropped_image_buffer,
-                    None,
-                    filename_with_extension,
-                    mimetypes.guess_type(filename_with_extension)[0],
-                    cropped_image_buffer.tell(),
-                    None
-                )
-            except:
-                return render(request, "sell_product.html", {"message": "Please upload the photo of your product"})
+            #try:
+            uploaded_file = request.FILES['product_images']
+            if uploaded_file:
+                allowed_types = ['image/jpeg', 'image/png']
+                if uploaded_file.content_type not in allowed_types:
+                    return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
+            crop_x = float(request.POST.get('crop_x'))
+            crop_y = float(request.POST.get('crop_y'))
+            crop_width = float(request.POST.get('crop_width'))
+            crop_height = float(request.POST.get('crop_height'))
+            image = Image.open(uploaded_file)
+            cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
+            cropped_image_buffer = BytesIO()
+            cropped_image.save(cropped_image_buffer, format='JPEG')
+            cropped_image_buffer.seek(0)
+            unique_filename = str(uuid.uuid4())
+            _, extension = os.path.splitext(uploaded_file.name)
+            filename_with_extension = f"{unique_filename}{extension}"
+            cropped_uploaded_file = InMemoryUploadedFile(
+                cropped_image_buffer,
+                None,
+                filename_with_extension,
+                mimetypes.guess_type(filename_with_extension)[0],
+                cropped_image_buffer.tell(),
+                None
+            )
+            #except:
+            #    return render(request, "sell_product.html", {"message": "Please upload the photo of your product"})
             try:
                 float(price)
             except:
