@@ -51,7 +51,8 @@
                         <div class="col-md-12">
                             <label for="price" class="form-label font-weight-bold">Set a price for your product
                                 (SAR):</label>
-                            <input type="text" class="form-control style-text" name="price" id="price" placeholder="5.00">
+                            <input type="text" class="form-control style-text" name="price" id="price"
+                                placeholder="5.00">
                         </div>
                     </div>
                     <div class="row mb-3 mt-4 d-flex justify-content-center align-items-center">
@@ -135,6 +136,12 @@
         });
     });
 
+    function disableButton() {
+        var button = document.getElementById('cropButton');
+        button.disabled = true;
+        button.innerHTML = "Uploading image...";
+    }
+
     // Function to initialize Cropper
     function initCropper(imageElement) {
         window.cropper = new Cropper(imageElement, {
@@ -151,32 +158,34 @@
 
         // Listen for crop button click
         document.getElementById('cropButton').addEventListener('click', function () {
-            document.getElementById('cropButton').disabled = true;
-            document.getElementById('cropButton').value = "Cropping image...";
-            // Get the canvas element where Cropper has drawn the cropped image
-            var canvas = window.cropper.getCroppedCanvas();
-            // Convert the canvas to a data URL representing the cropped image
-            var croppedDataURL = canvas.toDataURL();
-            // Set the src attribute of the cropped preview image
-            document.getElementById('croppedPreview').src = croppedDataURL;
+            disableButton()
+            setTimeout(function () {
+                // Get the canvas element where Cropper has drawn the cropped image
+                var canvas = window.cropper.getCroppedCanvas();
+                // Convert the canvas to a data URL representing the cropped image
+                var croppedDataURL = canvas.toDataURL();
+                // Set the src attribute of the cropped preview image
+                document.getElementById('croppedPreview').src = croppedDataURL;
 
-            // Send cropping data to the server
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/crop-image?x=' + document.getElementById('x').value + '&y=' + document.getElementById('y').value + '&width=' + document.getElementById('width').value + '&height=' + document.getElementById('height').value);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    console.log('Cropping data sent successfully');
-                } else {
-                    // Handle error response from server if needed
-                    console.error('Error sending cropping data to server');
-                }
-                document.getElementById('cropButton').disabled = false;
-                document.getElementById('cropButton').value = "Crop image";
-            };
-            xhr.send();
+                // Send cropping data to the server
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/crop-image?x=' + document.getElementById('x').value + '&y=' + document.getElementById('y').value + '&width=' + document.getElementById('width').value + '&height=' + document.getElementById('height').value);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        console.log('Cropping data sent successfully');
+                    } else {
+                        // Handle error response from server if needed
+                        console.error('Error sending cropping data to server');
+                    }
+                    // Enable the button again
+                    document.getElementById('cropButton').disabled = false;
+                    document.getElementById('cropButton').innerHTML = "Crop image";
+                };
+                xhr.send();
 
-            // Close the modal
-            document.getElementById('imagePreviewModal').style.display = 'none';
+                // Close the modal
+                document.getElementById('imagePreviewModal').style.display = 'none';
+            }, 500);
         });
     }
 
@@ -218,8 +227,8 @@
     function saveFormData() {
         const formData = {
             name: document.getElementById('product_name').value,
-            email: document.getElementById('description').value,
-            message: document.getElementById('price').value
+            description: document.getElementById('description').value,
+            price: document.getElementById('price').value
         };
 
         localStorage.setItem('formData', JSON.stringify(formData));
@@ -231,8 +240,8 @@
         if (savedData) {
             const formData = JSON.parse(savedData);
             document.getElementById('product_name').value = formData.name;
-            document.getElementById('description').value = formData.email;
-            document.getElementById('price').value = formData.message;
+            document.getElementById('description').value = formData.description;
+            document.getElementById('price').value = formData.price;
         }
     }
 

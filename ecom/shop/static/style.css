@@ -67,8 +67,21 @@ body {
 }
 
 .heightlock {
-    min-height: 33vh;
+    min-height: 41.5vh;
+    height: auto;
     width: 100%;
+}
+
+@media  screen and (max-width: 700px) {
+    .heightlock {
+        min-height: 37.5vh;
+    }
+}
+
+@media  screen and (min-width: 700px) {
+    .heightlock {
+        min-height: 32.5vh;
+    }
 }
 
 .widthlock {
