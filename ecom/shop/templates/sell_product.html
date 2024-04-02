@@ -11,7 +11,8 @@
     <div class="modal-content" style="height: auto; width: auto; max-width: 90%;">
         <span class="close" style="cursor: pointer;"><i class="bi bi-x-circle-fill text-danger lead mx-2"></i></span>
         <img id="preview" src="" alt="Preview" style="width: 100vh; height: auto; max-height: 70vh;">
-        <button type="button" id="cropButton" class="btn btn-primary" onclick="this.disabled=true; this.value='Saving changes...';">Crop Image</button>
+        <button type="button" id="cropButton" class="btn btn-primary"
+            onclick="this.disabled=true; this.value='Saving changes...';">Crop Image</button>
     </div>
 </div>
 
@@ -62,6 +63,9 @@
                             <input type="hidden" id="y" name="crop_y">
                             <input type="hidden" id="width" name="crop_width">
                             <input type="hidden" id="height" name="crop_height">
+                        </div>
+                        <div class="col-md-12">
+                            <img id="croppedPreview" src="" alt="Cropped Preview" style="width: 100%; max-width: 100%; height: auto;">
                         </div>
                     </div>
                     <!-- Add an <img> element with id "preview" where the cropped image will be displayed -->
@@ -124,6 +128,34 @@
             charCount.textContent = this.value.length;
         });
     });
+
+    // Function to initialize Cropper
+    function initCropper(imageElement) {
+        window.cropper = new Cropper(imageElement, {
+            aspectRatio: 4 / 3, // Set desired aspect ratio
+            viewMode: 1,    // Set cropping mode
+            crop: function (event) {
+                // Update hidden input fields with cropping data
+                document.getElementById('x').value = event.detail.x;
+                document.getElementById('y').value = event.detail.y;
+                document.getElementById('width').value = event.detail.width;
+                document.getElementById('height').value = event.detail.height;
+            }
+        });
+
+        // Listen for crop button click
+        document.getElementById('cropButton').addEventListener('click', function () {
+            // Get the canvas element where Cropper has drawn the cropped image
+            var canvas = window.cropper.getCroppedCanvas();
+            // Convert the canvas to a data URL representing the cropped image
+            var croppedDataURL = canvas.toDataURL();
+            // Set the src attribute of the cropped preview image
+            document.getElementById('croppedPreview').src = croppedDataURL;
+            // Close the modal
+            document.getElementById('imagePreviewModal').style.display = 'none';
+        });
+    }
+
     // Add event listener to input file element
     document.getElementById('imageUpload').addEventListener('change', function (event) {
         var input = event.target;
@@ -146,31 +178,6 @@
         // Read the selected file as a Data URL
         reader.readAsDataURL(input.files[0]);
     });
-
-    // Function to initialize Cropper
-    function initCropper(imageElement) {
-        window.cropper = new Cropper(imageElement, {
-            aspectRatio: 4 / 3, // Set desired aspect ratio
-            viewMode: 1,    // Set cropping mode
-            crop: function (event) {
-                // Update hidden input fields with cropping data
-                document.getElementById('x').value = event.detail.x;
-                document.getElementById('y').value = event.detail.y;
-                document.getElementById('width').value = event.detail.width;
-                document.getElementById('height').value = event.detail.height;
-            }
-        });
-
-        // Listen for crop button click
-        document.getElementById('cropButton').addEventListener('click', function () {
-            // Get the canvas element where Cropper has drawn the cropped image
-            var canvas = window.cropper.getCroppedCanvas();
-            // Convert the canvas to a data URL representing the cropped image
-            var croppedDataURL = canvas.toDataURL();
-            // Close the modal
-            document.getElementById('imagePreviewModal').style.display = 'none';
-        });
-    }
 
     // Get the modal
     var modal = document.getElementById('imagePreviewModal');
