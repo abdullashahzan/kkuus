@@ -102,6 +102,10 @@ body {
     font-family: var(--family5);
 }
 
+.font-weight-bold {
+    font-weight: 500;
+}
+
 .truncate-3-lines {
     overflow: hidden;
     display: -webkit-box;
@@ -164,6 +168,7 @@ nav.custom_nav {
     display: none; 
     justify-content: center; 
     align-items: center; 
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .vertical-line {

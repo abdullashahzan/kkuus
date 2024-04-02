@@ -7,18 +7,18 @@
 
 {% block body %}
 
-<div id="imagePreviewModal" class="modal animate__animated animate__bounceIn">
-    <div class="modal-content" style="height: auto; width: auto; max-width: 90%;">
+<div id="imagePreviewModal" class="modal">
+    <div class="modal-content bg-light animate__animated animate__bounceIn" style="height: auto; width: auto; max-width: 90%;">
         <span class="close" style="cursor: pointer;"><i class="bi bi-x-circle-fill text-danger lead mx-2"></i></span>
         <img id="preview" src="" alt="Preview" style="width: 100vh; height: auto; max-height: 70vh;">
-        <button type="button" id="cropButton" class="btn btn-primary"
+        <button type="button" id="cropButton" class="btn text-primary"
             onclick="this.disabled=true; this.value='Saving changes...';">Crop Image</button>
     </div>
 </div>
 
 <div class="container">
     <div class="row" style="min-height: 80vh;">
-        <div class="col-md-6 d-flex justify-content-center align-items-center slideInLeft">
+        <div class="col-md-6 d-flex justify-content-center align-items-start mt-4 slideInLeft">
             <img class="widthlock my-3" src="{% static 'media/undraw_web_shopping_re_owap.svg' %}"
                 alt="Picture shopping">
         </div>
@@ -28,44 +28,46 @@
                 {% if message %}
                 <p class="style-text" style="color: red;">{{message}}</p>
                 {% endif %}
-                <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data">
+                <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data" class="style-text">
                     {% csrf_token %}
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="product_name" class="form-label">Name of your product:</label>
+                            <label for="product_name" class="form-label font-weight-bold">Name of your product:</label>
                             <input type="text" class="form-control style-text" name="product_name"
                                 placeholder="e.g. Chocolate">
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <label for="description" class="form-label">Product details:</label>
+                            <label for="description" class="form-label font-weight-bold">Product details:</label>
                             <textarea class="form-control style-text" id="description" name="product_description"
                                 rows="4" style="resize: none;"
-                                placeholder="Write a short and attractive description about your product"></textarea>
+                                placeholder="e.g. I'm selling my scooter because I have bought another one. If you are interested you can contact me on my given whatsapp number. Only cash is accepted."></textarea>
                             <p class="style-text-2 text-primary"><span id="charCount">0</span> / 500</p>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="price" class="form-label">Set a price for your product (SAR):</label>
+                            <label for="price" class="form-label font-weight-bold">Set a price for your product (SAR):</label>
                             <input type="text" class="form-control style-text" name="price" placeholder="5.00">
                         </div>
                     </div>
-                    <div class="row mb-3 mt-4">
-                        <div class="col-md-12">
+                    <div class="row mb-3 mt-4 d-flex justify-content-center align-items-center">
+                        <div class="col-md-6">
+                            <label for="croppedPreview" class="form-label font-weight-bold">Image preview:</label>
+                            <img id="croppedPreview" src="" alt="Your product image appears here" style="width: 100%; max-width: 100%; height: auto;" onerror="this.onerror=null; this.src='../static/media/logo/png/logo-color.png';">
+                        </div>
+                        <div class="col-md-6 my-3">
                             <label for="imageUpload" class="btn btn-outline-primary">Select an Image</label>
                             <input type="file" name="product_images" class="custom-file-input" id="imageUpload"
-                                accept="image/*">
-                            <span class="text-primary" id="selectedFiles">No file chosen</span>
+                                accept="image/*" capture="camera">
+                            <p class="text-primary my-2 mx-1" id="selectedFiles">No image chosen</p>
+                            <p class="text-muted">Only JPEG and PNG image formats are supported</p>
                             <!-- Add hidden input fields for cropping data -->
                             <input type="hidden" id="x" name="crop_x">
                             <input type="hidden" id="y" name="crop_y">
                             <input type="hidden" id="width" name="crop_width">
                             <input type="hidden" id="height" name="crop_height">
-                        </div>
-                        <div class="col-md-12">
-                            <img id="croppedPreview" src="" alt="Cropped Preview" style="width: 100%; max-width: 100%; height: auto;">
                         </div>
                     </div>
                     <!-- Add an <img> element with id "preview" where the cropped image will be displayed -->
