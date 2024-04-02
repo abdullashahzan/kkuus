@@ -212,7 +212,7 @@ def paid_sale_successful(request, invoice, plan):
 @login_required(login_url="shop:login_user")
 def new_listing(request):
     hasFCM = FCMToken.objects.filter(username=request.user.username)
-    if hasFCM.exists():
+    if not hasFCM.exists():
         delete_unpaid(request.user.username)
         if request.method == "POST":
             product_name = request.POST['product_name']
@@ -225,10 +225,10 @@ def new_listing(request):
                 allowed_types = ['image/jpeg', 'image/png']
                 if uploaded_file.content_type not in allowed_types:
                     return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
-            crop_x = float(request.POST.get('crop_x'))
-            crop_y = float(request.POST.get('crop_y'))
-            crop_width = float(request.POST.get('crop_width'))
-            crop_height = float(request.POST.get('crop_height'))
+            crop_x = float(request.POST['crop_x'])
+            crop_y = float(request.POST['crop_y'])
+            crop_width = float(request.POST['crop_width'])
+            crop_height = float(request.POST['crop_height'])
             image = Image.open(uploaded_file)
             cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
             cropped_image_buffer = BytesIO()
