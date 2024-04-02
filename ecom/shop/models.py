@@ -72,7 +72,7 @@ class UserNotification(models.Model):
 
 class FCMToken(models.Model):
     username = models.CharField(max_length=128)
-    token = models.CharField(max_length=255, unique=True)
+    token = models.CharField(max_length=255)
 
     def __str__(self):
         return f"{self.username} has a registered token"
