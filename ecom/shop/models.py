@@ -7,6 +7,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=255)
     whatsapp = models.CharField(max_length=15, null=True)
+    privileged = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} has {self.address}"
@@ -26,6 +27,7 @@ class UserListings(models.Model):
     num_orders = models.IntegerField(default=0)
     new_orders = models.IntegerField(default=0)
     payment_done = models.BooleanField(default=False)
+    num_views = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.username} listed {self.product_name}"

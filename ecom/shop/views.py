@@ -201,7 +201,7 @@ def paid_sale_successful(request, invoice, plan):
         else:
             return JsonResponse({"Error": "Invalid method of payment."})
     else:
-        return HttpResponseBadRequest("You naughty naughty :)")
+        return HttpResponseBadRequest("A small and annoying error occured while handling this request. Contact the developer at kkuunofficialstore@gmail.com")
 
 def crop_image(request):
     try:
@@ -269,7 +269,8 @@ def new_listing(request):
                 blob = firebase_bucket.blob(firebase_path)
                 blob.upload_from_filename(path, content_type='image/jpeg')
                 os.remove(path)
-                if request.user.username == "shahzan":
+                user_profile = UserProfile.objects.get(user=request.user)
+                if user_profile.privileged == True:
                     expiry_date = set_expiry(plan)
                     UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
                     notification_title = f"{product_name} was listed successfully in marketplace!"
@@ -302,14 +303,10 @@ def new_listing(request):
                         'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
                     }
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-                    paypal_fee = 7.51/1.5
-                    paypal_fee = format(paypal_fee, '.2f')
-                    web_fee = 7.51 - float(paypal_fee)
-                    web_fee = format(web_fee, '.2f')
                     context = {
                         'price': 7.51,
-                        'paypal_fee': paypal_fee,
-                        'web_fee': web_fee,
+                        'paypal_fee': 5.60,
+                        'web_fee': 1.91,
                         'paypal': paypal_payment
                     }
                     return render(request, 'checkout.html', context)
@@ -323,7 +320,7 @@ def new_listing(request):
                     invoice.save()
                     paypal_checkout = {
                         'business': PAYPAL_RECIEVER_EMAIL,
-                        'amount': 3,
+                        'amount': 3.00,
                         'item_name': "AD DURATION: 28 DAYS",
                         'invoice': created_uuid,
                         'currency_code': 'USD',
@@ -332,14 +329,10 @@ def new_listing(request):
                         'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
                     }
                     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-                    paypal_fee = 11.26/1.5
-                    paypal_fee = format(paypal_fee, '.2f')
-                    web_fee = 11.26 - float(paypal_fee)
-                    web_fee = format(web_fee, '.2f')
                     context = {
                         'price': 11.26,
-                        'paypal_fee': paypal_fee,
-                        'web_fee': web_fee,
+                        'paypal_fee': 8.39,
+                        'web_fee': 2.87,
                         'paypal': paypal_payment
                     }
                     return render(request, 'checkout.html', context)
@@ -424,6 +417,8 @@ def buy(request, item_id):
     for item in ordered_items:
         new_item_orders += item.new_orders
     item = UserListings.objects.get(id=item_id)
+    item.num_views += 1
+    item.save()
     if request.user.is_authenticated:
         user_wishlist = get_user_wishlist(request.user.username)
         user_wishlist_list = []

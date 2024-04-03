@@ -12,7 +12,8 @@
             <article>
                 <h1 class="style-text-3">Confirm purchase?</h1>
                 <p class="lead style-text">
-                    You are almost there! By clicking confirm purchase, seller will be notified about your purchase. For now there is no online payment option, therefore all payments will be cash on delivery.
+                    You are almost there! By clicking confirm purchase, seller will be notified about your purchase. For
+                    now there is no online payment option, therefore all payments will be cash on delivery.
                 </p>
                 <p class="style-text"><strong>Do not forget to show him your buyer code!</strong></p>
                 <p class="style-text"><strong>Note:</strong> You can get details of your order from <a
@@ -32,12 +33,12 @@
     </div>
 </div>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-<div class="container fadeInUp">
-    <div class="row p-4">
+<div class="container fadeInUp" style="min-height: 50vh;">
+    <div class="row p-4 d-none d-md-flex">
         <div class="col-md-4">
             <img class="widthlock" src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}">
         </div>
-        <div class="col-md-8 my-4">
+        <div class="col-md-8">
             <article>
                 <h1 class="style-heading">{{item.product_name}}</h1>
                 <h5 class="text-muted style-text-2">Sold by {{item.username}}</h5>
@@ -55,7 +56,8 @@
                 {% if whatsapp %}
                 <a href="https://wa.me/{{whatsapp}}?text=Hello there! I would like to know if the product *{{item.product_name}}* is still available?
                 
-                unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank" class="text-primary"><i class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
+                unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank" class="text-primary"><i
+                        class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
                 {% endif %}
                 {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
                 <button class="btn btn-primary my-3" onclick="openModal()">Place order</button>
@@ -74,91 +76,150 @@
             </article>
         </div>
     </div>
-    <div class="row p-3">
-        <h1 class="style-heading my-3">Comments</h1>
-        <hr>
-        {% if user.username != item.username %}
-        <form action="{% url 'shop:postComment' item.id %}" method="post" class="col-md-4 my-1">
-            {% csrf_token %}
-            <div class="card p-3">
-                <div class="mb-2 style-text">
-                    <input class="form-control mb-2" type="text" name="heading" placeholder="Heading of your comment">
-                    <textarea class="form-control" name="comment" id="comment" rows="4"
-                        placeholder="Write your opinion about the product..." style="resize: none;"></textarea>
-                    <p class="style-text-2 text-primary"><span id="charCount">0</span> / 200</p>
-                    <label class="style-text mt-3" for="rating">How much do you rate this product? (Out of 5)</label>
-                    <div class="rating my-2 style-text">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                                value="1">
-                            <label class="form-check-label" for="inlineRadio1">1</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                                value="2">
-                            <label class="form-check-label" for="inlineRadio2">2</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions" id="inlineRadio3"
-                                value="3">
-                            <label class="form-check-label" for="inlineRadio3">3</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions" id="inlineRadio3"
-                                value="4">
-                            <label class="form-check-label" for="inlineRadio3">4</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions" id="inlineRadio3"
-                                value="5">
-                            <label class="form-check-label" for="inlineRadio3">5</label>
-                        </div>
-                    </div>
+
+    <div class="row d-block d-md-none">
+        <div class="col-12">
+            <div class="shadow card mb-1 d-flex align-items-center">
+                <div class="card-header style-text bg-primary text-light" style="width: 100%;">@{{item.username}}'s
+                    shop
                 </div>
-                <p class="text-danger style-text-2">{{message}}</p>
-                <button type="submit" class="btn btn-primary">Post</button>
-            </div>
-        </form>
-        {% else %}
-        <h5 class="style-text-2 text-danger col-md-4 my-1">You cannot comment on your own item.</h5>
-        {% endif %}
-        <div class="col-md-8">
-            {% for comment in comments %}
-            <div class="card my-2">
-                <div class="card-body">
-                    <h2 class="style-text-2">{{comment.heading}}</h2>
-                    <h6 class="text-muted style-text">By: {{comment.username}}</h6>
-                    <h6 class="style-text-2 my-3"><i class="bi bi-star-fill"></i> {{comment.ratings}}/5.0</h6>
+                <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock" alt="{{item.product_name}}">
+                <div class="card-body mt-2" style="width: 100%;">
+                    <h2 class="style-text-2 text-primary">{{item.product_name}}</h2>
                     <hr>
-                    <p class="style-text-2">{{comment.comment}}</p>
-                </div>
-                <div class="card-footer">
-                    <p class="text-muted style-text">Posted on {{comment.timestamp}}</p>
-                    {% if comment.username == user.username %}
-                    <form action="{% url 'shop:delete_comment' comment.id item.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                    <h4 class="style-text-2">SAR {{item.product_price}}</h4>
+                    <p class="style-text">
+                        <i class="bi bi-heart-fill lead text-danger"></i><span class="mx-2">{{item.ratings}}/5.0
+                            ({{item.num_raters}})</span>
+                        <span class="card-text style-text text-muted truncate-3-lines"><i
+                                class="bi bi-bag-fill lead text-primary"></i> <span class="mx-1">Bought by:
+                                {{item.num_orders}} buyer(s)</span></span>
+                        <span class="card-text style-text text-muted truncate-3-lines"><i
+                            class="bi bi-eye-fill lead text-muted"></i> <span class="mx-1">Viewed by {{item.num_views}} people</span></span>
+                        {% if user.is_authenticated %}
+                        {% if whatsapp %}
+                        <span class="card-text style-text text-muted truncate-3-lines"><i
+                                class="bi bi-whatsapp lead text-success"></i>
+                            <a href="https://wa.me/{{whatsapp}}?text=Hello there! I would like to know if the product *{{item.product_name}}* is still available?
+                                unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank"
+                                class="mx-1 text-muted">Message {{item.username}} on whatsapp</a></span>
+                        {% endif %}
+                        {% else %}
+                    </p>
+                    <p class="text-danger">Please log in to purchase this item.</p>
                     {% endif %}
+
+                    {% if user.is_authenticated and user.username != item.username and user.username not in bought_users%}
+                    <button class="btn btn-primary mt-4" onclick="openModal()" style="width: 85%;"><i
+                            class="bi bi-cart"></i> <span class="mx-1 style-text-2">Place
+                            order</span></button>
+                    {% if item.id in wishlist %}
+                    <button class="btn btn-outline-primary add-to-wishlist mt-4" data-item-id="{{ item.id }}">
+                        <i class="bi bi-star-fill"></i></button>
+                    {% else %}
+                    <button class="btn btn-outline-primary add-to-wishlist mt-4" data-item-id="{{ item.id }}">
+                        <i class="bi bi-star"></i></button>
+                    {% endif %}
+                    {% else %}
+                    {% endif %}
+                    <p>
+                        <span class="style-heading">Description:</span>
+                        <span class="card-text style-text-2">{{item.product_description}}</span>
+                    </p>
                 </div>
             </div>
-            {% empty %}
-            <div class="card my-2">
-                <div class="card-body">
-                    <h2 class="style-text-2">There are no comments yet...</h2>
-                </div>
-            </div>
-            {% endfor %}
         </div>
     </div>
+</div>
+
+<div class="row m-0 p-4">
+    <h1 class="style-heading my-3">Comments</h1>
+    <hr>
+    {% if not user.is_authenticated %}
+    <h5 class="text-danger">Please log in to comment.</h5>
+    {% elif user.username != item.username %}
+    <form action="{% url 'shop:postComment' item.id %}" method="post" class="col-md-4 my-1">
+        {% csrf_token %}
+        <div class="card p-3">
+            <div class="mb-2 style-text">
+                <input class="form-control mb-2" type="text" name="heading" placeholder="Heading of your comment">
+                <textarea class="form-control" name="comment" id="comment" rows="4"
+                    placeholder="Write your opinion about the product..." style="resize: none;"></textarea>
+                <p class="style-text-2 text-primary"><span id="charCount">0</span> / 200</p>
+                <label class="style-text mt-3" for="rating">How much do you rate this product? (Out of 5)</label>
+                <div class="rating my-2 style-text">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio1" value="1">
+                        <label class="form-check-label" for="inlineRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio2" value="2">
+                        <label class="form-check-label" for="inlineRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio3" value="3">
+                        <label class="form-check-label" for="inlineRadio3">3</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio3" value="4">
+                        <label class="form-check-label" for="inlineRadio3">4</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio3" value="5">
+                        <label class="form-check-label" for="inlineRadio3">5</label>
+                    </div>
+                </div>
+            </div>
+            <p class="text-danger style-text-2">{{message}}</p>
+            <button type="submit" class="btn btn-primary">Post</button>
+        </div>
+    </form>
+    {% else %}
+    <h5 class="style-text-2 text-danger col-md-4 my-1">You cannot comment on your own item.</h5>
+    {% endif %}
+    <div class="col-md-8">
+        {% for comment in comments %}
+        <div class="card my-2">
+            <div class="card-body">
+                <h2 class="style-text-2">{{comment.heading}}</h2>
+                <h6 class="text-muted style-text">By: {{comment.username}}</h6>
+                <h6 class="style-text-2 my-3"><i class="bi bi-star-fill"></i> {{comment.ratings}}/5.0</h6>
+                <hr>
+                <p class="style-text-2">{{comment.comment}}</p>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted style-text">Posted on {{comment.timestamp}}</p>
+                {% if comment.username == user.username %}
+                <form action="{% url 'shop:delete_comment' comment.id item.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="card my-2">
+            <div class="card-body">
+                <h2 class="style-text-2">There are no comments yet...</h2>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 </div>
 
 <script>
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();
     $('.add-to-wishlist').on('click', function () {
-        var button = $(this);
+        var icon = $(this).find('i');
         var item_id = $(this).data('item-id');
-        if (button.text().trim() === 'Add to wishlist') {
+        if (icon.hasClass('bi bi-star')) {
+            // Add item to wishlist
             $.ajax({
                 url: '/addToWishlist/' + item_id,
                 type: 'POST',
@@ -166,13 +227,14 @@
                 headers: { 'X-CSRFToken': csrftoken },
                 success: function (data) {
                     alert(data.message);
-                    button.text('Remove from wishlist');
+                    icon.removeClass('bi bi-star').addClass('bi bi-star-fill');
                 },
                 error: function (xhr, errmsg, err) {
-                    alert('Failed to add item in your wishlist');
+                    alert('Failed to add item to your wishlist');
                 }
             });
-        } else if (button.text().trim() === 'Remove from wishlist') {
+        } else if (icon.hasClass('bi bi-star-fill')) {
+            // Remove item from wishlist
             $.ajax({
                 url: '/removeFromWishlist/' + item_id,
                 type: 'POST',
@@ -180,7 +242,7 @@
                 headers: { 'X-CSRFToken': csrftoken },
                 success: function (data) {
                     alert(data.message);
-                    button.text('Add to wishlist');
+                    icon.removeClass('bi bi-star-fill').addClass('bi bi-star');
                 },
                 error: function (xhr, errmsg, err) {
                     alert('Failed to remove item from your wishlist');
