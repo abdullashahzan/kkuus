@@ -227,37 +227,37 @@ def new_listing(request):
             product_description = request.POST['product_description']
             price = request.POST['price']
             plan = request.POST['flexRadioDefault']
-            try:
-                uploaded_file = request.FILES['product_images']
-                if uploaded_file:
-                    allowed_types = ['image/jpeg', 'image/png']
-                    if uploaded_file.content_type not in allowed_types:
-                        return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
-                coordinates = CroppingImageCoordinatesCache.objects.get(username=request.user.username)
-                crop_x = coordinates.x
-                crop_y = coordinates.y
-                crop_width = coordinates.width
-                crop_height = coordinates.height
-                coordinates.delete()
-                image = Image.open(uploaded_file)
-                # Check and correct the orientation if needed
-                if hasattr(image, '_getexif'):
-                    exif = image._getexif()
-                    if exif is not None:
-                        orientation = exif.get(0x0112)
-                        if orientation == 3:
-                            image = image.rotate(180, expand=True)
-                        elif orientation == 6:
-                            image = image.rotate(270, expand=True)
-                        elif orientation == 8:
-                            image = image.rotate(90, expand=True)
-                image = image.convert("RGB")
-                cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
-                cropped_image_name = str(uuid.uuid4()) + '.jpg'
-                path = f"{BASE_DIR}/shop/image_cache/{cropped_image_name}"
-                cropped_image.save(path, format="JPEG")
-            except:
-                return render(request, "sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
+            #try:
+            uploaded_file = request.FILES['product_images']
+            if uploaded_file:
+                allowed_types = ['image/jpeg', 'image/png']
+                if uploaded_file.content_type not in allowed_types:
+                    return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
+            coordinates = CroppingImageCoordinatesCache.objects.get(username=request.user.username)
+            crop_x = coordinates.x
+            crop_y = coordinates.y
+            crop_width = coordinates.width
+            crop_height = coordinates.height
+            coordinates.delete()
+            image = Image.open(uploaded_file)
+            # Check and correct the orientation if needed
+            if hasattr(image, '_getexif'):
+                exif = image._getexif()
+                if exif is not None:
+                    orientation = exif.get(0x0112)
+                    if orientation == 3:
+                        image = image.rotate(180, expand=True)
+                    elif orientation == 6:
+                        image = image.rotate(270, expand=True)
+                    elif orientation == 8:
+                        image = image.rotate(90, expand=True)
+            image = image.convert("RGB")
+            cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
+            cropped_image_name = str(uuid.uuid4()) + '.jpg'
+            path = f"{BASE_DIR}/shop/image_cache/{cropped_image_name}"
+            cropped_image.save(path, format="JPEG")
+            #except:
+            #    return render(request, "sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
             try:
                 float(price)
             except:

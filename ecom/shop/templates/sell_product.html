@@ -158,6 +158,13 @@
 
         // Listen for crop button click
         document.getElementById('cropButton').addEventListener('click', function () {
+            const coordinates_data = {
+                x: document.getElementById("x").value,
+                y: document.getElementById("y").value,
+                width: document.getElementById("width").value,
+                height: document.getElementById("height").value
+            }
+            localStorage.setItem('coordinates', JSON.stringify(coordinates_data))
             disableButton()
             setTimeout(function () {
                 // Get the canvas element where Cropper has drawn the cropped image
@@ -169,7 +176,15 @@
 
                 // Send cropping data to the server
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', '/crop-image?x=' + document.getElementById('x').value + '&y=' + document.getElementById('y').value + '&width=' + document.getElementById('width').value + '&height=' + document.getElementById('height').value);
+                const local_coordinates = localStorage.getItem("coordinates")
+                if (local_coordinates) {
+                    const parsed_coordinates = JSON.parse(local_coordinates);
+                    const x = parsed_coordinates.x;
+                    const y = parsed_coordinates.y;
+                    const width = parsed_coordinates.width;
+                    const height = parsed_coordinates.height;
+                    xhr.open('GET', '/crop-image?x=' + x + '&y=' + y + '&width=' + width + '&height=' + height);
+                }
                 xhr.onload = function () {
                     if (xhr.status === 200) {
                         console.log('Cropping data sent successfully');
@@ -185,7 +200,7 @@
 
                 // Close the modal
                 document.getElementById('imagePreviewModal').style.display = 'none';
-            }, 500);
+            }, 50);
         });
     }
 
