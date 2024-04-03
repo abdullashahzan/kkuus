@@ -56,14 +56,29 @@
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <div class="col-md-12">
-                                <label for="address" class="form-label">Student housing address</label>
-                                <input type="address" class="form-control" name="address" id="web_address"
-                                    placeholder="e.g. BR7, Building 5, Room no. 403" aria-describedby="address_help">
-                                <div id="address_help" class="form-text">Address format should be like this: <br>
-                                    BUILDING
-                                    CODE, BUILDING NUMBER, ROOM NUMBER</div>
+                            <label for="address" class="form-label">Student housing address</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="room_no" id="address"
+                                    placeholder="Enter your Room number" aria-describedby="address_help">
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" id="building_code" name="building_code">
+                                        <option value="0">Select your building</option>
+                                        <option value="br1">BR1</option>
+                                        <option value="br2">BR2</option>
+                                        <option value="br3">BR3</option>
+                                        <option value="br4">BR4</option>
+                                        <option value="br5">BR5</option>
+                                        <option value="br6">BR6</option>
+                                        <option value="br7">BR7</option>
+                                        <option value="br8">BR8</option>
+                                        <option value="br9">BR9</option>
+                                        <option value="br10">BR10</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="address_help" class="form-text">For now the service is only available inside KKU Male student housing in Al Fara</div>
                         </div>
                         {% if message %}
                         <p class="style-text" style="color: red;">{{message}}</p>
@@ -136,17 +151,29 @@
                                 </div>
                             </div>
                             <div class="row mb-4">
-                                <div class="col-md-12">
-                                    <label for="address" class="form-label">Student housing address</label>
-                                    <input type="address" class="form-control" name="address" id="address"
-                                        placeholder="e.g. BR7, Room no. 403" aria-describedby="address_help">
-                                    <div id="address_help" class="form-text">Address format should be like this: <br>
-                                        BUILDING CODE, ROOM NUMBER. This service is only available for male students of
-                                        King
-                                        Khalid University living in
-                                        student housing.
+                                <label for="address" class="form-label">Student housing address</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="room_no" id="web_address"
+                                        placeholder="Enter your Room number" aria-describedby="address_help">
+                                </div>
+                                <div class="col-md-6 my-2">
+                                    <div class="form-group">
+                                        <select class="form-control" id="building_code" name="building_code">
+                                            <option value="0">Select your building</option>
+                                            <option value="br1">BR1</option>
+                                            <option value="br2">BR2</option>
+                                            <option value="br3">BR3</option>
+                                            <option value="br4">BR4</option>
+                                            <option value="br5">BR5</option>
+                                            <option value="br6">BR6</option>
+                                            <option value="br7">BR7</option>
+                                            <option value="br8">BR8</option>
+                                            <option value="br9">BR9</option>
+                                            <option value="br10">BR10</option>
+                                        </select>
                                     </div>
                                 </div>
+                                <div id="address_help" class="form-text">For now the service is only available inside KKU Male student housing in Al Fara</div>
                             </div>
                             {% if message %}
                             <p class="style-text" style="color: red;">{{message}}</p>

@@ -19,7 +19,7 @@
                 <hr>
                 <p class="style-text">
                     <span class="text-muted">Username:</span> {{order.0.user.username}} <br>
-                    <span class="text-muted">Address:</span> {{order.0.address}} <br>
+                    <span class="text-muted">Address:</span> Room {{order.0.room_no}} Building {{order.0.building_code}} <br>
                     <span class="text-muted">Phone:</span> {{order.0.whatsapp}}
                 </p>
                 {% if order.1 == "accepted" %}
@@ -27,8 +27,8 @@
                 <a href="{% url 'shop:confirmPurchase' item.id %}" class="btn btn-primary my-2"><i class="bi bi-receipt"></i> Take code</a>
                 {% elif order.1 == "requested" %}
                 <a href="{% url 'shop:acceptOrder' item.id order.0.user.username %}" class="btn btn-primary">Accept order</a>
-                <a href="{% url 'shop:rejectOrder' item.id order.0.user.username %}" class="btn btn-outline-danger">Reject order</a>
                 {% endif %}
+                <a href="{% url 'shop:rejectOrder' item.id order.0.user.username %}" class="btn btn-outline-danger">Reject order</a>
             </div>
         </div>
         {% endfor %}

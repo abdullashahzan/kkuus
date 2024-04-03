@@ -13,10 +13,12 @@
             <h3 class="style-heading text-primary">My profile</h3>
             <hr>
             <ul class="list-unstyled px-3">
-                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-primary style-text-2" style="text-decoration: none;">My
+                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-primary style-text-2"
+                        style="text-decoration: none;">My
                         information</a></li>
                 {% if user.is_staff and user.is_superuser and user.username == "shahzan" %}
-                <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-muted style-text-2" style="text-decoration: none;">Developer dashboard</a></li>
+                <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-muted style-text-2"
+                        style="text-decoration: none;">Developer dashboard</a></li>
                 {% endif %}
                 <li class="my-1">Version: {{version}}</li>
             </ul>
@@ -31,7 +33,8 @@
                 <hr>
                 <div class="style-text" style="min-height: 5vh;">
                     <a href="{% url 'shop:preEnableNotifications' %}" class="btn btn-primary">Enable</a>
-                    <p class="text-muted mt-2">If you are not receiving notifications on this device or have not enabled notifications for this device, please click here to enable it.</p>
+                    <p class="text-muted mt-2">If you are not receiving notifications on this device or have not enabled
+                        notifications for this device, please click here to enable it.</p>
                 </div>
             </article>
             <article class="mb-4">
@@ -41,16 +44,25 @@
                     {% csrf_token %}
                     <div class="mb-3 row">
                         <div class="col-md-6">
-                            <label for="old_address" class="form-label">Old address</label>
-                            <input type="text" class="form-control" id="old_address" aria-describedby="emailHelp"
-                                placeholder="{{other.address}}" disabled>
+                            <input type="text" class="form-control" name="room_no" id="address"
+                                placeholder="Room number: {{other.room_no}}" aria-describedby="address_help">
                         </div>
                         <div class="col-md-6">
-                            <label for="new_address" class="form-label">New address</label>
-                            <input type="text" class="form-control" id="new_address" name="new_address"
-                                aria-describedby="address_help">
-                            <div id="address_help" class="form-text">Address format should be like this: <br> BUILDING
-                                CODE, BUILDING NUMBER, ROOM NUMBER</div>
+                            <div class="form-group">
+                                <select class="form-control" id="building_code" name="building_code">
+                                    <option value="0">Select your building</option>
+                                    <option value="br1">BR1</option>
+                                    <option value="br2">BR2</option>
+                                    <option value="br3">BR3</option>
+                                    <option value="br4">BR4</option>
+                                    <option value="br5">BR5</option>
+                                    <option value="br6">BR6</option>
+                                    <option value="br7">BR7</option>
+                                    <option value="br8">BR8</option>
+                                    <option value="br9">BR9</option>
+                                    <option value="br10">BR10</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     {% if address_error %}
@@ -75,6 +87,11 @@
                             <input type="text" class="form-control" id="last_name" name="last_name"
                                 placeholder="{{user.last_name}}">
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="whatsapp" class="form-label">Whatsapp no.</label>
+                        <input type="text" class="form-control" name="whatsapp" id="whatsapp"
+                            placeholder="{{other.whatsapp}}">
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -123,7 +140,8 @@
             <article class="d-flex justify-content-center align-items-center mt-4 p-4">
                 <div class="style-text" style="text-align: center;">
                     <a href="{% url 'shop:delete_account' %}" class="btn btn-danger mb-2 delete-link">Delete account</a>
-                    <p class="text-muted">Please note that this process cannot be undone, once your account gets delete you can not recover it.
+                    <p class="text-muted">Please note that this process cannot be undone, once your account gets delete
+                        you can not recover it.
                     </p>
                 </div>
             </article>

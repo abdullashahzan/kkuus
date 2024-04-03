@@ -78,7 +78,7 @@ body {
     }
 }
 
-@media  screen and (min-width: 700px) {
+@media  screen and (min-width: 700px) and (max-width: 1000px) {
     .heightlock {
         min-height: 32.5vh;
     }

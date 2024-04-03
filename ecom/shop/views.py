@@ -40,9 +40,10 @@ def signup_user(request):
         username = request.POST['username']
         password = request.POST['password']
         password2 = request.POST['password2']
-        address = request.POST['address']
+        room_no = request.POST['room_no']
+        building_code = request.POST['building_code']
         whatsapp = request.POST['whatsapp']
-        if first != "" and second != ""and email is not None and username is not None and password is not None and password2 is not None and address is not None and whatsapp != "":
+        if first != "" and second != ""and email is not None and username is not None and password is not None and password2 is not None and room_no != "" and building_code != "0" and whatsapp != "":
             if password == password2:
                 try:
                     user = User.objects.create_user(username=username, password=password)
@@ -50,7 +51,7 @@ def signup_user(request):
                     user.last_name = second
                     user.email = email
                     user.save()
-                    UserProfile(user=user, address=address, whatsapp=whatsapp).save()
+                    UserProfile(user=user, room_no=room_no, building_code=building_code, whatsapp=whatsapp).save()
                     UserWishlist(username=username).save()
                     login(request, user)
                     return redirect(reverse('shop:preEnableNotifications'))
@@ -482,7 +483,7 @@ def purchase(request, item_id):
     buyer_username = request.user.username
     purchased_item = item.product_name
     purchased_item_price = item.product_price
-    buyer_address = buyer_object.address
+    buyer_address = f"Room: {buyer_object.room_no} Building: {buyer_object.building_code}"
     buyer_whatsapp = buyer_object.whatsapp
     special_keys = [buyer_name, buyer_username, purchased_item, purchased_item_price, buyer_address, buyer_whatsapp]
     task = "New Order"
@@ -494,14 +495,13 @@ def purchase(request, item_id):
     seller_user = User.objects.get(username=item.username)
     seller_object = UserProfile.objects.get(user=seller_user)
 
-    seller_address = seller_object.address
+    seller_address = f"Room {seller_object.room_no}, Building {seller_object.building_code}"
     seller_whatsapp = seller_object.whatsapp
 
     key = generate_random_key()
     get_user = User.objects.get(username=item.username)
-    address= UserProfile.objects.get(user=get_user).address
     whatsapp = UserProfile.objects.get(user=get_user).whatsapp
-    UserOrder(username=request.user.username, item=item, key=key, status="requested", address=address, whatsapp=whatsapp).save()
+    UserOrder(username=request.user.username, item=item, key=key, status="requested", room_no=UserProfile.objects.get(user=get_user).room_no, building_code=UserProfile.objects.get(user=get_user).building_code, whatsapp=whatsapp).save()
     item.new_orders += 1
     item.save()
     notification_title = f"{request.user.username} would like to purchase {item.product_name}"
@@ -513,9 +513,12 @@ def purchase(request, item_id):
     notification_title = f"Your order was placed successfully"
     notification_body = f"We have notified the seller about your order. Please wait for order acceptance from the seller. In case if the seller is not responding, here are the seller details: Whatsapp no: {seller_whatsapp}, Address info: {seller_address}"
     UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_order").save()
-    notify_users = FCMToken.objects.filter(username=request.user.username)
-    for notify in notify_users:
-        send_notification(notify.token, notification_title, notification_body)
+    try:
+        notify_users = FCMToken.objects.filter(username=request.user.username)
+        for notify in notify_users:
+            send_notification(notify.token, notification_title, notification_body)
+    except:
+        pass
     return redirect(reverse('shop:myOrders'))
     
 def confirm_purchase(request, item_id):
@@ -607,13 +610,16 @@ def search_item(request):
 @require_POST
 def update_address(request):
     global address_error
-    new_address = request.POST['new_address']
+    room_no = request.POST['room_no']
+    building_code = request.POST['building_code']
     object = UserProfile.objects.get(user=request.user)
-    old_address = object.address
-    if old_address == new_address:
+    old_room_no = object.room_no
+    old_building_no = object.building_code
+    if old_room_no == room_no and old_building_no == building_code:
         address_error = "New address cannot be the same as old address"
-    elif old_address != new_address:
-        object.address = new_address
+    elif old_room_no != room_no:
+        object.room_no = room_no
+        object.building_code = building_code
         object.save()
     else:
         address_error = "An unkown error occured while changing address"
@@ -628,8 +634,10 @@ def get_address():
 def update_info(request):
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
+    whatsapp = request.POST['whatsapp']
     email = request.POST['email']
     user_object = User.objects.get(username=request.user.username)
+    user_profile = UserProfile.objects.get(user=user_object)
     if first_name != "":
         user_object.first_name = first_name
         user_object.save()
@@ -639,6 +647,9 @@ def update_info(request):
     if email != "":
         user_object.email = email
         user_object.save()
+    if whatsapp != "":
+        user_profile.whatsapp = whatsapp
+        user_profile.save()
     referring_url = request.META.get('HTTP_REFERER')
     return redirect(referring_url or reverse("shop:profile"))
 

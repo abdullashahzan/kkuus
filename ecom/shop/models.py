@@ -5,12 +5,13 @@ from django.contrib.auth.models import User
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    address = models.CharField(max_length=255)
+    room_no = models.IntegerField()
+    building_code = models.CharField(max_length=5)
     whatsapp = models.CharField(max_length=15, null=True)
     privileged = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.username} has {self.address}"
+        return f"{self.user.username}'s profile"
 
 class UserListings(models.Model):
     username = models.CharField(max_length=128)
@@ -55,7 +56,8 @@ class UserOrder(models.Model):
     item = models.ForeignKey(UserListings, on_delete=models.CASCADE, related_name='orders')
     key = models.CharField(max_length=10)
     status = models.CharField(max_length=20)
-    address = models.CharField(max_length=100)
+    room_no = models.IntegerField(default=0)
+    building_code = models.CharField(max_length=5, default="yeah")
     whatsapp = models.CharField(max_length=15, null=True)
 
     def __str__(self):
