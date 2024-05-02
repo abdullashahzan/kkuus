@@ -142,11 +142,11 @@
         {% csrf_token %}
         <div class="card p-3">
             <div class="mb-2 style-text">
-                <input class="form-control mb-2" type="text" name="heading" placeholder="Heading of your comment">
+                <input class="form-control mb-2" type="text" name="heading" placeholder="How is the product? (Optional)">
                 <textarea class="form-control" name="comment" id="comment" rows="4"
-                    placeholder="Write your opinion about the product..." style="resize: none;"></textarea>
+                    placeholder="Give {{ item.username }} your opinion about the product... (Optional)" style="resize: none;"></textarea>
                 <p class="style-text-2 text-primary"><span id="charCount">0</span> / 200</p>
-                <label class="style-text mt-3" for="rating">How much do you rate this product? (Out of 5)</label>
+                <label class="style-text mt-3" for="rating">How much do you rate this product out of 5?</label>
                 <div class="rating my-2 style-text">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
@@ -176,7 +176,7 @@
                 </div>
             </div>
             <p class="text-danger style-text-2">{{message}}</p>
-            <button type="submit" class="btn btn-primary">Post</button>
+            <button type="submit" class="btn btn-primary" onclick="this.classList.add('disabled')">Post</button>
         </div>
     </form>
     {% else %}

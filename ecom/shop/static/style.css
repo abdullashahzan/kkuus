@@ -12,6 +12,17 @@ body {
     background: #f7f7f7;
 }
 
+.loadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000000;
+    display: none;
+}
+
 .this-active {
     background: linear-gradient(to bottom, #0d6efd 50%, rgba(0, 0, 0, 0.2));
 }

@@ -32,7 +32,7 @@ const hiddenDiv = document.getElementById("hiddenDiv");
 
 window.addEventListener("scroll", function () {
     let currentScroll = window.scrollY;
-    if (currentScroll > lastScrollTop) {
+    if (currentScroll > (lastScrollTop+30)) {
         // Scroll down
         hiddenDiv.classList.remove("animate__slideInUp");
         hiddenDiv.classList.add("animate__slideOutDown");
@@ -40,7 +40,7 @@ window.addEventListener("scroll", function () {
             hiddenDiv.classList.remove("d-none");
             hiddenDiv.classList.add("d-block");
         });
-    } else {
+    } else if (currentScroll <= (lastScrollTop-10)) {
         // Scroll up
         hiddenDiv.classList.remove("animate__slideOutDown");
         hiddenDiv.classList.add("animate__slideInUp");

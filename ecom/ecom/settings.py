@@ -36,12 +36,12 @@ firebase_admin.initialize_app(cred, {'storageBucket': 'kku-unofficial-store.apps
 SECRET_KEY = 'django-insecure-^6=%fw@w!7p#3=u&6ef+v20efj41g)i)%0lgkb)3vc@k=91g7n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['unstore.pythonanywhere.com', '127.0.0.1']
 
 # Current application version
-version = "3.1 (Stable release)"
+version = "3.2 (Stable release)"
 
 # Application definition
 

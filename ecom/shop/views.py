@@ -430,17 +430,20 @@ def buy(request, item_id):
 
 @require_POST
 def comment(request, item_id):
-    item = UserListings.objects.get(id=item_id)
-    username = request.user.username
-    ratings = int(request.POST['inlineRadioOptions'])
-    heading = request.POST['heading']
-    comment = request.POST['comment']
-    if ratings is not None and heading != "" and comment != "":
-        UserComment(item=item, username=username, ratings=ratings, heading=heading, comment=comment).save()
-        new_avg_rating = UserComment.objects.filter(item=item).aggregate(avg_rating=Avg('ratings'))['avg_rating']
-        item.ratings = format(new_avg_rating, '.2f')
-        item.num_raters += 1
-        item.save()
+    try:
+        item = UserListings.objects.get(id=item_id)
+        username = request.user.username
+        ratings = int(request.POST['inlineRadioOptions'])
+        heading = request.POST['heading']
+        comment = request.POST['comment']
+        if ratings is not None:
+            UserComment(item=item, username=username, ratings=ratings, heading=heading, comment=comment).save()
+            new_avg_rating = UserComment.objects.filter(item=item).aggregate(avg_rating=Avg('ratings'))['avg_rating']
+            item.ratings = format(new_avg_rating, '.2f')
+            item.num_raters += 1
+            item.save()
+    except:
+        pass
     referring_url = request.META.get('HTTP_REFERER')
     return redirect(referring_url or reverse("shop:homepage"))
 

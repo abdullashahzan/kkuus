@@ -41,7 +41,7 @@
             {{new_orders}} new order!</a>
     </div>
     {% endif %}
-    <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
+    <div class="row mx-1 mx-md-0" data-masonry='{"percentPosition": true }'>
         {% for item in page_obj %}
         <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
             <div class="shadow card card-item hidden mb-1 d-flex align-items-center">
@@ -50,7 +50,7 @@
                 <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock" alt="{{item.product_name}}">
                 <div class="card-body mt-2" style="width: 100%;">
                     <h4 class="text-primary" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
-                            class="text-primary style-text-3">{{item.product_name}}</a></h4>
+                            class="text-primary style-text-3" onclick="this.classList.add('disabled');">{{item.product_name}}</a></h4>
                     <hr>
                     <h4 class="style-text-2">SAR {{item.product_price}}</h4>
                     <p class="style-text">
@@ -66,11 +66,11 @@
                     <div class="style-text-2">
                         {% if user.username != item.username %}
                         {% if item.id in bought_items %}
-                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2">Requested</a>
+                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2" onclick="this.classList.add('disabled');">Requested</a>
                         {% elif item.id in completed_items %}
                         <button class="btn btn-disabled my-2 text-primary">Purchased</button>
                         {% else %}
-                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2">Show item</a>
+                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2" onclick="this.classList.add('disabled');">Show item</a>
                         {% endif %}
                         {% if item.id in wishlist %}
                         <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
@@ -129,9 +129,9 @@
         </span>
 
         {% if page_obj.has_next %}
-        <a class="mx-1 btn btn-primary" title="Next page" href="?page={{ page_obj.next_page_number }}"><i
+        <a class="mx-1 btn btn-primary" title="Next page" href="?page={{ page_obj.next_page_number }}" onclick="this.classList.add('disabled');"><i
                 class="bi bi-chevron-right"></i></a>
-        <a class="mx-1 btn btn-primary" title="Last page" href="?page={{ page_obj.paginator.num_pages }}"><i
+        <a class="mx-1 btn btn-primary" title="Last page" href="?page={{ page_obj.paginator.num_pages }}" onclick="this.classList.add('disabled');"><i
                 class="bi bi-chevron-double-right"></i></a>
         {% endif %}
     </span>
