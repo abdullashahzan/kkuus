@@ -220,129 +220,125 @@ def crop_image(request):
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
-    hasFCM = FCMToken.objects.filter(username=request.user.username)
-    if hasFCM.exists():
-        delete_unpaid(request.user.username)
-        if request.method == "POST":
-            product_name = request.POST['product_name']
-            product_description = request.POST['product_description']
-            price = request.POST['price']
-            plan = request.POST['flexRadioDefault']
-            try:
-                uploaded_file = request.FILES['product_images']
-                if uploaded_file:
-                    allowed_types = ['image/jpeg', 'image/png']
-                    if uploaded_file.content_type not in allowed_types:
-                        return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
-                coordinates = CroppingImageCoordinatesCache.objects.get(username=request.user.username)
-                crop_x = coordinates.x
-                crop_y = coordinates.y
-                crop_width = coordinates.width
-                crop_height = coordinates.height
-                coordinates.delete()
-                image = Image.open(uploaded_file)
-                # Check and correct the orientation if needed
-                if hasattr(image, '_getexif'):
-                    exif = image._getexif()
-                    if exif is not None:
-                        orientation = exif.get(0x0112)
-                        if orientation == 3:
-                            image = image.rotate(180, expand=True)
-                        elif orientation == 6:
-                            image = image.rotate(270, expand=True)
-                        elif orientation == 8:
-                            image = image.rotate(90, expand=True)
-                image = image.convert("RGB")
-                cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
-                cropped_image_name = str(uuid.uuid4()) + '.jpg'
-                path = f"{BASE_DIR}/shop/image_cache/{cropped_image_name}"
-                cropped_image.save(path, format="JPEG")
-            except:
-                return render(request, "sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
-            try:
-                float(price)
-            except:
-                return render(request, "sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
-            if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
-                unique_filename = str(uuid.uuid4())
-                firebase_path = f'product_images/{unique_filename}/'
-                firebase_bucket = storage.bucket()
-                blob = firebase_bucket.blob(firebase_path)
-                blob.upload_from_filename(path, content_type='image/jpeg')
-                os.remove(path)
-                user_profile = UserProfile.objects.get(user=request.user)
-                if user_profile.privileged == True:
-                    expiry_date = set_expiry(plan)
-                    UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
-                    notification_title = f"{product_name} was listed successfully in marketplace!"
-                    notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-                    UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
-                    return redirect(reverse('shop:homepage'))
-                elif int(plan) <= 4:
-                    expiry_date = set_expiry(plan)
-                    UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
-                    notification_title = f"{product_name} was listed successfully in marketplace!"
-                    notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-                    UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
-                    return redirect(reverse('shop:homepage'))
-                elif int(plan) == 14:
-                    expiry_date = set_expiry(0)
-                    item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
-                    item.save()
-                    host = request.get_host()
-                    created_uuid = uuid.uuid4()
-                    invoice = Invoice(item=item, invoice=created_uuid)
-                    invoice.save()
-                    paypal_checkout = {
-                        'business': PAYPAL_RECIEVER_EMAIL,
-                        'amount': 2.00,
-                        'item_name': "AD DURATION: 14 DAYS",
-                        'invoice': created_uuid,
-                        'currency_code': 'USD',
-                        'notify_url': f"https://{host}{reverse('paypal-ipn')}",
-                        'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':invoice.id, 'plan':14})}",
-                        'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
-                    }
-                    paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-                    context = {
-                        'price': 7.51,
-                        'paypal_fee': 5.60,
-                        'web_fee': 1.91,
-                        'paypal': paypal_payment
-                    }
-                    return render(request, 'checkout.html', context)
-                elif int(plan) == 28:
-                    expiry_date = set_expiry(0)
-                    item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
-                    item.save()
-                    host = request.get_host()
-                    created_uuid = uuid.uuid4()
-                    invoice = Invoice(item=item, invoice=created_uuid)
-                    invoice.save()
-                    paypal_checkout = {
-                        'business': PAYPAL_RECIEVER_EMAIL,
-                        'amount': 3.00,
-                        'item_name': "AD DURATION: 28 DAYS",
-                        'invoice': created_uuid,
-                        'currency_code': 'USD',
-                        'notify_url': f"https://{host}{reverse('paypal-ipn')}",
-                        'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice': invoice.id, 'plan':28})}",
-                        'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
-                    }
-                    paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-                    context = {
-                        'price': 11.26,
-                        'paypal_fee': 8.39,
-                        'web_fee': 2.87,
-                        'paypal': paypal_payment
-                    }
-                    return render(request, 'checkout.html', context)
-            else:
-                return render(request, "sell_product.html", {"message": "Please fill all fields"})
+    delete_unpaid(request.user.username)
+    if request.method == "POST":
+        product_name = request.POST['product_name']
+        product_description = request.POST['product_description']
+        price = request.POST['price']
+        plan = request.POST['flexRadioDefault']
+        try:
+            uploaded_file = request.FILES['product_images']
+            if uploaded_file:
+                allowed_types = ['image/jpeg', 'image/png']
+                if uploaded_file.content_type not in allowed_types:
+                    return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
+            coordinates = CroppingImageCoordinatesCache.objects.get(username=request.user.username)
+            crop_x = coordinates.x
+            crop_y = coordinates.y
+            crop_width = coordinates.width
+            crop_height = coordinates.height
+            coordinates.delete()
+            image = Image.open(uploaded_file)
+            # Check and correct the orientation if needed
+            if hasattr(image, '_getexif'):
+                exif = image._getexif()
+                if exif is not None:
+                    orientation = exif.get(0x0112)
+                    if orientation == 3:
+                        image = image.rotate(180, expand=True)
+                    elif orientation == 6:
+                        image = image.rotate(270, expand=True)
+                    elif orientation == 8:
+                        image = image.rotate(90, expand=True)
+            image = image.convert("RGB")
+            cropped_image = image.crop((crop_x, crop_y, crop_x + crop_width, crop_y + crop_height))
+            cropped_image_name = str(uuid.uuid4()) + '.jpg'
+            path = f"{BASE_DIR}/shop/image_cache/{cropped_image_name}"
+            cropped_image.save(path, format="JPEG")
+        except:
+            return render(request, "sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
+        try:
+            float(price)
+        except:
+            return render(request, "sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
+        if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
+            unique_filename = str(uuid.uuid4())
+            firebase_path = f'product_images/{unique_filename}/'
+            firebase_bucket = storage.bucket()
+            blob = firebase_bucket.blob(firebase_path)
+            blob.upload_from_filename(path, content_type='image/jpeg')
+            os.remove(path)
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile.privileged == True:
+                expiry_date = set_expiry(plan)
+                UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
+                notification_title = f"{product_name} was listed successfully in marketplace!"
+                notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+                UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
+                return redirect(reverse('shop:homepage'))
+            elif int(plan) <= 4:
+                expiry_date = set_expiry(plan)
+                UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
+                notification_title = f"{product_name} was listed successfully in marketplace!"
+                notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+                UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
+                return redirect(reverse('shop:homepage'))
+            elif int(plan) == 14:
+                expiry_date = set_expiry(0)
+                item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
+                item.save()
+                host = request.get_host()
+                created_uuid = uuid.uuid4()
+                invoice = Invoice(item=item, invoice=created_uuid)
+                invoice.save()
+                paypal_checkout = {
+                    'business': PAYPAL_RECIEVER_EMAIL,
+                    'amount': 2.00,
+                    'item_name': "AD DURATION: 14 DAYS",
+                    'invoice': created_uuid,
+                    'currency_code': 'USD',
+                    'notify_url': f"https://{host}{reverse('paypal-ipn')}",
+                    'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':invoice.id, 'plan':14})}",
+                    'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
+                }
+                paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+                context = {
+                    'price': 7.51,
+                    'paypal_fee': 5.60,
+                    'web_fee': 1.91,
+                    'paypal': paypal_payment
+                }
+                return render(request, 'checkout.html', context)
+            elif int(plan) == 28:
+                expiry_date = set_expiry(0)
+                item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
+                item.save()
+                host = request.get_host()
+                created_uuid = uuid.uuid4()
+                invoice = Invoice(item=item, invoice=created_uuid)
+                invoice.save()
+                paypal_checkout = {
+                    'business': PAYPAL_RECIEVER_EMAIL,
+                    'amount': 3.00,
+                    'item_name': "AD DURATION: 28 DAYS",
+                    'invoice': created_uuid,
+                    'currency_code': 'USD',
+                    'notify_url': f"https://{host}{reverse('paypal-ipn')}",
+                    'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice': invoice.id, 'plan':28})}",
+                    'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
+                }
+                paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+                context = {
+                    'price': 11.26,
+                    'paypal_fee': 8.39,
+                    'web_fee': 2.87,
+                    'paypal': paypal_payment
+                }
+                return render(request, 'checkout.html', context)
         else:
-            return render(request, "sell_product.html")
+            return render(request, "sell_product.html", {"message": "Please fill all fields"})
     else:
-        return redirect(reverse('shop:preEnableNotifications'))
+        return render(request, "sell_product.html")
 
 def delete_image(firebase_path):
     firebase_path = f'product_images/{firebase_path}/'
@@ -374,15 +370,11 @@ def delete_listing(request, listing_id):
 
 @login_required(login_url="shop:login_user")
 def my_shop(request):
-    hasFCM = FCMToken.objects.filter(username=request.user.username)
-    if hasFCM.exists():
-        delete_unpaid(request.user.username)
-        check_data()
-        items = UserListings.objects.filter(username=request.user.username)
-        notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
-        return render(request, 'my_shop.html', {"items": items, "notifications":notifications})
-    else:
-        return redirect(reverse('shop:preEnableNotifications'))
+    delete_unpaid(request.user.username)
+    check_data()
+    items = UserListings.objects.filter(username=request.user.username)
+    notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
+    return render(request, 'my_shop.html', {"items": items, "notifications":notifications})
 
 @require_POST
 def add_to_wishlist(request, item_id):
@@ -535,10 +527,6 @@ def confirm_purchase(request, item_id):
             recipient_list = [User.objects.get(username=item.username).email, request.user.email]
             special_keys = [item.product_name]
             task = "Order Completed"
-            try:
-                message = send_email(task, recipient_list, special_keys)
-            except:
-                pass
             user = User.objects.get(username=order.username)
             notification_title = f"{item.product_name} was sold successfully to {order.username}."
             notification_body = f"Your order has been completed."
