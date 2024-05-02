@@ -38,7 +38,13 @@ def login_user(request):
             next_url = request.GET.get('next', 'shop:index')
             return redirect(next_url)
         else:
-            message = "Invalid credentials"
+            get_user = User.objects.get(email=username)
+            user = authenticate(username=get_user.username, password=password)
+            if user is not None:
+                login(request, user)
+                next_url = request.GET.get('next', 'shop:index')
+                return redirect(next_url)
+        message = "Invalid credentials"
     if language == "en":
         return render(request, "login.html", {"message": message})
     elif language == "ar":
