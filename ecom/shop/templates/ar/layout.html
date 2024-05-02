@@ -277,10 +277,10 @@
         var anchors = document.querySelectorAll('a');
         anchors.forEach(function (anchor) {
             anchor.addEventListener('click', function (event) {
-                event.preventDefault();
+                //event.preventDefault();
                 anchor.classList.add('disabled');
                 document.querySelector('.loadingScreen').style.display = "block";
-                window.location.href = anchor.href;
+                //window.location.href = anchor.href;
             });
         });
 

@@ -100,7 +100,7 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown" style="cursor: pointer;">
-                        <sapn class="nav-link dropdown-toggle active notification_panel" data-bs-toggle="dropdown"
+                        <span class="nav-link dropdown-toggle active notification_panel" data-bs-toggle="dropdown"
                             aria-expanded="false"><i class="bi bi-person-circle lead mx-2"></i> Account
                             {% if notifications %}<span class="notification_badge"></span>{% endif %}</span>
                             <ul class="dropdown-menu">
@@ -275,10 +275,10 @@
         var anchors = document.querySelectorAll('a');
         anchors.forEach(function (anchor) {
             anchor.addEventListener('click', function (event) {
-                event.preventDefault();
+                //event.preventDefault();
                 anchor.classList.add('disabled');
                 document.querySelector('.loadingScreen').style.display = "block";
-                window.location.href = anchor.href;
+                // window.location.href = anchor.href;
             });
         });
 
