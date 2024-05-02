@@ -1,0 +1,66 @@
+{% extends 'ar/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>طلباتي</title>
+{% endblock %}
+
+{% block body %}
+<div class="container p-4">
+    <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
+        {% for order in orders %}
+        <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
+            <div class="shadow fadeInUp card mb-2 d-flex justify-content-center align-items-center">
+                <div class="card-header style-text" style="width: 100%;">حالة الطلب: <span class="text-primary">{{order.status}}</span></div>
+                <img class="heightlock" src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top"
+                    alt="{{order.item.product_name}}">
+                <div class="card-body" style="width: 100%;">
+                    <h5 class="card-title text-primary style-text">{{order.item.product_name}}</h5>
+                    <hr>
+                    <p class="style-text"><strong>الرمز: </strong> <span class="text-primary lead">{{order.key}}</span><br><span class="text-muted">الرجاء إظهار هذا الرمز للبائع.</span>
+                    </p>
+                    <p class="style-text">
+                        <span class="text-primary">تفاصيل البائع:</span><br>
+                        <strong>العنوان:</strong> غرفة {{order.room_no}}، المبنى {{order.building_code}}<br>
+                        <strong>واتساب:</strong> {{order.whatsapp}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="row d-none d-lg-flex align-items-center" style="min-height: 80vh;">
+            <div class="col-md-7 slideInLeft">
+                <h1 class="style-text-3">ليس لديك أي طلبات...</h1>
+                <p class="text-muted style-text">تظهر طلباتك المشتراة هنا</p>
+            </div>
+            <div class="col-md-5 slideInLeft">
+                <img class="widthlock" src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="فارغ">
+            </div>
+        </div>
+        <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
+            <div class="col-12 col-md-5">
+                <div class="card shadow animate__animated animate__zoomIn">
+                    <img class="widthlock p-2" src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="فارغ">
+                    <div class="card-body">
+                        <article>
+                            <h1 class="style-text-3 my-3">ليس لديك أي طلبات...</h1>
+                            <hr>
+                            <p class="text-muted style-text">تظهر طلباتك المشتراة هنا</p>
+                            <a href="{% url 'shop:index' %}" class="btn btn-outline-primary style-text-2">شراء شيء</a>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<script>
+    var bar = document.querySelector('.orders-bar');
+    bar.classList.add('this-active');
+</script>
+
+
+{% endblock %}

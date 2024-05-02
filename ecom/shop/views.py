@@ -17,6 +17,16 @@ from ecom.settings import version, PAYPAL_RECIEVER_EMAIL, BASE_DIR
 from paypal.standard.forms import PayPalPaymentsForm
 from PIL import Image
 
+language = "ar"
+
+def change_language(request):
+    global language
+    if language == "en":
+        language = "ar"
+    else:
+        language = "en"
+    return HttpResponseRedirect(reverse('shop:homepage'))
+
 def login_user(request):
     message = ""
     if request.method == "POST":
@@ -29,7 +39,10 @@ def login_user(request):
             return redirect(next_url)
         else:
             message = "Invalid credentials"
-    return render(request, "login.html", {"message": message})
+    if language == "en":
+        return render(request, "login.html", {"message": message})
+    elif language == "ar":
+        return render(request, "ar/login.html", {"message": message})
 
 def signup_user(request):
     message = ""
@@ -63,7 +76,10 @@ def signup_user(request):
                 message = "Passwords do not match"
         else:
             message = "Please fill all the fields"
-    return render(request, "signup.html", {"message": message})
+    if language == "en":
+        return render(request, "signup.html", {"message": message})
+    elif language == "ar":
+        return render(request, "ar/signup.html", {"message": message})
 
 def check_username_availability(request, username):
     if request.method == "POST":
@@ -144,8 +160,14 @@ def homepage(request):
         user_wishlist_list = []
         for i in user_wishlist:
             user_wishlist_list.append(i.id)
-        return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj})
-    return render(request, "index.html", {"items": items,'page_obj': page_obj})
+        if language == "en":
+            return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj})
+        elif language == "ar":
+            return render(request, "ar/index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj})
+    if language == "en":
+        return render(request, "index.html", {"items": items,'page_obj': page_obj})
+    elif language == "ar":
+        return render(request, "ar/index.html", {"items": items,'page_obj': page_obj})
 
 def notifications(request):
     ordered_items = UserListings.objects.filter(username=request.user.username)
@@ -156,7 +178,10 @@ def notifications(request):
     for notification in notifications:
         notification.unread = False
         notification.save()
-    return render(request, "notifications.html", {"notifications": notifications, "new_orders": new_item_orders})
+    if language == "en":
+        return render(request, "notifications.html", {"notifications": notifications, "new_orders": new_item_orders})
+    elif language == "ar":
+        return render(request, "ar/notifications.html", {"notifications": notifications, "new_orders": new_item_orders})
 
 def delete_notification(request, notification_id):
     UserNotification.objects.get(id=notification_id).delete()
@@ -181,7 +206,10 @@ def wishlist(request):
         completed.append(completed_item.item.id)
     for i in user_wishlist:
         user_wishlist_list.append(i.id)
-    return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders})
+    if language == "en":
+        return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders})
+    elif language == "ar":
+        return render(request, "ar/wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders})
 
 def paid_sale_successful(request, invoice, plan):
     if 'HTTP_REFERER' in request.META:
@@ -231,7 +259,10 @@ def new_listing(request):
             if uploaded_file:
                 allowed_types = ['image/jpeg', 'image/png']
                 if uploaded_file.content_type not in allowed_types:
-                    return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
+                    if language == "en":
+                        return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
+                    elif language == "ar":
+                        return render(request, "ar/sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
             coordinates = CroppingImageCoordinatesCache.objects.get(username=request.user.username)
             crop_x = coordinates.x
             crop_y = coordinates.y
@@ -256,11 +287,17 @@ def new_listing(request):
             path = f"{BASE_DIR}/shop/image_cache/{cropped_image_name}"
             cropped_image.save(path, format="JPEG")
         except:
-            return render(request, "sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
+            if language == "en":
+                return render(request, "sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
+            elif language == "ar":
+                return render(request, "ar/sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
         try:
             float(price)
         except:
-            return render(request, "sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
+            if language == "en":
+                return render(request, "sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
+            elif language == "ar":
+                return render(request, "ar/sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
         if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
             unique_filename = str(uuid.uuid4())
             firebase_path = f'product_images/{unique_filename}/'
@@ -308,7 +345,10 @@ def new_listing(request):
                     'web_fee': 1.91,
                     'paypal': paypal_payment
                 }
-                return render(request, 'checkout.html', context)
+                if language == "en":
+                    return render(request, 'checkout.html', context)
+                elif language == "ar":
+                    return render(request, 'ar/checkout.html', context)
             elif int(plan) == 28:
                 expiry_date = set_expiry(0)
                 item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
@@ -334,11 +374,20 @@ def new_listing(request):
                     'web_fee': 2.87,
                     'paypal': paypal_payment
                 }
-                return render(request, 'checkout.html', context)
+                if language == "en":
+                    return render(request, 'checkout.html', context)
+                elif language == "ar":
+                    return render(request, 'ar/checkout.html', context)
         else:
-            return render(request, "sell_product.html", {"message": "Please fill all fields"})
+            if language == "en":
+                return render(request, "sell_product.html", {"message": "Please fill all fields"})
+            elif language == "ar":
+                return render(request, "ar/sell_product.html", {"message": "Please fill all fields"})
     else:
-        return render(request, "sell_product.html")
+        if language == "en":
+            return render(request, "sell_product.html")
+        elif language == "ar":
+            return render(request, "ar/sell_product.html")
 
 def delete_image(firebase_path):
     firebase_path = f'product_images/{firebase_path}/'
@@ -374,7 +423,10 @@ def my_shop(request):
     check_data()
     items = UserListings.objects.filter(username=request.user.username)
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
-    return render(request, 'my_shop.html', {"items": items, "notifications":notifications})
+    if language == "en":
+        return render(request, 'my_shop.html', {"items": items, "notifications":notifications})
+    elif language == "ar":
+        return render(request, 'ar/my_shop.html', {"items": items, "notifications":notifications})
 
 @require_POST
 def add_to_wishlist(request, item_id):
@@ -425,8 +477,14 @@ def buy(request, item_id):
         user = User.objects.get(username=item.username)
         user_profile = UserProfile.objects.get(user=user)
         whatsapp = user_profile.whatsapp
-        return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "whatsapp": whatsapp, "new_orders": new_item_orders})
-    return render(request, "buy_product.html", {"item": item})
+        if language == "en":
+            return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "whatsapp": whatsapp, "new_orders": new_item_orders})
+        elif language == "ar":
+            return render(request, "ar/buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "whatsapp": whatsapp, "new_orders": new_item_orders})
+    if language == "en":
+        return render(request, "buy_product.html", {"item": item})
+    elif language == "ar":
+        return render(request, "ar/buy_product.html", {"item": item})
 
 @require_POST
 def comment(request, item_id):
@@ -467,7 +525,10 @@ def order_details(request, item_id):
         order_status = object.status
         detail = [UserProfile.objects.get(user=user), order_status]
         details.append(detail)
-    return render(request, "ordered_by.html", {"item": item, "orders":details})
+    if language == "en":
+        return render(request, "ordered_by.html", {"item": item, "orders":details})
+    elif language == "ar":
+        return render(request, "ar/ordered_by.html", {"item": item, "orders":details})
 
 def purchase(request, item_id):
     item = UserListings.objects.get(id=item_id)
@@ -540,8 +601,14 @@ def confirm_purchase(request, item_id):
             item.num_orders += 1
             item.save()
             order.delete()
-            return render(request, "purchase_complete.html", {"item":item, "user": user})
-    return render(request, "confirm_purchase.html", {"item": item, "message":message})
+            if language == "en":
+                return render(request, "purchase_complete.html", {"item":item, "user": user})
+            elif language == "ar":
+                return render(request, "ar/purchase_complete.html", {"item":item, "user": user})
+    if language == "en":
+        return render(request, "confirm_purchase.html", {"item": item, "message":message})
+    elif language == "ar":
+        return render(request, "ar/confirm_purchase.html", {"item": item, "message":message})
 
 def myOrders(request):
     ordered_items = UserListings.objects.filter(username=request.user.username)
@@ -550,7 +617,10 @@ def myOrders(request):
         new_item_orders += item.new_orders
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     ordered_items = UserOrder.objects.filter(username=request.user.username)
-    return render(request, "my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders})
+    if language == "en":
+        return render(request, "my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders})
+    elif language == "ar":
+        return render(request, "ar/my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders})
 
 def acceptOrder(request, item_id, username):
     item = UserListings.objects.get(id=item_id)
@@ -596,7 +666,10 @@ def search_item(request):
         cleaned_desc = str(listing.product_description).strip().lower()
         if item in cleaned_name or item in cleaned_desc:
             items_found.append(listing)
-    return render(request, "search_items.html", {"items": items_found, "new_orders": new_item_orders})
+    if language == "en":
+        return render(request, "search_items.html", {"items": items_found, "new_orders": new_item_orders})
+    elif language == "ar":
+        return render(request, "ar/search_items.html", {"items": items_found, "new_orders": new_item_orders})
 
 @require_POST
 def update_address(request):
@@ -710,7 +783,10 @@ def profile(request):
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     this_user = User.objects.get(username=request.user.username)
     this_user_profile = UserProfile.objects.get(user=request.user)
-    return render(request, "profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error, "notifications":notifications, "version": version})
+    if language == "en":
+        return render(request, "profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error, "notifications":notifications, "version": version})
+    elif language == "ar":
+        return render(request, "ar/profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error, "notifications":notifications, "version": version})
 
 def developer(request):
     users = User.objects.all().count()
@@ -727,15 +803,24 @@ def developer(request):
     })
 
 def page_404(request, exception):
-    return render(request, "page404.html", status=404)
+    if language == "en":
+        return render(request, "page404.html", status=404)
+    elif language == "ar":
+        return render(request, "ar/page404.html", status=404)
 
 @login_required(login_url="shop:login_user")
 def preEnableNotifications(request):
-    return render(request, "pre_enable_notification.html")
+    if language == "en":
+        return render(request, "pre_enable_notification.html")
+    elif language == "ar":
+        return render(request, "ar/pre_enable_notification.html")
 
 @login_required(login_url="shop:login_user")
 def enableNotifications(request):
-    return render(request, "enable_notifications.html")
+    if language == "en":
+        return render(request, "enable_notifications.html")
+    elif language == "ar":
+        return render(request, "ar/enable_notifications.html")
 
 def save_fcm_token(request):
     if request.method == 'POST':
@@ -754,3 +839,4 @@ def process_purchase(request):
     for token in tokens:
         send_notification(token.token, title, body)
     return redirect(reverse('shop:profile'))
+

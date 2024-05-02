@@ -1,9 +1,9 @@
 :root {
-    --family1: 'Kalnia';
-    --family2: 'Wix Madefor Display';
-    --family3: 'Raleway';
-    --family4: 'Poltawski Nowy';
-    --family5: 'Trochut';
+    --family1: 'Kalnia', 'IBM Plex Sans Arabic';
+    --family2: 'Wix Madefor Display', 'IBM Plex Sans Arabic';
+    --family3: 'Raleway', 'IBM Plex Sans Arabic';
+    --family4: 'Poltawski Nowy', 'IBM Plex Sans Arabic';
+    --family5: 'Trochut', 'IBM Plex Sans Arabic';
     --themecolor1: '#0d6efd';
     --themecolor2: '#f7f7f7';
 }

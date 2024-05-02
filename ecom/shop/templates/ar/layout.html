@@ -1,7 +1,6 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en"> <!--lang="ar" dir="rtl"-->
+<html lang="ar" dir="rtl"> <!--lang="ar" dir="rtl"-->
 
 <head>
     <meta charset="UTF-8">
@@ -27,6 +26,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Kalnia:wght@100..700&family=Poltawski+Nowy:ital,wght@0,400..700;1,400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Trochut:ital,wght@0,400;0,700;1,400&family=Wix+Madefor+Display:wght@400..800&display=swap"
         rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -49,7 +51,7 @@
 
 
     {% block title %}
-    <title>KKU Unofficial Store</title>
+    <title>متجر جامعة الملك خالد غير الرسمي</title>
     {% endblock %}
 </head>
 
@@ -67,17 +69,17 @@
         <div class="container-fluid" style="min-height: 0;">
             <a class="style-text-4" href="{% url 'shop:homepage' %}"
                 style="color: #f7f7f7; text-decoration: none; font-size: 2rem;"
-                title="E-commerce application for students of King Khalid University">KKU <span class="style-text-4"
-                    style="font-size: 1.6rem;">unofficial store</span>
+                title="تطبيق التجارة الإلكترونية لطلاب جامعة الملك خالد">حراج <span class="style-text-4"
+                    style="font-size: 1.6rem;">الجامعي</span>
             </a>
             <div class="d-block d-lg-none mt-1 style-text">
                 {% if user.is_authenticated %}
                 <a href="{% url 'shop:logout_user' %}" class="text-light text-decoration-none">
-                    <i class="bi bi-door-open lead"></i> <span class="align-middle">Logout</span>
+                    <i class="bi bi-door-open lead"></i> <span class="align-middle">تسجيل الخروج</span>
                 </a>
                 {% else %}
                 <a href="{% url 'shop:login_user' %}" class="text-light text-decoration-none">
-                    <i class="bi bi-person lead"></i> <span class="align-middle">Sign in</span>
+                    <i class="bi bi-person lead"></i> <span class="align-middle">تسجيل الدخول</span>
                 </a>
                 {% endif %}
             </div>
@@ -85,51 +87,53 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'shop:index' %}"><i
-                                class="bi bi-house-fill lead mx-2"></i> Home </a>
+                                class="bi bi-house-fill lead mx-2"></i> الصفحة الرئيسية </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'shop:myOrders' %}"><i
-                                class="bi bi-receipt lead mx-2"></i> My orders </a>
+                                class="bi bi-receipt lead mx-2"></i> طلباتي </a>
                     </li>
                     <li class="nav-item dropdown" style="cursor: pointer;">
                         <span class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                class="bi bi-cash lead mx-2"></i> Sell </span>
+                                class="bi bi-cash lead mx-2"></i> بيع </span>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'shop:new_listing' %}">Sell new product</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My products</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:new_listing' %}">بيع منتج جديد</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">منتجاتي</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown" style="cursor: pointer;">
-                        <sapn class="nav-link dropdown-toggle active notification_panel" data-bs-toggle="dropdown"
-                            aria-expanded="false"><i class="bi bi-person-circle lead mx-2"></i> Account
+                        <span class="nav-link dropdown-toggle active notification_panel" data-bs-toggle="dropdown"
+                            aria-expanded="false"><i class="bi bi-person-circle lead mx-2"></i> الحساب
                             {% if notifications %}<span class="notification_badge"></span>{% endif %}</span>
-                            <ul class="dropdown-menu">
-                                {% if user.is_authenticated %}
-                                <li class="mx-3">
-                                    <div class="style-text">Logged in as <strong>{{user.username}}</strong></div>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{% url 'shop:wishlist' %}"> Wishlist</a></li>
-                                <li><a class="dropdown-item" href="{% url 'shop:notifications' %}"> Notifications
-                                        {% if notifications %}
-                                        <span class="bg-danger rounded text-light style-text-2 p-1 mx-1">
-                                            New</span>
-                                        {% endif %}</a></li>
-                                <li><a class="dropdown-item" href="{% url 'shop:profile' %}"> Settings</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{% url 'shop:toggleLanguage' %}"><i class="bi bi-globe lead mx-2"></i> ع / En</a></li>
-                                <li><a class="dropdown-item" href="{% url 'shop:logout_user' %}"><i
-                                            class="bi bi-door-open-fill lead mx-2 text-danger"></i> Logout</a></li>
-                                {% else %}
-                                <li><a class="dropdown-item" href="{% url 'shop:toggleLanguage' %}"><i class="bi bi-globe lead mx-2"></i> ع / En</a></li>
-                                <li><a class="dropdown-item" href="{% url 'shop:login_user' %}"><i
-                                            class="bi bi-door-open-fill lead mx-2 text-success"></i> Login</a></li>
-                                {% endif %}
-                            </ul>
+                        <ul class="dropdown-menu">
+                            {% if user.is_authenticated %}
+                            <li class="mx-3">
+                                <div class="style-text">مسجل الدخول كـ <strong>{{user.username}}</strong></div>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'shop:wishlist' %}"> قائمة الرغبات</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:notifications' %}"> الإشعارات
+                                    {% if notifications %}
+                                    <span class="bg-danger rounded text-light style-text-2 p-1 mx-1">
+                                        جديد</span>
+                                    {% endif %}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:profile' %}"> الإعدادات</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'shop:toggleLanguage' %}"><i
+                                        class="bi bi-globe lead mx-2"></i> ع / En</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:logout_user' %}"><i
+                                        class="bi bi-door-open-fill lead mx-2 text-danger"></i> تسجيل الخروج</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'shop:toggleLanguage' %}"><i
+                                        class="bi bi-globe lead mx-2"></i> ع / En</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:login_user' %}"><i
+                                        class="bi bi-door-open-fill lead mx-2 text-success"></i> تسجيل الدخول</a></li>
+                            {% endif %}
+                        </ul>
                     </li>
                     <li>
                         <div class="vertical-line d-none d-lg-block"></div>
@@ -138,9 +142,9 @@
                         <form action="{% url 'shop:search_item' %}"
                             class="d-flex justify-content-center align-items-center style-text-2" method="post">
                             {% csrf_token %}
-                            <input type="text" class="form-control mx-2" placeholder="Search for an item"
-                                aria-label="Search for an item" aria-describedby="basic-addon2" name="search">
-                            <input type="submit" class="btn btn-outline-light lead"
+                            <input type="text" class="form-control mx-2" placeholder="البحث عن منتج"
+                                aria-label="البحث عن منتج" aria-describedby="basic-addon2" name="search">
+                            <input type="submit" class="btn btn-outline-light lead" value="بحث"
                                 onclick="this.classList.add('disabled');">
                         </form>
                     </li>
@@ -153,22 +157,22 @@
         <div class="mx-2 style-text">
             <button class="btn btn-primary shadow mb-3" id="searchButton" style="text-decoration: none; height: 2.6rem;"
                 onclick="openModal()" disabled>
-                <i class="bi bi-search"></i> <span class="align-middle">Search</span></button>
+                <i class="bi bi-search"></i> <span class="align-middle">بحث</span></button>
             <a class="btn btn-primary shadow mb-3 notification_panel" style="text-decoration: none; height: 2.6rem;"
                 href="{% url 'shop:notifications' %}">
-                <i class="bi bi-chat-left-dots-fill"></i> Notifications
+                <i class="bi bi-chat-left-dots-fill"></i> الإشعارات
                 {% if notifications %}
                 <span class="notification_badge animate__animated animate__headShake"></span>
                 {% endif %}</a>
             <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;"
                 href="{% url 'shop:wishlist' %}">
-                <i class="bi bi-bag"></i> <span class="align-middle">Wishlist</span></a>
+                <i class="bi bi-bag"></i> <span class="align-middle">قائمة الرغبات</span></a>
             <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;"
-            href="{% url 'shop:toggleLanguage' %}">
-            <i class="bi bi-globe"></i> <span class="align-middle">عربي</span></a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem; margin-right: 0.7rem;"
+                href="{% url 'shop:toggleLanguage' %}">
+                <i class="bi bi-globe"></i> <span class="align-middle">English</span></a>
+            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem; margin-left: 0.7rem;"
                 href="{% url 'shop:new_listing' %}">
-                <i class="bi bi-cart-plus-fill"></i> <span class="align-middle">Sell a new product</span></a>
+                <i class="bi bi-cart-plus-fill"></i> <span class="align-middle">بيع منتج جديد</span></a>
         </div>
     </div>
 
@@ -177,21 +181,21 @@
         border border-primary rounded-top d-block animate__animated px-2" id="hiddenDiv">
         <div class="row pt-2">
             <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:homepage' %}">
-                <p class="style-text-2"><i class="bi bi-house-fill" style="font-size: 1.7rem;"></i> <br> Home</p>
+                <p class="style-text-2"><i class="bi bi-house-fill" style="font-size: 1.7rem;"></i> <br> الرئيسية</p>
             </a>
             <a class="col-3 text-center text-light text-decoration-none shop_panel" href="{% url 'shop:my_shop' %}">
                 <p class="style-text-2"><i class="bi bi-shop" style="font-size: 1.7rem;"></i> <br>
-                    My shop
+                    متجري
                     {% if new_orders %}
                     <span class="shop_badge animate__animated animate__headShake">{{new_orders}}</span>
                     {% endif %}
                 </p>
             </a>
             <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:myOrders' %}">
-                <p class="style-text-2"><i class="bi bi-receipt" style="font-size: 1.7rem;"></i> <br> My orders</p>
+                <p class="style-text-2"><i class="bi bi-receipt" style="font-size: 1.7rem;"></i> <br> طلباتي</p>
             </a>
             <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:profile' %}">
-                <p class="style-text-2"><i class="bi bi-person-circle" style="font-size: 1.7rem;"></i> <br> Account</p>
+                <p class="style-text-2"><i class="bi bi-person-circle" style="font-size: 1.7rem;"></i> <br> الحساب</p>
             </a>
         </div>
     </div>
@@ -242,7 +246,7 @@
     </svg>
 
     <footer class="text-light text-center py-2 bg-primary">
-        <p class="style-text">&copy; 2024 All rights reserved.</p>
+        <p class="style-text">&copy; 2024 جميع الحقوق محفوظة.</p>
     </footer>
     <script src="{% static 'script.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" async></script>

@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 app_name = 'shop'
 urlpatterns = [
+    path('toggleLanguage/', views.change_language, name='toggleLanguage'),
     path('username_availability/<str:username>', views.check_username_availability, name='username_availability'),
     path('email_availability/<str:email>', views.check_email_availability, name='email_availability'),
     path('developer_dashboard/', views.developer, name='developer'),

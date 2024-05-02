@@ -1,0 +1,127 @@
+{% extends 'ar/layout.html' %}
+{% load static %}
+
+{% block title %}
+{% if user.is_authenticated %}
+<title>مرحبًا، {{request.user.first_name}}!</title>
+{% else %}
+<title>مرحبًا، مستخدم!</title>
+{% endif %}
+{% endblock %}
+
+{% block body %}
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+<div class="container p-4">
+    <div class="row" data-masonry='{"percentPosition": true }'>
+        {% for item in items %}
+        <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
+            <div class="shadow fadeInUp card mb-1 d-flex align-items-center">
+                <div class="card-header style-text bg-primary text-light" style="width: 100%;">متجر @{{item.username}}
+                </div>
+                <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock"
+                    alt="{{item.product_name}}">
+                <div class="card-body mt-2" style="width: 100%;">
+                    <h4 class="text-primary" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
+                            class="text-primary style-text-3">{{item.product_name}}</a></h4>
+                    <hr>
+                    <h4 class="style-text-2">SAR {{item.product_price}}</h4>
+                    <p class="style-text">
+                        <i class="bi bi-heart-fill lead text-danger"></i><span class="mx-2">{{item.ratings}}/5.0
+                            ({{item.num_raters}})</span>
+                        <span class="card-text style-text text-muted truncate-3-lines"><i
+                                class="bi bi-bag-fill lead text-primary"></i> <span class="mx-1">تم شراؤها بواسطة:
+                                {{item.num_orders}} مشترين</span></span>
+                    </p>
+                    <p>
+                        <span class="card-text style-text-2 truncate-3-lines">{{item.product_description}}</span>
+                    </p>
+                    <div class="style-text-2">
+                        {% if user.username != item.username %}
+                        {% if item.id in bought_items %}
+                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2">تم الطلب</a>
+                        {% elif item.id in completed_items %}
+                        <button class="btn btn-disabled my-2 text-primary">تم الشراء</button>
+                        {% else %}
+                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2">عرض العنصر</a>
+                        {% endif %}
+                        {% if item.id in wishlist %}
+                        <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
+                            <i class="bi bi-star-fill"></i></button>
+                        {% else %}
+                        <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
+                            <i class="bi bi-star"></i></button>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 80vh;">
+            <div class="col-md-7 animate__animated animate__bounceIn">
+                <h1 class="style-text-3">ليس لديك أي عناصر في قائمة أمانيك...</h1>
+                <p class="text-muted style-text">تظهر العناصر المضافة إلى قائمة الأماني هنا</p>
+            </div>
+            <div class="col-md-5 d-flex justify-content-center align-items-center">
+                <img class="widthlock" src="{% static 'media/undraw_wishlist_re_m7tv.svg' %}" alt="Wishlist">
+            </div>
+        </div>
+        <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
+            <div class="col-12 col-md-5">
+                <div class="card shadow animate__animated animate__zoomIn">
+                    <img class="widthlock p-2" src="{% static 'media/undraw_wishlist_re_m7tv.svg' %}" alt="empty">
+                    <div class="card-body">
+                        <article>
+                            <h1 class="style-text-3 my-3">ليس لديك أي عناصر في قائمة أمانيك...</h1>
+                            <hr>
+                            <p class="text-muted style-text">تظهر العناصر المضافة إلى قائمة الأماني هنا</p>
+                            <a href="{% url 'shop:index' %}" class="btn btn-outline-primary style-text-2">الرئيسية</a>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    $('.add-to-wishlist').on('click', function () {
+        var icon = $(this).find('i');
+        var item_id = $(this).data('item-id');
+        if (icon.hasClass('bi bi-star')) {
+            // Add item to wishlist
+            $.ajax({
+                url: '/addToWishlist/' + item_id,
+                type: 'POST',
+                dataType: 'json',
+                headers: { 'X-CSRFToken': csrftoken },
+                success: function (data) {
+                    alert(data.message);
+                    icon.removeClass('bi bi-star').addClass('bi bi-star-fill');
+                },
+                error: function (xhr, errmsg, err) {
+                    alert('فشل في إضافة العنصر إلى قائمة الأماني الخاصة بك');
+                }
+            });
+        } else if (icon.hasClass('bi bi-star-fill')) {
+            // Remove item from wishlist
+            $.ajax({
+                url: '/removeFromWishlist/' + item_id,
+                type: 'POST',
+                dataType: 'json',
+                headers: { 'X-CSRFToken': csrftoken },
+                success: function (data) {
+                    alert(data.message);
+                    icon.removeClass('bi bi-star-fill').addClass('bi bi-star');
+                },
+                error: function (xhr, errmsg, err) {
+                    alert('فشل في إزالة العنصر من قائمة الأماني الخاصة بك');
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "ar/layout.html" %}
+{% load static %}
+
+{% block body %}
+<main>
+    <div class="container">
+        <div class="row" style="min-height: 80vh;">
+            <div class="col-md-6 d-flex justify-content-center align-items-center slideInLeft">
+                <img class="widthlock" src="{% static 'media/undraw_certification_re_ifll.svg' %}"
+                    alt="Picture">
+            </div>
+            <div class="col-md-6 d-flex justify-content-start align-items-center p-5 slideInUp">
+                <article>
+                    <h1 class="mb-4 style-heading">يرجى طلب من المشتري تقديم الرمز المكون من 6 أرقام لإكمال عملية الشراء</h1>
+                    <form action="{% url 'shop:confirmPurchase' item.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="code" class="form-label style-text">أدخل الرمز:</label>
+                            <input type="text" name="code" placeholder="مثال: iJk5G6" class="form-control style-text" id="code">
+                        </div>
+                        {% if message %}
+                            <p class="style-text text-danger">الرمز غير صحيح، لا يوجد رمز بهذا الشكل.</p>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary">إرسال</button>
+                    </form>
+                </article>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

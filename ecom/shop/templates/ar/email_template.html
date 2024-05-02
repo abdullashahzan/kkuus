@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>KKU unofficial store</title>
+
+    <style>
+        .style-heading {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 2.5rem;
+        }
+
+        .style-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .style-footer {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            color: #f7f7f7;
+            text-decoration: none;
+        }
+
+        .container {
+            min-height: 30vh;
+            background-color: #0d6efd;
+            padding: 2rem;
+        }
+
+        .text-white {
+            color: #f7f7f7;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container">
+        <article>
+            <h1 class="style-heading">{{specialKeys.0}} قام بطلب {{specialKeys.2}}</h1>
+            <p class="style-text">
+                <strong style="font-size: 2rem;">تفاصيل المشتري</strong><br><br>
+                الاسم: <span class="text-white">{{specialKeys.0}}</span><br>
+                واتساب: <a href="https://wa.me/{{specialKeys.5}}" class="text-white">{{specialKeys.5}} (انقر هنا للتواصل مع المستخدم على الواتساب)</a>
+                <br><br>
+                -> <a href="https://unstore.pythonanywhere.com/myShop/" class="btn" target="_blank">انقر هنا للانتقال إلى متجرك وقبول طلب المستخدم.</a>
+            </p>
+            <p class="style-footer">
+                تحياتنا <br>
+                <strong>متجر جامعة الملك خالد غير الرسمي</strong>
+            </p>
+        </article>
+    </div>
+</body>
+
+</html>

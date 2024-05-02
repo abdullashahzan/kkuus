@@ -1,0 +1,281 @@
+{% extends "ar/layout.html" %}
+{% load static %}
+
+{% block body %}
+<main>
+    <div class="container d-none d-lg-block">
+        <div class="row" style="min-height: 80vh;">
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <img class="widthlock" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="صورة">
+            </div>
+            <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
+                <article>
+                    <h1 class="style-heading mb-4">اكتشف الفرح في كل نقرة، سجِّل اليوم!</h1>
+                    <form action="{% url 'shop:signup_user' %}" method="post" class="style-text" id="myForm">
+                        {% csrf_token %}
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label for="first" class="form-label">الاسم الأول</label>
+                                <input type="text" class="form-control" name="first" id="web_first">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="second" class="form-label">الاسم الثاني</label>
+                                <input type="text" class="form-control" name="second" id="web_second">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label for="whatsapp" class="form-label">رقم الواتساب</label>
+                                <input type="text" class="form-control" name="whatsapp" id="web_whatsapp"
+                                    placeholder="مثال: +966509338765">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label for="username" class="form-label">اسم المستخدم</label>
+                                <input type="text" class="form-control" name="username" id="userInput"
+                                    aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
+                                <div id="checkUsernameAvailability" class="form-text"></div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label for="email" class="form-label">البريد الإلكتروني</label>
+                                <input type="email" class="form-control" name="email" id="web_email"
+                                    placeholder="مثال: my_email@gmail.com">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label for="exampleInputPassword1" class="form-label">كلمة المرور</label>
+                                <input type="password" name="password" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="exampleInputPassword2" class="form-label">تأكيد كلمة المرور</label>
+                                <input type="password" name="password2" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label for="address" class="form-label">عنوان السكن الطلابي</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="room_no" id="address"
+                                    placeholder="أدخل رقم غرفتك" aria-describedby="address_help">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" id="building_code" name="building_code">
+                                        <option value="0">اختر مبنى السكن الخاص بك</option>
+                                        <option value="br1">BR1</option>
+                                        <option value="br2">BR2</option>
+                                        <option value="br3">BR3</option>
+                                        <option value="br4">BR4</option>
+                                        <option value="br5">BR5</option>
+                                        <option value="br6">BR6</option>
+                                        <option value="br7">BR7</option>
+                                        <option value="br8">BR8</option>
+                                        <option value="br9">BR9</option>
+                                        <option value="br10">BR10</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="address_help" class="form-text">حالياً، الخدمة متاحة داخل الإسكان الطلابي للذكور في جامعة الملك خالد في الفرع</div>
+                        </div>
+                        {% if message %}
+                        <p class="style-text" style="color: red;">{{message}}</p>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary my-2">تسجيل</button><br>
+                        <a href="{% url 'shop:login_user' %}" type="submit"
+                            class="btn btn-light btn-outline-primary">لديك حساب بالفعل؟</a>
+                    </form>
+                </article>
+            </div>
+        </div>
+    </div>
+    <div class="container d-block d-lg-none justify-content-center align-items-center mb-4" style="min-height: 80vh;">
+        <div class="col-12">
+            <div class="card shadow animate__animated animate__zoomIn">
+                <img class="widthlock p-2" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="صورة فارغة">
+                <div class="card-body">
+                    <article>
+                        <h1 class="style-heading mb-4">اكتشف الفرح في كل نقرة، سجِّل اليوم!</h1>
+                        <form action="{% url 'shop:signup_user' %}" method="post" class="style-text" id="myForm">
+                            {% csrf_token %}
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <label for="first" class="form-label">الاسم الأول</label>
+                                    <input type="text" class="form-control" name="first" id="first">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="second" class="form-label">الاسم الثاني</label>
+                                    <input type="text" class="form-control" name="second" id="second">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label for="whatsapp" class="form-label">رقم الواتساب</label>
+                                    <input type="text" class="form-control" name="whatsapp" id="whatsapp"
+                                        placeholder="مثال: +966509338765">
+                                    <div id="address_help" class="form-text">تأكد من كتابة رمز البلد الصحيح مع "+" في البداية. سيتم عرض هذا الرقم للبائعين أو المشترين للاتصال بك.</div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label for="username" class="form-label">اسم المستخدم</label>
+                                    <input type="text" class="form-control" name="username" id="userInput"
+                                        aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
+                                    <div id="checkUsernameAvailability" class="form-text"></div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label for="email" class="form-label">البريد الإلكتروني</label>
+                                    <input type="email" class="form-control" name="email" id="email" aria-describedby="email_help">
+                                    <div id="address_help" class="form-text">يرجى التأكد من أن بريدك الإلكتروني نشط. نحن نستخدمه لإرسال تفاصيل حول طلباتك.</div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <label for="exampleInputPassword1" class="form-label">كلمة المرور</label>
+                                    <input type="password" name="password" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="exampleInputPassword2" class="form-label">تأكيد كلمة المرور</label>
+                                    <input type="password" name="password2" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <label for="address" class="form-label">عنوان السكن الطلابي</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="room_no" id="web_address"
+                                        placeholder="أدخل رقم غرفتك" aria-describedby="address_help">
+                                </div>
+                                <div class="col-md-6 my-2">
+                                    <div class="form-group">
+                                        <select class="form-control" id="building_code" name="building_code">
+                                            <option value="0">اختر مبنى السكن الخاص بك</option>
+                                            <option value="br1">BR1</option>
+                                            <option value="br2">BR2</option>
+                                            <option value="br3">BR3</option>
+                                            <option value="br4">BR4</option>
+                                            <option value="br5">BR5</option>
+                                            <option value="br6">BR6</option>
+                                            <option value="br7">BR7</option>
+                                            <option value="br8">BR8</option>
+                                            <option value="br9">BR9</option>
+                                            <option value="br10">BR10</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="address_help" class="form-text">حالياً، الخدمة متاحة داخل الإسكان الطلابي للذكور في جامعة الملك خالد في الفرع</div>
+                            </div>
+                            {% if message %}
+                            <p class="style-text" style="color: red;">{{message}}</p>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary my-2">تسجيل</button><br>
+                            <a href="{% url 'shop:login_user' %}" type="submit"
+                                class="btn btn-light btn-outline-primary">لديك حساب بالفعل؟</a>
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    let timeoutId;
+    let functionCalled = false;
+
+    function delayFunction() {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            if (!functionCalled) {
+                checkUsername();
+                functionCalled = true;
+            }
+        }, 2000);
+        functionCalled = false;
+    }
+
+    function checkUsername() {
+
+        var messageBox = document.getElementById('checkUsernameAvailability');
+        var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        var userInput = document.getElementById('userInput');
+        var userInputValue = userInput.value;
+
+        if (userInputValue == "") {
+            html_data = `<p class="style-text" style="color: red;">اسم المستخدم لا يمكن أن يكون فارغًا</p>`
+            messageBox.innerHTML = html_data;
+        } else {
+            fetch(`/username_availability/${userInputValue}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: 'user_input=' + encodeURIComponent(userInputValue),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var html_data;
+                    console.log(data.response)
+                    if (data.response == "available") {
+                        html_data = `<p class="style-text" style="color: green;">اسم المستخدم متاح</p>`
+                        messageBox.innerHTML = html_data;
+                    }
+                    else if (data.response == "not available") {
+                        html_data = `<p class="style-text" style="color: red;">اسم المستخدم محجوز بالفعل</p>`
+                        messageBox.innerHTML = html_data;
+                    }
+                });
+        }
+    }
+
+    // Function to save form data to localStorage
+    function saveFormData() {
+        const formData = {
+            first: document.getElementById('first').value,
+            second: document.getElementById('second').value,
+            whatsapp: document.getElementById('whatsapp').value,
+            username: document.getElementById('userInput').value,
+            email: document.getElementById('email').value,
+            address: document.getElementById('address').value,
+
+            web_first: document.getElementById('web_first').value,
+            web_second: document.getElementById('web_second').value,
+            web_whatsapp: document.getElementById('web_whatsapp').value,
+            web_email: document.getElementById('web_email').value,
+            web_address: document.getElementById('web_address').value,
+        };
+
+        localStorage.setItem('formData', JSON.stringify(formData));
+    }
+
+    // Function to load form data from localStorage
+    function loadFormData() {
+        const savedData = localStorage.getItem('formData');
+        if (savedData) {
+            const formData = JSON.parse(savedData);
+            document.getElementById('first').value = formData.first;
+            document.getElementById('second').value = formData.second;
+            document.getElementById('whatsapp').value = formData.whatsapp;
+            document.getElementById('userInput').value = formData.username;
+            document.getElementById('email').value = formData.email;
+            document.getElementById('address').value = formData.address;
+
+            document.getElementById('web_first').value = formData.web_first;
+            document.getElementById('web_second').value = formData.web_second;
+            document.getElementById('web_whatsapp').value = formData.web_whatsapp;
+            document.getElementById('web_email').value = formData.web_email;
+            document.getElementById('web_address').value = formData.web_address;
+        }
+    }
+
+    // Listen for changes in the form fields and save data to localStorage
+    document.getElementById('myForm').addEventListener('change', saveFormData);
+
+    // Load form data from localStorage when the page loads
+    window.addEventListener('load', loadFormData);
+</script>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends 'ar/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>ملفي الشخصي</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container p-4">
+    <div class="row">
+        <div class="d-none d-lg-block col-3 p-3">
+            <h3 class="style-heading text-primary">ملفي الشخصي</h3>
+            <hr>
+            <ul class="list-unstyled px-3">
+                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-primary style-text-2"
+                        style="text-decoration: none;">معلوماتي</a></li>
+                {% if user.is_staff and user.is_superuser and user.username == "shahzan" %}
+                <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-muted style-text-2"
+                        style="text-decoration: none;">لوحة المطور</a></li>
+                {% endif %}
+                <li class="my-1">الإصدار: {{version}}</li>
+            </ul>
+            <hr>
+            <p class="text-muted style-text">
+                نأسف إذا واجهت أي أخطاء حيث أن الموقع لا يزال تحت التطوير.
+            </p>
+        </div>
+        <div class="col-md-9 p-3">
+            <article class="mb-4">
+                <h3 class="style-heading">تمكين الإشعارات على هذا الجهاز</h3>
+                <hr>
+                <div class="style-text" style="min-height: 5vh;">
+                    <a href="{% url 'shop:preEnableNotifications' %}" class="btn btn-primary">تمكين</a>
+                    <p class="text-muted mt-2">إذا لم تكن تستلم الإشعارات على هذا الجهاز أو لم تقم بتمكين الإشعارات لهذا الجهاز، يرجى النقر هنا لتمكينها.</p>
+                </div>
+            </article>
+            <article class="mb-4">
+                <h3 class="style-heading">تحديث العنوان</h3>
+                <hr>
+                <form action="{% url 'shop:update_address' %}" class=" style-text-2" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="room_no" id="address"
+                                placeholder="رقم الغرفة: {{other.room_no}}" aria-describedby="address_help">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <select class="form-control" id="building_code" name="building_code">
+                                    <option value="0">اختر مبناك</option>
+                                    <option value="br1">BR1</option>
+                                    <option value="br2">BR2</option>
+                                    <option value="br3">BR3</option>
+                                    <option value="br4">BR4</option>
+                                    <option value="br5">BR5</option>
+                                    <option value="br6">BR6</option>
+                                    <option value="br7">BR7</option>
+                                    <option value="br8">BR8</option>
+                                    <option value="br9">BR9</option>
+                                    <option value="br10">BR10</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    {% if address_error %}
+                    <p class="text-danger">{{address_error}}</p>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">تحديث العنوان</button>
+                </form>
+            </article>
+            <article class="mb-4">
+                <h3 class="style-heading">معلومات عامة</h3>
+                <hr>
+                <form class="style-text-2" action="{% url 'shop:update_info' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">الاسم الأول</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name"
+                                placeholder="{{user.first_name}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">اسم العائلة</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name"
+                                placeholder="{{user.last_name}}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="whatsapp" class="form-label">رقم واتساب</label>
+                        <input type="text" class="form-control" name="whatsapp" id="whatsapp"
+                            placeholder="{{other.whatsapp}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">اسم المستخدم</label>
+                        <input type="text" class="form-control" id="username" disabled placeholder="{{user.username}}">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="form-label">البريد الإلكتروني</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="{{user.email}}"
+                            oninput="delayFunction()">
+                        <div id="checkEmailAvailability" class="form-text"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary updateInfo">تحديث المعلومات</button>
+                </form>
+            </article>
+            <article class="mb-4">
+                <h3 class="style-heading">تحديث كلمة المرور</h3>
+                <hr>
+                <form action="{% url 'shop:update_password' %}" class="style-text-2" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">كلمة المرور القديمة</label>
+                        <input type="password" class="form-control" id="password1" name="old_password">
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <label for="password2" class="form-label">كلمة المرور الجديدة</label>
+                            <input type="password" class="form-control" id="password2" name="new_password1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password3" class="form-label">إعادة إدخال كلمة المرور الجديدة</label>
+                            <input type="password" class="form-control" id="password3" name="new_password2">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="btn btn-outline-primary password_toggler" onclick="togglePasswordVisibility()">عرض كلمات المرور</div>
+                    </div>
+                    <hr>
+                    {% if password_error %}
+                    <p class="text-danger">{{password_error}}</p>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">تحديث كلمة المرور</button>
+                </form>
+            </article>
+            <hr>
+            <article class="d-flex justify-content-center align-items-center mt-4 p-4">
+                <div class="style-text" style="text-align: center;">
+                    <a href="{% url 'shop:delete_account' %}" class="btn btn-danger mb-2 delete-link">حذف الحساب</a>
+                    <p class="text-muted">يرجى ملاحظة أن هذه العملية لا يمكن التراجع عنها، بمجرد حذف حسابك لن تتمكن من استعادته مرة أخرى.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll(".delete-link").forEach(function (link) {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            var confirmation = confirm("هل أنت متأكد أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء!");
+            if (confirmation) {
+                window.location.href = this.getAttribute("href");
+            }
+        });
+    });
+
+    function togglePasswordVisibility() {
+        var passwordInput1 = document.getElementById('password1');
+        var passwordInput2 = document.getElementById('password2');
+        var passwordInput3 = document.getElementById('password3');
+        var btn = document.querySelector('.password_toggler')
+
+        if (btn.innerHTML === "عرض كلمات المرور") {
+            btn.innerHTML = "إخفاء كلمات المرور"
+        } else {
+            btn.innerHTML = "عرض كلمات المرور";
+        }
+
+        if (passwordInput1.type === "password") {
+            passwordInput1.type = "text";
+        } else {
+            passwordInput1.type = "password";
+        }
+
+        if (passwordInput2.type === "password") {
+            passwordInput2.type = "text";
+        } else {
+            passwordInput2.type = "password";
+        }
+
+        if (passwordInput3.type === "password") {
+            passwordInput3.type = "text";
+        } else {
+            passwordInput3.type = "password";
+        }
+    }
+
+    let timeoutId;
+    let functionCalled = false;
+
+    function delayFunction() {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            if (!functionCalled) {
+                checkEmail();
+                functionCalled = true;
+            }
+        }, 10);
+        functionCalled = false;
+    }
+
+    function checkEmail() {
+        var updateInfo = document.querySelector('.updateInfo')
+        var messageBox = document.getElementById('checkEmailAvailability');
+        var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        var userInput = document.getElementById('email');
+        var userInputValue = userInput.value;
+
+        if (userInputValue == "") {
+            html_data = `<p class="style-text" style="color: red;">لا يمكن ترك البريد الإلكتروني فارغًا</p>`
+            messageBox.innerHTML = html_data;
+        } else {
+            fetch(`/email_availability/${userInputValue}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: 'user_input=' + encodeURIComponent(userInputValue),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var html_data;
+                    console.log(data.response)
+                    if (data.response == "available") {
+                        html_data = `<p class="style-text" style="color: green;">البريد الإلكتروني غير مأخوذ</p>`
+                        messageBox.innerHTML = html_data;
+                        updateInfo.disabled = false;
+                    }
+                    else if (data.response == "not available") {
+                        html_data = `<p class="style-text" style="color: red;">البريد الإلكتروني مأخوذ بالفعل</p>`
+                        messageBox.innerHTML = html_data;
+                        updateInfo.disabled = true;
+                    }
+                });
+        }
+    }
+
+    var bar = document.querySelector('.account-bar');
+    bar.classList.add('this-active');
+</script>
+
+{% endblock %}

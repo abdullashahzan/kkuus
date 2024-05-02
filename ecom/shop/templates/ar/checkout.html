@@ -1,0 +1,54 @@
+{% extends 'ar/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>الدفع</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 90vh;">
+        <div class="col-md-7 animate__animated animate__bounceIn">
+            <h1 class="style-text-3">الرجاء الدفع <span class="text-primary">SAR {{price}}</span></h1>
+            <p class="style-text-2 mb-3">
+                <span style="font-size: 1.5rem;">تفاصيل الطلب</span><br>
+                <strong>رسوم باي بال:</strong> {{paypal_fee}} (SAR) <br>
+                <strong>رسوم الموقع:</strong> {{web_fee}} (SAR) <br>
+                <strong>المجموع:</strong> {{price}} (SAR)
+            </p>
+            <hr>
+            <p class="text-muted style-text">سيتم توجيهك إلى بوابة الدفع الآمنة لباي بال لإتمام العملية.
+            </p>
+            <hr>
+            <p>{{paypal.render}}</p>
+        </div>
+        <div class="col-md-5 d-flex justify-content-center align-items-center">
+            <img class="widthlock" src="{% static 'media/undraw_credit_card_payments_re_qboh.svg' %}" alt="Wishlist">
+        </div>
+    </div>
+    <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
+        <div class="col-12 col-md-5">
+            <div class="card shadow animate__animated animate__zoomIn">
+                <img class="widthlock p-2" src="{% static 'media/undraw_credit_card_payments_re_qboh.svg' %}" alt="empty">
+                <div class="card-body">
+                    <article>
+                        <h1 class="style-text-3 my-3">الرجاء الدفع SAR {{price}}</h1>
+                        <p class="style-text-2 mb-3">
+                            <span style="font-size: 1.5rem;">تفاصيل الطلب</span><br>
+                            <strong>رسوم باي بال:</strong> {{paypal_fee}} (SAR) <br>
+                            <strong>رسوم الموقع:</strong> {{web_fee}} (SAR) <br>
+                            <strong>المجموع:</strong> {{price}} (SAR)
+                        </p>
+                        <hr>
+                        <p class="text-muted style-text">سيتم توجيهك إلى بوابة الدفع الآمنة لباي بال لإتمام العملية. <br>
+                            <strong>ملاحظة:</strong> يرجى عدم ترك الدفع في منتصف الطريق. إذا واجهت أي مشاكل، أرسل بريدًا إلكترونيًا إلى <span class="text-primary">kkuunofficialstore@gmail.com</span> مع صورة شاشة للخلل.
+                        </p>
+                        <hr>
+                        <p>{{paypal.render}}</p>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

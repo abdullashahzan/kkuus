@@ -1,8 +1,8 @@
-{% extends 'layout.html' %}
+{% extends 'ar/layout.html' %}
 {% load static %}
 
 {% block title %}
-<title>{{ item.product_name }} details</title>
+<title>تفاصيل {{ item.product_name }}</title>
 {% endblock %}
 
 {% block body %}
@@ -10,25 +10,23 @@
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-6">
             <article>
-                <h1 class="style-text-3">Confirm purchase?</h1>
+                <h1 class="style-text-3">تأكيد الشراء؟</h1>
                 <p class="lead style-text">
-                    You are almost there! By clicking confirm purchase, seller will be notified about your purchase. For
-                    now there is no online payment option, therefore all payments will be cash on delivery or however the seller wants it (maybe via stcpay, al rajhi etc...)
+                    أنت على وشك الوصول! بالنقر فوق تأكيد الشراء، سيتم إخطار البائع بشرائك. في الوقت الحالي ليس هناك خيار للدفع عبر الإنترنت، لذا سيتم الدفع نقدًا عند التسليم أو كما يريد البائع (ربما عبر stcpay، الراجحي، وما إلى ذلك...)
                 </p>
-                <p class="style-text"><strong>Do not forget to show him your buyer code!</strong></p>
-                <p class="style-text"><strong>Note:</strong> You can get details of your order from <a
-                        href="{% url 'shop:myOrders' %}" class="text-primary">My orders</a>.</p>
+                <p class="style-text"><strong>لا تنسَ أن تظهر له رمز المشتري الخاص بك!</strong></p>
+                <p class="style-text"><strong>ملاحظة:</strong> يمكنك الحصول على تفاصيل طلبك من <a
+                        href="{% url 'shop:myOrders' %}" class="text-primary">طلباتي</a>.</p>
                 <form action="{% url 'shop:purchase' item.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-primary"
-                        onclick="this.disabled=true; this.value='Gotcha 1 sec!'; this.form.submit();">Yes, go
-                        ahead!</button>
+                        onclick="this.disabled=true; this.value='لحظة...'; this.form.submit();">نعم، تقدم بالطلب!</button>
                 </form>
-                <button class="btn btn-outline-danger mt-2" onclick="closeModal()">No, take me back</button>
+                <button class="btn btn-outline-danger mt-2" onclick="closeModal()">لا، أعيدني</button>
             </article>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-items-center my-3">
-            <img class="widthlock" src="{% static 'media/undraw_access_account_re_8spm.svg' %}" alt="image">
+            <img class="widthlock" src="{% static 'media/undraw_access_account_re_8spm.svg' %}" alt="صورة">
         </div>
     </div>
 </div>
@@ -41,37 +39,37 @@
         <div class="col-md-8">
             <article>
                 <h1 class="style-heading">{{item.product_name}}</h1>
-                <h5 class="text-muted style-text-2">Sold by {{item.username}}</h5>
-                <h2 class="style-text-3 text-primary mt-2"><strong>SAR </strong>{{item.product_price}}</h2>
-                <h5 class="style-text-2">Ratings: {{item.ratings}} / 5.0 <span class="text-muted"
+                <h5 class="text-muted style-text-2">مباع من قبل {{item.username}}</h5>
+                <h2 class="style-text-3 text-primary mt-2"><strong>ريال سعودي </strong>{{item.product_price}}</h2>
+                <h5 class="style-text-2">التقييمات: {{item.ratings}} / 5.0 <span class="text-muted"
                         style="font-size: 0.9rem;">
-                        ({{item.num_raters}} people voted)</span></h5>
+                        (قام {{item.num_raters}} شخصًا بالتصويت)</span></h5>
                 {% if user.is_authenticated %}
                 <p class="style-text-2 text-muted">
-                    {{item.num_orders}} Buyer(s) have purchased so far <br>
+                    قام {{item.num_orders}} مشترٍ بالشراء حتى الآن <br>
                 </p>
                 {% else %}
-                <p class="text-danger">Please log in to purchase this item.</p>
+                <p class="text-danger">يرجى تسجيل الدخول لشراء هذا العنصر.</p>
                 {% endif %}
                 {% if whatsapp %}
-                <a href="https://wa.me/{{whatsapp}}?text=Hello there! I would like to know if the product *{{item.product_name}}* is still available?
+                <a href="https://wa.me/{{whatsapp}}?text=مرحبًا! أرغب في معرفة ما إذا كان المنتج *{{item.product_name}}* متوفرًا بعد الآن؟
                 
                 unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank" class="text-primary"><i
-                        class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
+                        class="bi bi-whatsapp"></i> اسأل عما إذا كان المنتج متوفرًا؟</a><br>
                 {% endif %}
                 {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
-                <button class="btn btn-primary my-3" onclick="openModal()">Place order</button>
+                <button class="btn btn-primary my-3" onclick="openModal()">طلب الشراء</button>
                 {% if item.id in wishlist %}
                 <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
-                    Remove from wishlist</button>
+                    إزالة من قائمة الأمنيات</button>
                 {% else %}
                 <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
-                    Add to wishlist</button>
+                    إضافة إلى قائمة الأمنيات</button>
                 {% endif %}
                 {% else %}
                 {% endif %}
                 <hr>
-                <h5 class="lead"><strong>Product description:</strong></h5>
+                <h5 class="lead"><strong>وصف المنتج:</strong></h5>
                 <p class="style-text-2">{{item.product_description}}</p>
             </article>
         </div>
@@ -80,39 +78,37 @@
     <div class="row d-block d-md-none">
         <div class="col-12">
             <div class="shadow card mb-1 d-flex align-items-center">
-                <div class="card-header style-text bg-primary text-light" style="width: 100%;">@{{item.username}}'s
-                    shop
-                </div>
+                <div class="card-header style-text bg-primary text-light" style="width: 100%;">متجر @{{item.username}}</div>
                 <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock" alt="{{item.product_name}}">
                 <div class="card-body mt-2" style="width: 100%;">
                     <h2 class="style-text-2 text-primary">{{item.product_name}}</h2>
                     <hr>
-                    <h4 class="style-text-2">SAR {{item.product_price}}</h4>
+                    <h4 class="style-text-2">ريال سعودي {{item.product_price}}</h4>
                     <p class="style-text">
                         <i class="bi bi-heart-fill lead text-danger"></i><span class="mx-2">{{item.ratings}}/5.0
                             ({{item.num_raters}})</span>
                         <span class="card-text style-text text-muted truncate-3-lines"><i
-                                class="bi bi-bag-fill lead text-primary"></i> <span class="mx-1">Bought by:
-                                {{item.num_orders}} buyer(s)</span></span>
+                                class="bi bi-bag-fill lead text-primary"></i> <span class="mx-1">تم شراؤه بواسطة:
+                                {{item.num_orders}} مشترٍ(ين)</span></span>
                         <span class="card-text style-text text-muted truncate-3-lines"><i
-                            class="bi bi-eye-fill lead text-muted"></i> <span class="mx-1">Viewed by {{item.num_views}} people</span></span>
+                            class="bi bi-eye-fill lead text-muted"></i> <span class="mx-1">شاهده {{item.num_views}} شخصًا</span></span>
                         {% if user.is_authenticated %}
                         {% if whatsapp %}
                         <span class="card-text style-text text-muted truncate-3-lines"><i
                                 class="bi bi-whatsapp lead text-success"></i>
-                            <a href="https://wa.me/{{whatsapp}}?text=Hello there! I would like to know if the product *{{item.product_name}}* is still available?
+                            <a href="https://wa.me/{{whatsapp}}?text=مرحبًا! أرغب في معرفة ما إذا كان المنتج *{{item.product_name}}* متوفرًا بعد الآن؟
                                 unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank"
-                                class="mx-1 text-muted">Message {{item.username}} on whatsapp</a></span>
+                                class="mx-1 text-muted">رسالة {{item.username}} على الواتساب</a></span>
                         {% endif %}
                         {% else %}
                     </p>
-                    <p class="text-danger">Please log in to purchase this item.</p>
+                    <p class="text-danger">يرجى تسجيل الدخول لشراء هذا العنصر.</p>
                     {% endif %}
 
                     {% if user.is_authenticated and user.username != item.username and user.username not in bought_users%}
                     <button class="btn btn-primary mt-4" onclick="openModal()" style="width: 85%;"><i
-                            class="bi bi-cart"></i> <span class="mx-1 style-text-2">Place
-                            order</span></button>
+                            class="bi bi-cart"></i> <span class="mx-1 style-text-2">طلب
+                            شراء</span></button>
                     {% if item.id in wishlist %}
                     <button class="btn btn-outline-primary add-to-wishlist mt-4" data-item-id="{{ item.id }}">
                         <i class="bi bi-star-fill"></i></button>
@@ -123,7 +119,7 @@
                     {% else %}
                     {% endif %}
                     <p>
-                        <span class="style-heading">Description:</span>
+                        <span class="style-heading">الوصف:</span>
                         <span class="card-text style-text-2">{{item.product_description}}</span>
                     </p>
                 </div>
@@ -133,20 +129,20 @@
 </div>
 
 <div class="row m-0 p-4">
-    <h1 class="style-heading my-3">Comments</h1>
+    <h1 class="style-heading my-3">التعليقات</h1>
     <hr>
     {% if not user.is_authenticated %}
-    <h5 class="text-danger">Please log in to comment.</h5>
+    <h5 class="text-danger">يرجى تسجيل الدخول للتعليق.</h5>
     {% elif user.username != item.username %}
     <form action="{% url 'shop:postComment' item.id %}" method="post" class="col-md-4 my-1">
         {% csrf_token %}
         <div class="card p-3">
             <div class="mb-2 style-text">
-                <input class="form-control mb-2" type="text" name="heading" placeholder="How is the product? (Optional)">
+                <input class="form-control mb-2" type="text" name="heading" placeholder="كيف هو المنتج؟ (اختياري)">
                 <textarea class="form-control" name="comment" id="comment" rows="4"
-                    placeholder="Give {{ item.username }} your opinion about the product... (Optional)" style="resize: none;"></textarea>
+                    placeholder="أعط {{ item.username }} رأيك حول المنتج... (اختياري)" style="resize: none;"></textarea>
                 <p class="style-text-2 text-primary"><span id="charCount">0</span> / 200</p>
-                <label class="style-text mt-3" for="rating">How much do you rate this product out of 5?</label>
+                <label class="style-text mt-3" for="rating">كم تقيم هذا المنتج من 5؟</label>
                 <div class="rating my-2 style-text">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
@@ -176,28 +172,28 @@
                 </div>
             </div>
             <p class="text-danger style-text-2">{{message}}</p>
-            <button type="submit" class="btn btn-primary" onclick="this.classList.add('disabled')">Post</button>
+            <button type="submit" class="btn btn-primary" onclick="this.classList.add('disabled')">نشر</button>
         </div>
     </form>
     {% else %}
-    <h5 class="style-text-2 text-danger col-md-4 my-1">You cannot comment on your own item.</h5>
+    <h5 class="style-text-2 text-danger col-md-4 my-1">لا يمكنك التعليق على عنصرك الخاص.</h5>
     {% endif %}
     <div class="col-md-8">
         {% for comment in comments %}
         <div class="card my-2">
             <div class="card-body">
                 <h2 class="style-text-2">{{comment.heading}}</h2>
-                <h6 class="text-muted style-text">By: {{comment.username}}</h6>
+                <h6 class="text-muted style-text">بواسطة: {{comment.username}}</h6>
                 <h6 class="style-text-2 my-3"><i class="bi bi-star-fill"></i> {{comment.ratings}}/5.0</h6>
                 <hr>
                 <p class="style-text-2">{{comment.comment}}</p>
             </div>
             <div class="card-footer">
-                <p class="text-muted style-text">Posted on {{comment.timestamp}}</p>
+                <p class="text-muted style-text">نشر في {{comment.timestamp}}</p>
                 {% if comment.username == user.username %}
                 <form action="{% url 'shop:delete_comment' comment.id item.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">حذف</button>
                 </form>
                 {% endif %}
             </div>
@@ -205,7 +201,7 @@
         {% empty %}
         <div class="card my-2">
             <div class="card-body">
-                <h2 class="style-text-2">There are no comments yet...</h2>
+                <h2 class="style-text-2">لا توجد تعليقات بعد...</h2>
             </div>
         </div>
         {% endfor %}
@@ -219,7 +215,7 @@
         var icon = $(this).find('i');
         var item_id = $(this).data('item-id');
         if (icon.hasClass('bi bi-star')) {
-            // Add item to wishlist
+            // إضافة العنصر إلى قائمة الأمنيات
             $.ajax({
                 url: '/addToWishlist/' + item_id,
                 type: 'POST',
@@ -230,11 +226,11 @@
                     icon.removeClass('bi bi-star').addClass('bi bi-star-fill');
                 },
                 error: function (xhr, errmsg, err) {
-                    alert('Failed to add item to your wishlist');
+                    alert('فشل في إضافة العنصر إلى قائمة أمنياتك');
                 }
             });
         } else if (icon.hasClass('bi bi-star-fill')) {
-            // Remove item from wishlist
+            // إزالة العنصر من قائمة الأمنيات
             $.ajax({
                 url: '/removeFromWishlist/' + item_id,
                 type: 'POST',
@@ -245,7 +241,7 @@
                     icon.removeClass('bi bi-star-fill').addClass('bi bi-star');
                 },
                 error: function (xhr, errmsg, err) {
-                    alert('Failed to remove item from your wishlist');
+                    alert('فشل في إزالة العنصر من قائمة أمنياتك');
                 }
             });
         }

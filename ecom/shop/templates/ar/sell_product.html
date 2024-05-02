@@ -1,0 +1,253 @@
+{% extends 'ar/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>إنشاء إعلان جديد</title>
+{% endblock %}
+
+{% block body %}
+
+<div id="imagePreviewModal" class="modal">
+    <div class="modal-content bg-light animate__animated animate__bounceIn"
+        style="height: auto; width: auto; max-width: 90%;">
+        <span class="close" style="cursor: pointer;"><i class="bi bi-x-circle-fill text-danger lead mx-2"></i></span>
+        <img id="preview" src="" alt="المعاينة" style="width: 100vh; height: auto; max-height: 70vh;">
+        <button type="button" id="cropButton" class="btn text-primary">تقطيع الصورة</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row" style="min-height: 80vh;">
+        <div class="col-md-6 d-flex justify-content-center align-items-start mt-4 slideInLeft">
+            <img class="widthlock my-3" src="{% static 'media/undraw_web_shopping_re_owap.svg' %}"
+                alt="صورة تسوق">
+        </div>
+        <div class="col-md-6 d-flex justify-content-start align-items-center p-5 slideInUp">
+            <article>
+                <h1 class="style-heading mb-4">إنشاء إعلانك الجديد</h1>
+                {% if message %}
+                <p class="style-text" style="color: red;">{{message}}</p>
+                {% endif %}
+                <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data"
+                    class="style-text" id="myForm">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="product_name" class="form-label font-weight-bold">اسم منتجك:</label>
+                            <input type="text" class="form-control style-text" name="product_name"
+                                placeholder="مثال: شوكولاتة" id="product_name">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <label for="description" class="form-label font-weight-bold">تفاصيل المنتج:</label>
+                            <textarea class="form-control style-text" id="description" name="product_description"
+                                rows="4" style="resize: none;"
+                                placeholder="مثال: أنا أبيع دراجتي البخارية لأني اشتريت واحدة أخرى. إذا كنت مهتمًا يمكنك الاتصال بي على رقم الواتساب المعطى. يتم قبول النقد فقط."></textarea>
+                            <p class="style-text-2 text-primary"><span id="charCount">0</span> / 500</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="price" class="form-label font-weight-bold">تحديد سعر المنتج (ريال سعودي):</label>
+                            <input type="text" class="form-control style-text" name="price" id="price"
+                                placeholder="5.00">
+                        </div>
+                    </div>
+                    <div class="row mb-3 mt-4 d-flex justify-content-center align-items-center">
+                        <div class="col-md-6">
+                            <label for="croppedPreview" class="form-label font-weight-bold">معاينة الصورة:</label>
+                            <img id="croppedPreview" src="" alt="تظهر صورة المنتج الخاص بك هنا"
+                                style="width: 100%; max-width: 100%; height: auto;"
+                                onerror="this.onerror=null; this.src='../static/media/logo/png/logo-color.png';">
+                        </div>
+                        <div class="col-md-6 my-3">
+                            <label for="imageUpload" class="btn btn-outline-primary">اختر صورة</label>
+                            <input type="file" name="product_images" class="custom-file-input" id="imageUpload"
+                                accept="image/jpeg, image/png">
+                            <p class="text-primary my-2 mx-1" id="selectedFiles">لم يتم اختيار صورة</p>
+                            <p class="text-muted">يتم دعم صيغ الصور JPEG و PNG فقط</p>
+                            <!-- Add hidden input fields for cropping data -->
+                            <input type="hidden" id="x" name="crop_x">
+                            <input type="hidden" id="y" name="crop_y">
+                            <input type="hidden" id="width" name="crop_width">
+                            <input type="hidden" id="height" name="crop_height">
+                        </div>
+                    </div>
+                    <!-- Add an <img> element with id "preview" where the cropped image will be displayed -->
+                    <img id="preview" src="" alt="معاينة" style="max-width: 100%; height: auto; display: none;">
+                    <div class="row mb-4 mt-4 style-text">
+                        <div class="style-text"><strong>اختر خطتك:</strong></div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="4" checked>
+                            <label class="form-check-label" for="flexRadioDefault">
+                                انشر لمدة 4 أيام <br> (مجاناً)
+                            </label>
+                        </div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="14">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                انشر لمدة 14 يومًا <br> (2 دولار ~ 7.51 ريال سعودي)
+                            </label>
+                        </div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="28">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                انشر لمدة 28 يومًا <br> (3 دولار ~ 11.26 ريال سعودي)
+                            </label>
+                        </div>
+                        <p class="text-muted">غير متاح نشر لأكثر من شهر واحد حاليًا بسبب تخزين الخادم المنخفض، ولكن سيتم توفيره قريبًا للجميع.</p>
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-3"><i class="bi bi-cash-stack lead mx-1"></i> <span
+                            class="style-text lead mx-2">عرض للبيع</span></button>
+                </form>
+            </article>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('imageUpload').addEventListener('change', function (e) {
+        var label = document.getElementById('selectedFiles');
+        var files = e.target.files;
+
+        if (files.length > 1) {
+            label.innerText = files.length + ' ملفات مختارة';
+        } else {
+            label.innerText = files[0].name;
+        }
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        var textArea = document.getElementById("description");
+        var charCount = document.getElementById("charCount");
+
+        textArea.addEventListener("input", function () {
+            var text = this.value;
+            if (text.length > 500) {
+                this.value = text.substring(0, 500);
+            }
+            charCount.textContent = this.value.length;
+        });
+    });
+
+    function disableButton() {
+        var button = document.getElementById('cropButton');
+        button.disabled = true;
+        button.innerHTML = "جارٍ تحميل الصورة...";
+    }
+
+    // Function to initialize Cropper
+    function initCropper(imageElement) {
+        window.cropper = new Cropper(imageElement, {
+            aspectRatio: 1, // Set desired aspect ratio
+            viewMode: 1,    // Set cropping mode
+            crop: function (event) {
+                // Update hidden input fields with cropping data
+                document.getElementById('x').value = event.detail.x;
+                document.getElementById('y').value = event.detail.y;
+                document.getElementById('width').value = event.detail.width;
+                document.getElementById('height').value = event.detail.height;
+            }
+        });
+
+        // Listen for crop button click
+        document.getElementById('cropButton').addEventListener('click', function () {
+            disableButton()
+            setTimeout(function () {
+                // Get the canvas element where Cropper has drawn the cropped image
+                var canvas = window.cropper.getCroppedCanvas();
+                // Convert the canvas to a data URL representing the cropped image
+                var croppedDataURL = canvas.toDataURL();
+                // Set the src attribute of the cropped preview image
+                document.getElementById('croppedPreview').src = croppedDataURL;
+
+                // Send cropping data to the server
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/crop-image?x=' + document.getElementById('x').value + '&y=' + document.getElementById('y').value + '&width=' + document.getElementById('width').value + '&height=' + document.getElementById('height').value);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        console.log('تم إرسال بيانات القص بنجاح');
+                    } else {
+                        // Handle error response from server if needed
+                        console.error('خطأ في إرسال بيانات القص إلى الخادم');
+                    }
+                    // Enable the button again
+                    document.getElementById('cropButton').disabled = false;
+                    document.getElementById('cropButton').innerHTML = "تقطيع الصورة";
+                };
+                xhr.send();
+
+                // Close the modal
+                document.getElementById('imagePreviewModal').style.display = 'none';
+            }, 100);
+        });
+    }
+
+    // Add event listener to input file element
+    document.getElementById('imageUpload').addEventListener('change', function (event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function () {
+            var dataURL = reader.result;
+            var preview = document.getElementById('preview');
+            var modal = document.getElementById('imagePreviewModal');
+            // Set the src attribute of the preview image element
+            preview.src = dataURL;
+            // Show the modal
+            modal.style.display = 'flex';
+            // Destroy previous Cropper instance if exists
+            if (window.cropper) {
+                window.cropper.destroy();
+            }
+            // Initialize Cropper on the preview image
+            initCropper(preview);
+        };
+        // Read the selected file as a Data URL
+        reader.readAsDataURL(input.files[0]);
+    });
+
+    // Get the modal
+    var modal = document.getElementById('imagePreviewModal');
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // Function to save form data to localStorage
+    function saveFormData() {
+        const formData = {
+            name: document.getElementById('product_name').value,
+            description: document.getElementById('description').value,
+            price: document.getElementById('price').value
+        };
+
+        localStorage.setItem('formData', JSON.stringify(formData));
+    }
+
+    // Function to load form data from localStorage
+    function loadFormData() {
+        const savedData = localStorage.getItem('formData');
+        if (savedData) {
+            const formData = JSON.parse(savedData);
+            document.getElementById('product_name').value = formData.name;
+            document.getElementById('description').value = formData.description;
+            document.getElementById('price').value = formData.price;
+        }
+    }
+
+    // Listen for changes in the form fields and save data to localStorage
+    document.getElementById('myForm').addEventListener('change', saveFormData);
+
+    // Load form data from localStorage when the page loads
+    window.addEventListener('load', loadFormData);
+
+</script>
+
+{% endblock %}
