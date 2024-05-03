@@ -60,11 +60,11 @@
                 {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
                 <button class="btn btn-primary my-3" onclick="openModal()">طلب الشراء</button>
                 {% if item.id in wishlist %}
-                <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
-                    إزالة من قائمة الأمنيات</button>
+                <button class="btn btn-outline-primary add-to-wishlist" title="إضافة إلى قائمة الأمنيات" data-item-id="{{ item.id }}">
+                    <i class="bi bi-star-fill"></i></button>
                 {% else %}
-                <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
-                    إضافة إلى قائمة الأمنيات</button>
+                <button class="btn btn-outline-primary add-to-wishlist" title="إزالة من قائمة الأمنيات" data-item-id="{{ item.id }}">
+                    <i class="bi bi-star"></i></button>
                 {% endif %}
                 {% else %}
                 {% endif %}

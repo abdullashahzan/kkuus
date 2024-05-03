@@ -191,7 +191,10 @@ def notifications(request):
         return render(request, "ar/notifications.html", {"notifications": notifications, "new_orders": new_item_orders})
 
 def delete_notification(request, notification_id):
-    UserNotification.objects.get(id=notification_id).delete()
+    try:
+        UserNotification.objects.get(id=notification_id).delete()
+    except:
+        pass
     return redirect(reverse('shop:notifications'))
 
 @login_required(login_url="shop:login_user")
@@ -408,20 +411,23 @@ def delete_image(firebase_path):
 
 @login_required(login_url="shop:login_user")
 def delete_listing(request, listing_id):
-    listing_details = UserListings.objects.get(id=listing_id)
-    delete_image(listing_details.firebase_path)
-    notification_title = f"{listing_details.product_name} was removed from marketplace successfully!"
-    notification_body = f"Your product is now no longer available on marketplace."
-    UserNotification(username=request.user.username, title=notification_title, body=notification_body).save()
-    notification_title = f"Unfortunately {listing_details.product_name} was sold to someone else"
-    notification_body = f"{listing_details.product_name} has been delisted from the marketplace since it was purchased by someone else."
-    all_users = UserOrder.objects.filter(item=listing_details)
-    for user in all_users:
-        UserNotification(username=user.username, title=notification_title, body=notification_body).save()
-        all_devices = FCMToken.objects.filter(username=user.username)
-        for device in all_devices:
-            send_notification(device.token, notification_title, notification_body)
-    listing_details.delete()
+    try:
+        listing_details = UserListings.objects.get(id=listing_id)
+        delete_image(listing_details.firebase_path)
+        notification_title = f"{listing_details.product_name} was removed from marketplace successfully!"
+        notification_body = f"Your product is now no longer available on marketplace."
+        UserNotification(username=request.user.username, title=notification_title, body=notification_body).save()
+        notification_title = f"Unfortunately {listing_details.product_name} was sold to someone else"
+        notification_body = f"{listing_details.product_name} has been delisted from the marketplace since it was purchased by someone else."
+        all_users = UserOrder.objects.filter(item=listing_details)
+        for user in all_users:
+            UserNotification(username=user.username, title=notification_title, body=notification_body).save()
+            all_devices = FCMToken.objects.filter(username=user.username)
+            for device in all_devices:
+                send_notification(device.token, notification_title, notification_body)
+        listing_details.delete()
+    except:
+        pass
     return redirect(reverse('shop:my_shop'))
 
 @login_required(login_url="shop:login_user")
@@ -514,12 +520,15 @@ def comment(request, item_id):
 
 @require_POST
 def delete_comment(request, comment_id, item_id):
-    item = UserListings.objects.get(id=item_id)
-    UserComment.objects.get(id=comment_id).delete()
-    new_avg_rating = UserComment.objects.filter(item=item).aggregate(avg_rating=Avg('ratings'))['avg_rating']
-    item.ratings = new_avg_rating
-    item.num_raters -= 1
-    item.save()
+    try:
+        item = UserListings.objects.get(id=item_id)
+        UserComment.objects.get(id=comment_id).delete()
+        new_avg_rating = UserComment.objects.filter(item=item).aggregate(avg_rating=Avg('ratings'))['avg_rating']
+        item.ratings = new_avg_rating
+        item.num_raters -= 1
+        item.save()
+    except:
+        pass
     referring_url = request.META.get('HTTP_REFERER')
     return redirect(referring_url or reverse("shop:homepage"))
 
@@ -815,9 +824,15 @@ def developer(request):
 
 def page_404(request, exception):
     if language == "en":
-        return render(request, "page404.html", status=404)
+        return render(request, "404.html", status=404)
     elif language == "ar":
-        return render(request, "ar/page404.html", status=404)
+        return render(request, "ar/404.html", status=404)
+
+def page_500(request, exception=None):
+    if language == "en":
+        return render(request, "500.html", status=500)
+    elif language == "ar":
+        return render(request, "ar/500.html", status=500)
 
 @login_required(login_url="shop:login_user")
 def preEnableNotifications(request):

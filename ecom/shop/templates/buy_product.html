@@ -13,7 +13,8 @@
                 <h1 class="style-text-3">Confirm purchase?</h1>
                 <p class="lead style-text">
                     You are almost there! By clicking confirm purchase, seller will be notified about your purchase. For
-                    now there is no online payment option, therefore all payments will be cash on delivery or however the seller wants it (maybe via stcpay, al rajhi etc...)
+                    now there is no online payment option, therefore all payments will be cash on delivery or however
+                    the seller wants it (maybe via stcpay, al rajhi etc...)
                 </p>
                 <p class="style-text"><strong>Do not forget to show him your buyer code!</strong></p>
                 <p class="style-text"><strong>Note:</strong> You can get details of your order from <a
@@ -62,11 +63,11 @@
                 {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
                 <button class="btn btn-primary my-3" onclick="openModal()">Place order</button>
                 {% if item.id in wishlist %}
-                <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
-                    Remove from wishlist</button>
+                <button class="btn btn-outline-primary add-to-wishlist" title="Add to wishlist" data-item-id="{{ item.id }}">
+                    <i class="bi bi-star-fill"></i></button>
                 {% else %}
-                <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
-                    Add to wishlist</button>
+                <button class="btn btn-outline-primary add-to-wishlist" title="Remove from wishlist" data-item-id="{{ item.id }}">
+                    <i class="bi bi-star"></i></button>
                 {% endif %}
                 {% else %}
                 {% endif %}
@@ -95,7 +96,8 @@
                                 class="bi bi-bag-fill lead text-primary"></i> <span class="mx-1">Bought by:
                                 {{item.num_orders}} buyer(s)</span></span>
                         <span class="card-text style-text text-muted truncate-3-lines"><i
-                            class="bi bi-eye-fill lead text-muted"></i> <span class="mx-1">Viewed by {{item.num_views}} people</span></span>
+                                class="bi bi-eye-fill lead text-muted"></i> <span class="mx-1">Viewed by
+                                {{item.num_views}} people</span></span>
                         {% if user.is_authenticated %}
                         {% if whatsapp %}
                         <span class="card-text style-text text-muted truncate-3-lines"><i
@@ -142,9 +144,11 @@
         {% csrf_token %}
         <div class="card p-3">
             <div class="mb-2 style-text">
-                <input class="form-control mb-2" type="text" name="heading" placeholder="How is the product? (Optional)">
+                <input class="form-control mb-2" type="text" name="heading"
+                    placeholder="How is the product? (Optional)">
                 <textarea class="form-control" name="comment" id="comment" rows="4"
-                    placeholder="Give {{ item.username }} your opinion about the product... (Optional)" style="resize: none;"></textarea>
+                    placeholder="Give {{ item.username }} your opinion about the product... (Optional)"
+                    style="resize: none;"></textarea>
                 <p class="style-text-2 text-primary"><span id="charCount">0</span> / 200</p>
                 <label class="style-text mt-3" for="rating">How much do you rate this product out of 5?</label>
                 <div class="rating my-2 style-text">

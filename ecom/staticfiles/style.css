@@ -1,15 +1,26 @@
 :root {
-    --family1: 'Kalnia';
-    --family2: 'Wix Madefor Display';
-    --family3: 'Raleway';
-    --family4: 'Poltawski Nowy';
-    --family5: 'Trochut';
+    --family1: 'Kalnia', 'IBM Plex Sans Arabic';
+    --family2: 'Wix Madefor Display', 'IBM Plex Sans Arabic';
+    --family3: 'Raleway', 'IBM Plex Sans Arabic';
+    --family4: 'Poltawski Nowy', 'IBM Plex Sans Arabic';
+    --family5: 'Trochut', 'IBM Plex Sans Arabic';
     --themecolor1: '#0d6efd';
     --themecolor2: '#f7f7f7';
 }
 
 body {
     background: #f7f7f7;
+}
+
+.loadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000000;
+    display: none;
 }
 
 .this-active {
@@ -67,8 +78,21 @@ body {
 }
 
 .heightlock {
-    min-height: 30vh;
+    min-height: 41.5vh;
+    height: auto;
     width: 100%;
+}
+
+@media  screen and (max-width: 700px) {
+    .heightlock {
+        min-height: 37.5vh;
+    }
+}
+
+@media  screen and (min-width: 700px) and (max-width: 1000px) {
+    .heightlock {
+        min-height: 32.5vh;
+    }
 }
 
 .widthlock {
@@ -102,11 +126,24 @@ body {
     font-family: var(--family5);
 }
 
+.font-weight-bold {
+    font-weight: 500;
+}
+
 .truncate-3-lines {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+}
+
+.card-item {
+    transition: transform 0.5s ease-in-out;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateX(-100%);
 }
 
 ul.horizontal-list li {
@@ -161,9 +198,9 @@ nav.custom_nav {
 }
 
 #imagePreviewModal {
-    display: none; 
-    justify-content: center; 
-    align-items: center; 
+    display: none;
+    justify-content: center;
+    align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
 }
 

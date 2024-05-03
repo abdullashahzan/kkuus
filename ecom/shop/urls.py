@@ -3,6 +3,8 @@ from . import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 app_name = 'shop'
+handler404 = 'shop.views.page_404'
+handler500 = 'shop.views.page_500'
 urlpatterns = [
     path('toggleLanguage/', views.change_language, name='toggleLanguage'),
     path('username_availability/<str:username>', views.check_username_availability, name='username_availability'),
