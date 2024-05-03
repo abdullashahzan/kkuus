@@ -56,11 +56,6 @@
 <body>
     <div class="loadingScreen">
         <div class="container d-flex justify-content-center align-items-center">
-            <div class="row">
-                <div class="col-12">
-                    <div class="loader"></div>
-                </div>
-            </div>
         </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-3">
@@ -278,6 +273,9 @@
                 //event.preventDefault();
                 anchor.classList.add('disabled');
                 document.querySelector('.loadingScreen').style.display = "block";
+                setTimeout(()=>{
+                    document.querySelector('.loadingScreen').style.display = "none";
+                }, 5000);
                 // window.location.href = anchor.href;
             });
         });

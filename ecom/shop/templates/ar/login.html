@@ -15,7 +15,7 @@
                     <form action="{% url 'shop:login_user' %}" method="post">
                         {% csrf_token %}
                         <div class="mb-2">
-                            <label for="InputEmail1" class="form-label style-text">اسم المستخدم</label>
+                            <label for="InputEmail1" class="form-label style-text">اسم المستخدم أو البريد الالكتروني</label>
                             <input type="text" name="username" placeholder="مثال: john53" class="form-control style-text" id="InputEmail1">
                         </div>
                         <div class="mb-3">

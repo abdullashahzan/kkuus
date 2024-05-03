@@ -27,12 +27,18 @@ function closeModal() {
     cards.style.filter = "blur(0)";
 }
 
+// Function to check if a string contains Arabic characters
+function containsArabic(text) {
+    var arabicPattern = /[\u0600-\u06FF]/;
+    return arabicPattern.test(text);
+}
+
 let lastScrollTop = 0;
 const hiddenDiv = document.getElementById("hiddenDiv");
 
 window.addEventListener("scroll", function () {
     let currentScroll = window.scrollY;
-    if (currentScroll > (lastScrollTop+30)) {
+    if (currentScroll > (lastScrollTop + 30)) {
         // Scroll down
         hiddenDiv.classList.remove("animate__slideInUp");
         hiddenDiv.classList.add("animate__slideOutDown");
@@ -40,7 +46,7 @@ window.addEventListener("scroll", function () {
             hiddenDiv.classList.remove("d-none");
             hiddenDiv.classList.add("d-block");
         });
-    } else if (currentScroll <= (lastScrollTop-10)) {
+    } else if (currentScroll <= (lastScrollTop - 10)) {
         // Scroll up
         hiddenDiv.classList.remove("animate__slideOutDown");
         hiddenDiv.classList.add("animate__slideInUp");
@@ -56,8 +62,15 @@ document.addEventListener("DOMContentLoaded", function () {
             var submitButton = form.querySelector("button[type='submit']");
             submitButton.disabled = true;
 
-            // Optional: Display a loading indicator
-            submitButton.innerHTML = "Please wait...";
+            var elements = document.getElementsByTagName('body');
+            if (elements.length > 0) {
+                var bodyText = elements[0].innerText;
+                if (containsArabic(bodyText)) {
+                    submitButton.innerHTML = "انتظر من فضلك...";
+                } else {
+                    submitButton.innerHTML = "Please wait...";
+                }
+            }
 
             // Prevent the default form submission behavior
             event.preventDefault();

@@ -25,7 +25,8 @@ def change_language(request):
         language = "ar"
     else:
         language = "en"
-    return HttpResponseRedirect(reverse('shop:homepage'))
+    referring_url = request.META.get('HTTP_REFERER')
+    return redirect(referring_url or 'shop:homepage')
 
 def login_user(request):
     message = ""
@@ -687,10 +688,14 @@ def update_address(request):
     old_building_no = object.building_code
     if old_room_no == room_no and old_building_no == building_code:
         address_error = "New address cannot be the same as old address"
-    elif old_room_no != room_no:
-        object.room_no = room_no
-        object.building_code = building_code
-        object.save()
+    elif old_room_no != room_no or old_building_no != building_code:
+        try:
+            object.room_no = room_no
+            object.save()
+            object.building_code = building_code
+            object.save()
+        except:
+            address_error = "Please make sure to write room number as well"
     else:
         address_error = "An unkown error occured while changing address"
     referring_url = request.META.get('HTTP_REFERER')
