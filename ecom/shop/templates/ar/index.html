@@ -33,23 +33,25 @@
         </div>
     </div>
 </div>
-{% if not first_visit %}
+{% if not first_visit and user.is_authenticated %}
 <div class="notice">
     <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
         <div class="card-body">
             <h1 class="style-text-3">مرحبًا بك في السوق المخصص لطلاب جامعة الملك خالد من طلاب جامعة الملك خالد</h1>
             <hr>
             <p class="style-text-2">
-                دعونا نبني مجتمعًا حيث الشراء والبيع مذهلان على حد سواء. ابدأ في التصفح والبيع الآن! لقد بدأنا للتو في خطواتنا الأولى لذا قد لا تجد مليون منتج، ولكن يمكنك دائمًا نشر منتجك.
+                دعونا نبني مجتمعًا حيث الشراء والبيع مذهلان على حد سواء. ابدأ في التصفح والبيع الآن! لقد بدأنا للتو في
+                خطواتنا الأولى لذا قد لا تجد مليون منتج، ولكن يمكنك دائمًا نشر منتجك.
             </p>
             <div class="style-text mt-4">
-                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">ابدأ الاستكشاف!</button>
+                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">ابدأ
+                    الاستكشاف!</button>
             </div>
         </div>
     </div>
 </div>
 {% endif %}
-{% if notice %}
+{% if notice and user.is_authenticated %}
 <div class="devnotice">
     <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
         <div class="card-body">
@@ -59,7 +61,8 @@
                 {{notice.body}}
             </p>
             <div class="style-text mt-4">
-                <button class="btn btn-primary" onclick="document.querySelector('.devnotice').style.display='none';">{{notice.button_text}}</button>
+                <button class="btn btn-primary"
+                    onclick="document.querySelector('.devnotice').style.display='none';">{{notice.button_text}}</button>
             </div>
         </div>
     </div>
@@ -68,6 +71,12 @@
 
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="container mb-4">
+    {% if not user.is_authenticated %}
+    <div class="row bg-danger my-3 mx-1">
+        <a href="{% url 'shop:login_user' %}" class="style-text-2 text-light py-2 text-decoration-none lead">من فضلك قم
+            بتسجيل الدخول للوصول إلى جميع الخدمات التي يقدمها هذا الموقع...</a>
+    </div>
+    {% endif %}
     {% if new_orders %}
     <div class="row bg-danger my-3 mx-1 animate__animated animate__flash">
         <a href="{% url 'shop:my_shop' %}" class="style-text-2 text-light py-2 text-decoration-none lead">لديك
@@ -78,11 +87,13 @@
         {% for item in page_obj %}
         <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
             <div class="shadow card card-item hidden mb-1 d-flex align-items-center">
-                <div class="card-header style-text bg-primary text-light" style="width: 100%;">متجر @{{item.username}}</div>
+                <div class="card-header style-text bg-primary text-light" style="width: 100%;">متجر @{{item.username}}
+                </div>
                 <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock" alt="{{item.product_name}}">
                 <div class="card-body mt-2" style="width: 100%;">
                     <h4 class="text-primary" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
-                            class="text-primary style-text-3" onclick="this.classList.add('disabled');">{{item.product_name}}</a></h4>
+                            class="text-primary style-text-3"
+                            onclick="this.classList.add('disabled');">{{item.product_name}}</a></h4>
                     <hr>
                     <h4 class="style-text-2">ريال {{item.product_price}}</h4>
                     <p class="style-text">
@@ -98,11 +109,13 @@
                     <div class="style-text-2">
                         {% if user.username != item.username %}
                         {% if item.id in bought_items %}
-                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2" onclick="this.classList.add('disabled');">مطلوب</a>
+                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2"
+                            onclick="this.classList.add('disabled');">مطلوب</a>
                         {% elif item.id in completed_items %}
                         <button class="btn btn-disabled my-2 text-primary">تم الشراء</button>
                         {% else %}
-                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2" onclick="this.classList.add('disabled');">عرض المنتج</a>
+                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2"
+                            onclick="this.classList.add('disabled');">عرض المنتج</a>
                         {% endif %}
                         {% if item.id in wishlist %}
                         <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
@@ -151,7 +164,8 @@
 <div class="pagination d-flex justify-content-center align-items-center my-4 style-text">
     <span class="step-links">
         {% if page_obj.has_previous %}
-        <a class="mx-1 btn btn-primary" title="الصفحة الأولى" href="?page=1"><i class="bi bi-chevron-double-left"></i></a>
+        <a class="mx-1 btn btn-primary" title="الصفحة الأولى" href="?page=1"><i
+                class="bi bi-chevron-double-left"></i></a>
         <a class="mx-1 btn btn-primary" title="الصفحة السابقة" href="?page={{ page_obj.previous_page_number }}"><i
                 class="bi bi-chevron-left"></i></a>
         {% endif %}
@@ -161,10 +175,10 @@
         </span>
 
         {% if page_obj.has_next %}
-        <a class="mx-1 btn btn-primary" title="الصفحة التالية" href="?page={{ page_obj.next_page_number }}" onclick="this.classList.add('disabled');"><i
-                class="bi bi-chevron-right"></i></a>
-        <a class="mx-1 btn btn-primary" title="الصفحة الأخيرة" href="?page={{ page_obj.paginator.num_pages }}" onclick="this.classList.add('disabled');"><i
-                class="bi bi-chevron-double-right"></i></a>
+        <a class="mx-1 btn btn-primary" title="الصفحة التالية" href="?page={{ page_obj.next_page_number }}"
+            onclick="this.classList.add('disabled');"><i class="bi bi-chevron-right"></i></a>
+        <a class="mx-1 btn btn-primary" title="الصفحة الأخيرة" href="?page={{ page_obj.paginator.num_pages }}"
+            onclick="this.classList.add('disabled');"><i class="bi bi-chevron-double-right"></i></a>
         {% endif %}
     </span>
 </div>

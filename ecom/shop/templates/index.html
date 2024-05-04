@@ -34,7 +34,7 @@
     </div>
 </div>
 <!--New part-->
-{% if not first_visit %}
+{% if not first_visit and user.is_authenticated %}
 <div class="notice">
     <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
         <div class="card-body">
@@ -53,7 +53,7 @@
     </div>
 </div>
 {% endif %}
-{% if notice %}
+{% if notice and user.is_authenticated %}
 <div class="devnotice">
     <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
         <div class="card-body">
@@ -65,13 +65,22 @@
             <div class="style-text mt-4">
                 <button class="btn btn-primary" onclick="document.querySelector('.devnotice').style.display='none';">{{notice.button_text}}</button>
             </div>
+        </div>{% if not user.is_authenticated %}
+        <div class="row bg-danger my-3 mx-1">
+            <a href="{% url 'shop:login_user' %}" class="style-text-2 text-light py-2 text-decoration-none lead">Please log in to access all the services that this website has to offer...</a>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endif %}
 <!--End-->
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="container mb-4">
+    {% if not user.is_authenticated %}
+    <div class="row bg-danger my-3 mx-1">
+        <a href="{% url 'shop:login_user' %}" class="style-text-2 text-light py-2 text-decoration-none lead">Please log in to access all the services that this website has to offer...</a>
+    </div>
+    {% endif %}
     {% if new_orders %}
     <div class="row bg-danger my-3 mx-1 animate__animated animate__flash">
         <a href="{% url 'shop:my_shop' %}" class="style-text-2 text-light py-2 text-decoration-none lead">You have
