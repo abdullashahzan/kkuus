@@ -73,6 +73,7 @@ def signup_user(request):
                     user.save()
                     UserProfile(user=user, room_no=room_no, building_code=building_code, whatsapp=whatsapp).save()
                     UserWishlist(username=username).save()
+                    FirstVisits(username=username).save()
                     login(request, user)
                     return redirect(reverse('shop:preEnableNotifications'))
                 except IntegrityError:
@@ -150,6 +151,24 @@ def homepage(request):
     bought_items = UserOrder.objects.filter(username=request.user.username, status='requested')
     completed_items = UserOrder.objects.filter(username=request.user.username, status='Completed')
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
+    get_notice = UserNotices.objects.filter(username=request.user.username).first()
+    try:
+        if get_notice.new == False:
+            get_notice.delete()
+            notice = ""
+        else:
+            notice = get_notice
+            get_notice.new = False
+            get_notice.save()
+    except:
+        notice = ""
+    try:
+        visits = FirstVisits.objects.get(username=request.user.username, visited_home=False)
+        first_visit = visits.visited_home
+        visits.visited_home = True
+        visits.save()
+    except:
+        first_visit = True
     cart = []
     completed = []
     for bought_item in bought_items:
@@ -168,9 +187,9 @@ def homepage(request):
         for i in user_wishlist:
             user_wishlist_list.append(i.id)
         if language == "en":
-            return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj})
+            return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit})
         elif language == "ar":
-            return render(request, "ar/index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj})
+            return render(request, "ar/index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit})
     if language == "en":
         return render(request, "index.html", {"items": items,'page_obj': page_obj})
     elif language == "ar":
@@ -207,6 +226,13 @@ def wishlist(request):
     bought_items = UserOrder.objects.filter(username=request.user.username, status='requested')
     completed_items = UserOrder.objects.filter(username=request.user.username, status='Completed')
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
+    try:
+        visits = FirstVisits.objects.get(username=request.user.username, visited_wishlist=False)
+        first_visit = visits.visited_wishlist
+        visits.visited_wishlist = True
+        visits.save()
+    except:
+        first_visit = True
     user_wishlist_list = []
     cart = []
     completed = []
@@ -217,9 +243,9 @@ def wishlist(request):
     for i in user_wishlist:
         user_wishlist_list.append(i.id)
     if language == "en":
-        return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders})
+        return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
     elif language == "ar":
-        return render(request, "ar/wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders})
+        return render(request, "ar/wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
 
 def paid_sale_successful(request, invoice, plan):
     if 'HTTP_REFERER' in request.META:
@@ -436,10 +462,17 @@ def my_shop(request):
     check_data()
     items = UserListings.objects.filter(username=request.user.username)
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
+    try:
+        visits = FirstVisits.objects.get(username=request.user.username, visited_shop=False)
+        first_visit = visits.visited_shop
+        visits.visited_shop = True
+        visits.save()
+    except:
+        first_visit = True
     if language == "en":
-        return render(request, 'my_shop.html', {"items": items, "notifications":notifications})
+        return render(request, 'my_shop.html', {"items": items, "notifications":notifications, "first_visit": first_visit})
     elif language == "ar":
-        return render(request, 'ar/my_shop.html', {"items": items, "notifications":notifications})
+        return render(request, 'ar/my_shop.html', {"items": items, "notifications":notifications, "first_visit": first_visit})
 
 @require_POST
 def add_to_wishlist(request, item_id):
@@ -633,10 +666,17 @@ def myOrders(request):
         new_item_orders += item.new_orders
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     ordered_items = UserOrder.objects.filter(username=request.user.username)
+    try:
+        visits = FirstVisits.objects.get(username=request.user.username, visited_orders=False)
+        first_visit = visits.visited_orders
+        visits.visited_orders = True
+        visits.save()
+    except:
+        first_visit = True
     if language == "en":
-        return render(request, "my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders})
+        return render(request, "my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
     elif language == "ar":
-        return render(request, "ar/my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders})
+        return render(request, "ar/my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
 
 def acceptOrder(request, item_id, username):
     item = UserListings.objects.get(id=item_id)
@@ -786,6 +826,9 @@ def delete_account(request):
     notifications = UserNotification.objects.filter(username=username)
     for notification in notifications:
         notification.delete()
+    visits = FirstVisits.objects.filter(username=username)
+    for visit in visits:
+        visit.delete()
     user_object.delete()
     logout(request)
     return redirect(reverse("shop:login_user"))
@@ -821,6 +864,16 @@ def developer(request):
         "expired_listings": expired_listings,
         "time": current_time
     })
+
+@require_POST
+def publish_new_notice(request):
+    title = request.POST['title']
+    body = request.POST['body']
+    users = UserProfile.objects.all()
+    for user in users:
+        UserNotices(username=user.user.username, title=title, body=body).save()
+    referring_url = request.META.get('HTTP_REFERER')
+    return redirect(referring_url or reverse("shop:homepage"))
 
 def page_404(request, exception):
     if language == "en":

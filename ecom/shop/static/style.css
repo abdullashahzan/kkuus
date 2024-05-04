@@ -23,6 +23,33 @@ body {
     display: none;
 }
 
+.notice {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100000000000;
+}
+
+.devnotice {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100000000000;
+}
+
+
 .this-active {
     background: linear-gradient(to bottom, #0d6efd 50%, rgba(0, 0, 0, 0.2));
 }

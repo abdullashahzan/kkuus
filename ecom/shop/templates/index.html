@@ -33,6 +33,43 @@
         </div>
     </div>
 </div>
+<!--New part-->
+{% if not first_visit %}
+<div class="notice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3">Welcome to marketplace made for students of King Khalid University by students of
+                King Khalid University</h1>
+            <hr>
+            <p class="style-text-2">
+                Let's build a community where buying and selling are equally awesome. Start browsing
+                and selling now! We have just started taking our baby steps so you might not find a million
+                products, but you can always post yours.
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">Start exploring!</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% if notice %}
+<div class="devnotice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3">{{notice.title}}</h1>
+            <hr>
+            <p class="style-text-2">
+                {{notice.body}}
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-primary" onclick="document.querySelector('.devnotice').style.display='none';">{{notice.button_text}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!--End-->
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="container mb-4">
     {% if new_orders %}
@@ -50,7 +87,8 @@
                 <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock" alt="{{item.product_name}}">
                 <div class="card-body mt-2" style="width: 100%;">
                     <h4 class="text-primary" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
-                            class="text-primary style-text-3" onclick="this.classList.add('disabled');">{{item.product_name}}</a></h4>
+                            class="text-primary style-text-3"
+                            onclick="this.classList.add('disabled');">{{item.product_name}}</a></h4>
                     <hr>
                     <h4 class="style-text-2">SAR {{item.product_price}}</h4>
                     <p class="style-text">
@@ -66,11 +104,13 @@
                     <div class="style-text-2">
                         {% if user.username != item.username %}
                         {% if item.id in bought_items %}
-                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2" onclick="this.classList.add('disabled');">Requested</a>
+                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2"
+                            onclick="this.classList.add('disabled');">Requested</a>
                         {% elif item.id in completed_items %}
                         <button class="btn btn-disabled my-2 text-primary">Purchased</button>
                         {% else %}
-                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2" onclick="this.classList.add('disabled');">Show item</a>
+                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2"
+                            onclick="this.classList.add('disabled');">Show item</a>
                         {% endif %}
                         {% if item.id in wishlist %}
                         <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
@@ -129,10 +169,10 @@
         </span>
 
         {% if page_obj.has_next %}
-        <a class="mx-1 btn btn-primary" title="Next page" href="?page={{ page_obj.next_page_number }}" onclick="this.classList.add('disabled');"><i
-                class="bi bi-chevron-right"></i></a>
-        <a class="mx-1 btn btn-primary" title="Last page" href="?page={{ page_obj.paginator.num_pages }}" onclick="this.classList.add('disabled');"><i
-                class="bi bi-chevron-double-right"></i></a>
+        <a class="mx-1 btn btn-primary" title="Next page" href="?page={{ page_obj.next_page_number }}"
+            onclick="this.classList.add('disabled');"><i class="bi bi-chevron-right"></i></a>
+        <a class="mx-1 btn btn-primary" title="Last page" href="?page={{ page_obj.paginator.num_pages }}"
+            onclick="this.classList.add('disabled');"><i class="bi bi-chevron-double-right"></i></a>
         {% endif %}
     </span>
 </div>

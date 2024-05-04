@@ -3,6 +3,16 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 # Create your models here.
+class FirstVisits(models.Model):
+    username = models.CharField(max_length=128)
+    visited_home = models.BooleanField(default=False)
+    visited_shop = models.BooleanField(default=False)
+    visited_orders = models.BooleanField(default=False)
+    visited_wishlist = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.username}'s visits"
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     room_no = models.IntegerField()
@@ -99,4 +109,12 @@ class CroppingImageCoordinatesCache(models.Model):
     def __str__(self):
         return f"Cropping coordinates stored for {self.username}"
 
+class UserNotices(models.Model):
+    username = models.CharField(max_length=128)
+    title = models.CharField(max_length=64)
+    body = models.CharField(max_length=128)
+    button_text = models.CharField(max_length=16, default="Okay")
+    new = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f"{self.username} has a notice {self.title}"

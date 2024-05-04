@@ -25,6 +25,22 @@
         </div>
     </div>
 </div>
+{% if not first_visit %}
+<div class="notice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3">This is your shop</h1>
+            <hr>
+            <p class="style-text-2">
+                All the products that you sell and all the new orders you get for that product will appear on this page.
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">Cool!</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 <div class="container" style="min-height: 100vh;">
     <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
         {% for item in items %}

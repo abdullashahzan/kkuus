@@ -6,6 +6,24 @@
 {% endblock %}
 
 {% block body %}
+{% if not first_visit %}
+<div class="notice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3">This is your orders page</h1>
+            <hr>
+            <p class="style-text-2">
+                All the products that you buy will appear here. You can see their status wether they have been
+                accepted by the seller or are still being requested. You can also see seller details like their
+                whatsapp number or their address so that you can visit them yourself if you want to. 
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">Alright!</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 <div class="container p-4">
     <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
         {% for order in orders %}

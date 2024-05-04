@@ -6,6 +6,22 @@
 {% endblock %}
 
 {% block body %}
+{% if not first_visit %}
+<div class="notice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3">هذه صفحة طلباتك</h1>
+            <hr>
+            <p class="style-text-2">
+                ستظهر هنا جميع المنتجات التي تشتريها. يمكنك معرفة حالتها سواء تم قبولها من قبل البائع أم لا تزال تُطلب. يمكنك أيضًا رؤية تفاصيل البائع مثل رقم الواتساب الخاص بهم أو عنوانهم حتى تتمكن من زيارتهم بنفسك إذا أردت.
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">حسنًا!</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 <div class="container p-4">
     <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
         {% for order in orders %}

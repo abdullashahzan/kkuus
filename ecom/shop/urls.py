@@ -51,6 +51,8 @@ urlpatterns = [
     path('save-fcm-token/', views.save_fcm_token, name='save_fcm_token'),
     path('samplePurchase/', views.process_purchase, name='samplePurchase'),
 
+    path('publishNewNotice/', views.publish_new_notice, name="publish_new_notice"),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()
