@@ -32,7 +32,6 @@ class UserListings(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     expiry = models.DateTimeField(default=timezone.now)
     is_expired = models.BooleanField(default=True)
-    is_renewed = models.BooleanField(default=False)
     num_raters = models.IntegerField(default=0)
     ratings = models.FloatField(default=0, null=True)
     num_orders = models.IntegerField(default=0)

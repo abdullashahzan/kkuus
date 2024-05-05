@@ -11,10 +11,27 @@
         <div class="col-md-6">
             <article>
                 <h1 class="style-text-3">Renew the item?</h1>
-                <p class="lead style-text">Renewing the item will extend the date for 1 more day.</p>
-                <p class="style-text"><strong>Note:</strong> You can only renew once.</p>
+                <p class="lead style-text">Renew your product to make it available again for your customers</p>
                 <form class="redirect_link" action="" method="post">
                     {% csrf_token %}
+                    <div class="row mb-4 mt-4 style-text">
+                        <input type="hidden" name="item_id" value="" class="item_id">
+                        <div class="style-text"><strong>Select your plan:</strong></div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="14" checked>
+                            <label class="form-check-label" for="flexRadioDefault">
+                                Post for 14 days <br> (2 USD ~ 7.5 SAR)
+                            </label>
+                        </div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="28">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                Post for 28 days <br> (3 USD ~ 11.25 SAR)
+                            </label>
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-outline-primary">Yes, go ahead!</button>
                 </form>
                 <button class="btn btn-outline-danger mt-2" onclick="closeModal()">No, take me back</button>
@@ -35,7 +52,8 @@
                 All the products that you sell and all the new orders you get for that product will appear on this page.
             </p>
             <div class="style-text mt-4">
-                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">Cool!</button>
+                <button class="btn btn-primary"
+                    onclick="document.querySelector('.notice').style.display='none';">Cool!</button>
             </div>
         </div>
     </div>
@@ -48,7 +66,8 @@
             <div class="shadow fadeInUp card mb-3 d-flex align-items-center">
                 {% if item.new_orders != 0 %}
                 <div class="card-header style-text" style="width: 100%;"><a
-                        href="{% url 'shop:order_details' item.id %}" class="text-danger lead">{{item.new_orders}} new order!</a></div>
+                        href="{% url 'shop:order_details' item.id %}" class="text-danger lead">{{item.new_orders}} new
+                        order!</a></div>
                 {% else %}
                 <div class="card-header style-text text-muted" style="width: 100%;">No new orders</div>
                 {% endif %}
@@ -60,10 +79,8 @@
                             class="text-primary style-text">{{item.product_name}}</a></h5>
                     <hr>
                     <h5 class="card-title style-text">SAR {{item.product_price}}</h5>
-                    {% if item.is_expired == True and item.is_renewed == False %}
+                    {% if item.is_expired == True %}
                     <button class="btn btn-primary" onclick="openModalParameter('{{item.id}}')">Renew</button>
-                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">Delete</a>
-                    {% elif item.is_expired %}
                     <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">Delete</a>
                     {% else %}
                     <p class="text-muted style-text">Click here to enter buyer code</p>
@@ -73,10 +90,12 @@
                     {% endif %}
                 </div>
                 {% if item.is_expired %}
-                <div class="card-footer style-text text-light bg-danger" style="width: 100%;">Item expired</div>
+                <div class="card-footer style-text text-light bg-danger" style="width: 100%;">Item expired please renew
+                    it to continue selling it.</div>
                 {% else %}
                 <div class="card-footer style-text text-light bg-primary" style="width: 100%;">Item expires on:
-                    <br>{{item.expiry}}</div>
+                    <br>{{item.expiry}}
+                </div>
                 {% endif %}
             </div>
         </div>

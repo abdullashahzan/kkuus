@@ -17,7 +17,7 @@ from ecom.settings import version, PAYPAL_RECIEVER_EMAIL, BASE_DIR
 from paypal.standard.forms import PayPalPaymentsForm
 from PIL import Image
 
-language = "ar"
+language = "en"
 
 def change_language(request):
     global language
@@ -248,25 +248,22 @@ def wishlist(request):
         return render(request, "ar/wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
 
 def paid_sale_successful(request, invoice, plan):
-    if 'HTTP_REFERER' in request.META:
-        validate_invoice = Invoice.objects.filter(id=invoice)
-        if validate_invoice.exists():
-            expiry_date = set_expiry(plan)
-            item_id = validate_invoice.first().item.id
-            item = UserListings.objects.get(id=item_id)
-            item.expiry = expiry_date
-            item.is_expired = False
-            item.payment_done = True
-            item.save()
-            notification_title = f"{item.product_name} was listed successfully in marketplace!"
-            notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-            UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
-            validate_invoice.first().delete()
-            return redirect(reverse('shop:index'))
-        else:
-            return JsonResponse({"Error": "Invalid method of payment."})
+    validate_invoice = Invoice.objects.filter(id=invoice)
+    if validate_invoice.exists():
+        expiry_date = set_expiry(plan)
+        item_id = validate_invoice.first().item.id
+        item = UserListings.objects.get(id=item_id)
+        item.expiry = expiry_date
+        item.is_expired = False
+        item.payment_done = True
+        item.save()
+        notification_title = f"{item.product_name} was listed successfully in marketplace!"
+        notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+        UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
+        validate_invoice.first().delete()
+        return redirect(reverse('shop:index'))
     else:
-        return HttpResponseBadRequest("A small and annoying error occured while handling this request. Contact the developer at kkuunofficialstore@gmail.com")
+        return JsonResponse({"Error": "Invalid method of payment."})
 
 def crop_image(request):
     try:
@@ -281,6 +278,49 @@ def crop_image(request):
     height = request.GET.get('height')
     CroppingImageCoordinatesCache(username=request.user.username, x=x, y=y, width=width, height=height).save()    
     return JsonResponse({'success': True})
+
+def free_post(username, product_name, product_description, price, unique_filename, expiry_date):
+    UserListings(username=username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
+    notification_title = f"{product_name} was listed successfully in marketplace!"
+    notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+    UserNotification(username=username, title=notification_title, body=notification_body, task="show_shop").save()
+
+def paid_post(item_id, host, plan):
+    item = UserListings.objects.get(id=item_id)
+    created_uuid = uuid.uuid4()
+    invoice = Invoice(item=item, invoice=created_uuid)
+    invoice.save()
+    try:
+        plan = int(plan.strip())
+    except:
+        pass
+    if int(plan) == 14:
+        amount = 2.00
+    elif int(plan) == 28:
+        amount = 3.00
+    else:
+        amount = 0
+    paypal_checkout = {
+        'business': PAYPAL_RECIEVER_EMAIL,
+        'amount': amount,
+        'item_name': f"AD DURATION: {plan} DAYS",
+        'invoice': created_uuid,
+        'currency_code': 'USD',
+        'notify_url': f"http://{host}{reverse('paypal-ipn')}",
+        'return_url': f"http://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':invoice.id, 'plan':plan})}",
+        'cancel_url': f"http://{host}{reverse('shop:my_shop')}",
+    }
+    paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+    price = 3.75*amount
+    paypal_fee = 0.85*price
+    web_fee = 0.15*price
+    context = {
+        'price': price,
+        'paypal_fee': paypal_fee,
+        'web_fee': web_fee,
+        'paypal': paypal_payment
+    }
+    return context
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
@@ -342,45 +382,16 @@ def new_listing(request):
             blob.upload_from_filename(path, content_type='image/jpeg')
             os.remove(path)
             user_profile = UserProfile.objects.get(user=request.user)
-            if user_profile.privileged == True:
+            if user_profile.privileged == True or int(plan) <= 4:
                 expiry_date = set_expiry(plan)
-                UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
-                notification_title = f"{product_name} was listed successfully in marketplace!"
-                notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-                UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
-                return redirect(reverse('shop:homepage'))
-            elif int(plan) <= 4:
-                expiry_date = set_expiry(plan)
-                UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
-                notification_title = f"{product_name} was listed successfully in marketplace!"
-                notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-                UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
+                free_post(request.user.username, product_name, product_description, price, unique_filename, expiry_date)
                 return redirect(reverse('shop:homepage'))
             elif int(plan) == 14:
                 expiry_date = set_expiry(0)
                 item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
                 item.save()
                 host = request.get_host()
-                created_uuid = uuid.uuid4()
-                invoice = Invoice(item=item, invoice=created_uuid)
-                invoice.save()
-                paypal_checkout = {
-                    'business': PAYPAL_RECIEVER_EMAIL,
-                    'amount': 2.00,
-                    'item_name': "AD DURATION: 14 DAYS",
-                    'invoice': created_uuid,
-                    'currency_code': 'USD',
-                    'notify_url': f"https://{host}{reverse('paypal-ipn')}",
-                    'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':invoice.id, 'plan':14})}",
-                    'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
-                }
-                paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-                context = {
-                    'price': 7.51,
-                    'paypal_fee': 5.60,
-                    'web_fee': 1.91,
-                    'paypal': paypal_payment
-                }
+                context = paid_post(item.id, host, int(plan))
                 if language == "en":
                     return render(request, 'checkout.html', context)
                 elif language == "ar":
@@ -390,26 +401,7 @@ def new_listing(request):
                 item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
                 item.save()
                 host = request.get_host()
-                created_uuid = uuid.uuid4()
-                invoice = Invoice(item=item, invoice=created_uuid)
-                invoice.save()
-                paypal_checkout = {
-                    'business': PAYPAL_RECIEVER_EMAIL,
-                    'amount': 3.00,
-                    'item_name': "AD DURATION: 28 DAYS",
-                    'invoice': created_uuid,
-                    'currency_code': 'USD',
-                    'notify_url': f"https://{host}{reverse('paypal-ipn')}",
-                    'return_url': f"https://{host}{reverse('shop:new_paid_listing', kwargs={'invoice': invoice.id, 'plan':28})}",
-                    'cancel_url': f"https://{host}{reverse('shop:my_shop')}",
-                }
-                paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-                context = {
-                    'price': 11.26,
-                    'paypal_fee': 8.39,
-                    'web_fee': 2.87,
-                    'paypal': paypal_payment
-                }
+                context = paid_post(item.id, host, int(plan))
                 if language == "en":
                     return render(request, 'checkout.html', context)
                 elif language == "ar":
@@ -489,18 +481,17 @@ def remove_from_wishlist(request, item_id):
     wishlist.item.remove(item)
     return JsonResponse({"message": "Item removed from wishlist"})
 
-@require_POST
-def renew_item(request, item_id):
-    item = UserListings.objects.get(id=item_id)
-    if item.is_renewed == False:
-        item.expiry = set_expiry(1)
-        item.is_renewed = True
-        item.is_expired = False
-        item.save()
-    notification_title = f"Your product {item.product_name} was renewed for 1 day successfully!"
-    notification_body = "Your product is available on the marketplace again for 1 day."
-    UserNotification(username=request.user.username, title=notification_title, body=notification_body).save()
-    return redirect(reverse('shop:my_shop'))
+def renew_item(request):
+    if request.method == "POST":
+        host = request.get_host()
+        item_id = request.POST['item_id']
+        plan = request.POST['flexRadioDefault']
+        context = paid_post(item_id, host, plan)
+        print(context)
+        if language == "en":
+            return render(request, 'checkout.html', context)
+        elif language == "ar":
+            return render(request, 'ar/checkout.html', context)
 
 def buy(request, item_id):
     ordered_items = UserListings.objects.filter(username=request.user.username)
@@ -508,7 +499,8 @@ def buy(request, item_id):
     for item in ordered_items:
         new_item_orders += item.new_orders
     item = UserListings.objects.get(id=item_id)
-    item.num_views += 1
+    if item.username != request.user.username:
+        item.num_views += 1
     item.save()
     if request.user.is_authenticated:
         user_wishlist = get_user_wishlist(request.user.username)

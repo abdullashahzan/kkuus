@@ -10,14 +10,31 @@
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-6">
             <article>
-                <h1 class="style-text-3">تجديد العنصر؟</h1>
-                <p class="lead style-text">سيؤدي تجديد العنصر إلى تمديد تاريخ انتهاء الصلاحية لمدة يوم آخر.</p>
-                <p class="style-text"><strong>ملاحظة:</strong> يمكنك تجديد العنصر مرة واحدة فقط.</p>
+                <h1 class="style-text-3">هل ترغب في تجديد العنصر؟</h1>
+                <p class="lead style-text">قم بتجديد منتجك لجعله متاحًا مرة أخرى لعملائك</p>
                 <form class="redirect_link" action="" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-primary">نعم، تفضل!</button>
+                    <div class="row mb-4 mt-4 style-text">
+                        <input type="hidden" name="item_id" value="" class="item_id">
+                        <div class="style-text"><strong>اختر خطتك:</strong></div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="14" checked>
+                            <label class="form-check-label" for="flexRadioDefault">
+                                نشر لمدة 14 يومًا <br> (2 دولار ~ 7.5 ريال سعودي)
+                            </label>
+                        </div>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="28">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                نشر لمدة 28 يومًا <br> (3 دولار ~ 11.25 ريال سعودي)
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary">نعم، تابع!</button>
                 </form>
-                <button class="btn btn-outline-danger mt-2" onclick="closeModal()">لا، أرجعني</button>
+                <button class="btn btn-outline-danger mt-2" onclick="closeModal()">لا، أعيدني للوراء</button>
             </article>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-items-center">
@@ -60,10 +77,8 @@
                             class="text-primary style-text">{{item.product_name}}</a></h5>
                     <hr>
                     <h5 class="card-title style-text">ريال {{item.product_price}}</h5>
-                    {% if item.is_expired == True and item.is_renewed == False %}
+                    {% if item.is_expired == True %}
                     <button class="btn btn-primary" onclick="openModalParameter('{{item.id}}')">تجديد</button>
-                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">حذف</a>
-                    {% elif item.is_expired %}
                     <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">حذف</a>
                     {% else %}
                     <p class="text-muted style-text">انقر هنا لإدخال رمز المشتري</p>
