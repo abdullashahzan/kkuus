@@ -49,7 +49,7 @@
 
 
     {% block title %}
-    <title>KKU Unofficial Store</title>
+    <title>Student souq (Unofficial store)</title>
     {% endblock %}
 </head>
 
@@ -62,8 +62,8 @@
         <div class="container-fluid" style="min-height: 0;">
             <a class="style-text-4" href="{% url 'shop:homepage' %}"
                 style="color: #f7f7f7; text-decoration: none; font-size: 2rem;"
-                title="E-commerce application for students of King Khalid University">KKU <span class="style-text-4"
-                    style="font-size: 1.6rem;">unofficial store</span>
+                title="E-commerce application for students">Student <span class="style-text-4"
+                    style="font-size: 1.6rem;">souq</span>
             </a>
             <div class="d-block d-lg-none mt-1 style-text">
                 {% if user.is_authenticated %}
@@ -91,7 +91,7 @@
                                 class="bi bi-cash lead mx-2"></i> Sell </span>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'shop:new_listing' %}">Sell new product</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My products</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My shop</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown" style="cursor: pointer;">

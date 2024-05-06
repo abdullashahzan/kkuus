@@ -10,17 +10,17 @@
             </div>
             <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
                 <article>
-                    <h1 class="style-heading mb-4">اكتشف الفرح في كل نقرة، سجِّل اليوم!</h1>
+                    <h1 class="style-heading mb-4">!نعتذر، ولكن عليك ملء هذا النموذج الممل للتسجيل لتسجيل نفسك 😩</h1>
                     <form action="{% url 'shop:signup_user' %}" method="post" class="style-text" id="myForm">
                         {% csrf_token %}
                         <div class="row mb-2">
                             <div class="col-md-6">
                                 <label for="first" class="form-label">الاسم الأول</label>
-                                <input type="text" class="form-control" name="first" id="web_first">
+                                <input type="text" class="form-control" name="first" id="web_first" placeholder="محمد">
                             </div>
                             <div class="col-md-6">
                                 <label for="second" class="form-label">الاسم الثاني</label>
-                                <input type="text" class="form-control" name="second" id="web_second">
+                                <input type="text" class="form-control" name="second" id="web_second" placeholder="سمبول">
                             </div>
                         </div>
                         <div class="row mb-2">
@@ -33,7 +33,7 @@
                         <div class="row mb-2">
                             <div class="col-md-12">
                                 <label for="username" class="form-label">اسم المستخدم</label>
-                                <input type="text" class="form-control" name="username" id="userInput"
+                                <input type="text" class="form-control" name="username" id="userInput" placeholder="JoJo"
                                     aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
                                 <div id="checkUsernameAvailability" class="form-text"></div>
                             </div>
@@ -48,11 +48,11 @@
                         <div class="row mb-2">
                             <div class="col-md-6">
                                 <label for="exampleInputPassword1" class="form-label">كلمة المرور</label>
-                                <input type="password" name="password" class="form-control">
+                                <input type="password" name="password" class="form-control" placeholder="ilovecupcakes">
                             </div>
                             <div class="col-md-6">
                                 <label for="exampleInputPassword2" class="form-label">تأكيد كلمة المرور</label>
-                                <input type="password" name="password2" class="form-control">
+                                <input type="password" name="password2" class="form-control" placeholder="ilovecupcakes">
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -78,7 +78,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div id="address_help" class="form-text">حالياً، الخدمة متاحة داخل الإسكان الطلابي للذكور في جامعة الملك خالد في الفرع</div>
+                            <div id="address_help" class="form-text">تأكد من صحة عنوانك وإلا سيتلقى طلبك شخص آخر 💀</div>
                         </div>
                         {% if message %}
                         <p class="style-text" style="color: red;">{{message}}</p>
@@ -97,7 +97,7 @@
                 <img class="widthlock p-2" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="صورة فارغة">
                 <div class="card-body">
                     <article>
-                        <h1 class="style-heading mb-4">اكتشف الفرح في كل نقرة، سجِّل اليوم!</h1>
+                        <h1 class="style-heading mb-4">نعتذر، ولكن عليك ملء هذا النموذج الممل للتسجيل لتسجيل نفسك 😩!</h1>
                         <form action="{% url 'shop:signup_user' %}" method="post" class="style-text" id="myForm">
                             {% csrf_token %}
                             <div class="row mb-2">
@@ -166,8 +166,8 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div id="address_help" class="form-text">حالياً، الخدمة متاحة داخل الإسكان الطلابي للذكور في جامعة الملك خالد في الفرع</div>
                             </div>
+                            <div id="address_help" class="form-text">تأكد من صحة عنوانك وإلا سيتلقى طلبك شخص آخر 💀</div>
                             {% if message %}
                             <p class="style-text" style="color: red;">{{message}}</p>
                             {% endif %}

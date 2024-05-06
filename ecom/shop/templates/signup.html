@@ -10,17 +10,17 @@
             </div>
             <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
                 <article>
-                    <h1 class="style-heading mb-4">Discover joy in every click, sign up today!</h1>
+                    <h1 class="style-heading mb-4">Yeah unfortunately, you will have to fill this boring form to register yourself 😩</h1>
                     <form action="{% url 'shop:signup_user' %}" method="post" class="style-text" id="myForm">
                         {% csrf_token %}
                         <div class="row mb-2">
                             <div class="col-md-6">
                                 <label for="first" class="form-label">First name</label>
-                                <input type="text" class="form-control" name="first" id="web_first">
+                                <input type="text" class="form-control" name="first" id="web_first" placeholder="Mohammad">
                             </div>
                             <div class="col-md-6">
                                 <label for="second" class="form-label">Second name</label>
-                                <input type="text" class="form-control" name="second" id="web_second">
+                                <input type="text" class="form-control" name="second" id="web_second" placeholder="Abdul">
                             </div>
                         </div>
                         <div class="row mb-2">
@@ -34,7 +34,7 @@
                             <div class="col-md-12">
                                 <label for="username" class="form-label">Username</label>
                                 <input type="text" class="form-control" name="username" id="userInput"
-                                    aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
+                                    aria-describedby="checkUsernameAvailability" oninput="delayFunction()" placeholder="JoJo">
                                 <div id="checkUsernameAvailability" class="form-text"></div>
                             </div>
                         </div>
@@ -48,11 +48,11 @@
                         <div class="row mb-2">
                             <div class="col-md-6">
                                 <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control">
+                                <input type="password" name="password" class="form-control" placeholder="ilovecupcakes">
                             </div>
                             <div class="col-md-6">
                                 <label for="exampleInputPassword2" class="form-label">Confirm password</label>
-                                <input type="password" name="password2" class="form-control">
+                                <input type="password" name="password2" class="form-control" placeholder="ilovecupcakes">
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -78,7 +78,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div id="address_help" class="form-text">For now the service is only available inside KKU Male student housing in Al Fara</div>
+                            <div id="address_help" class="form-text text-dark">Make sure your address is correct or someone else will recieve your order 💀</div>
                         </div>
                         {% if message %}
                         <p class="style-text" style="color: red;">{{message}}</p>
@@ -98,7 +98,7 @@
                 <img class="widthlock p-2" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="empty">
                 <div class="card-body">
                     <article>
-                        <h1 class="style-heading mb-4">Discover joy in every click, sign up today!</h1>
+                        <h1 class="style-heading mb-4">Yeah unfortunately, you will have to fill this boring form to register yourself 😩</h1>
                         <form action="{% url 'shop:signup_user' %}" method="post" class="style-text" id="myForm">
                             {% csrf_token %}
                             <div class="row mb-2">
@@ -173,8 +173,8 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div id="address_help" class="form-text">For now the service is only available inside KKU Male student housing in Al Fara</div>
                             </div>
+                            <div id="address_help" class="form-text">Make sure your address is correct or someone else will recieve your order 💀</div>
                             {% if message %}
                             <p class="style-text" style="color: red;">{{message}}</p>
                             {% endif %}

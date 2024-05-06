@@ -19,8 +19,7 @@
 <div class="container">
     <div class="row" style="min-height: 80vh;">
         <div class="col-md-6 d-flex justify-content-center align-items-start mt-4 slideInLeft">
-            <img class="widthlock my-3" src="{% static 'media/undraw_web_shopping_re_owap.svg' %}"
-                alt="صورة تسوق">
+            <img class="widthlock my-3" src="{% static 'media/undraw_web_shopping_re_owap.svg' %}" alt="صورة تسوق">
         </div>
         <div class="col-md-6 d-flex justify-content-start align-items-center p-5 slideInUp">
             <article>
@@ -43,15 +42,16 @@
                             <label for="description" class="form-label font-weight-bold">تفاصيل المنتج:</label>
                             <textarea class="form-control style-text" id="description" name="product_description"
                                 rows="4" style="resize: none;"
-                                placeholder="مثال: أنا أبيع دراجتي البخارية لأني اشتريت واحدة أخرى. إذا كنت مهتمًا يمكنك الاتصال بي على رقم الواتساب المعطى. يتم قبول النقد فقط."></textarea>
+                                placeholder="أنا ببيع شوكولاتتي لأنني تذكرت فقط أن لدي السكري..."></textarea>
                             <p class="style-text-2 text-primary"><span id="charCount">0</span> / 500</p>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="price" class="form-label font-weight-bold">تحديد سعر المنتج (ريال سعودي):</label>
+                            <label for="price" class="form-label font-weight-bold">تحديد سعر المنتج (ريال
+                                سعودي):</label>
                             <input type="text" class="form-control style-text" name="price" id="price"
-                                placeholder="5.00">
+                                placeholder="1,000,000,000">
                         </div>
                     </div>
                     <div class="row mb-3 mt-4 d-flex justify-content-center align-items-center">
@@ -77,7 +77,7 @@
                     <!-- Add an <img> element with id "preview" where the cropped image will be displayed -->
                     <img id="preview" src="" alt="معاينة" style="max-width: 100%; height: auto; display: none;">
                     <div class="row mb-4 mt-4 style-text">
-                        <div class="style-text"><strong>اختر خطتك:</strong></div>
+                        <div class="style-text"><strong>اختر خطتك، من فضلك اختر الخيار الأخير نحن بحاجة إلى بعض الأموال 😔</strong></div>
                         <div class="form-check col-4 m-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="4" checked>
@@ -89,18 +89,25 @@
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="14">
                             <label class="form-check-label" for="flexRadioDefault">
-                                انشر لمدة 14 يومًا <br> (2 دولار ~ 7.51 ريال سعودي)
+                                انشر لمدة 14 يومًا <br> (مجاناً)
                             </label>
                         </div>
                         <div class="form-check col-4 m-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="28">
                             <label class="form-check-label" for="flexRadioDefault">
-                                انشر لمدة 28 يومًا <br> (3 دولار ~ 11.26 ريال سعودي)
+                                انشر لمدة 28 يومًا <br> (مجاناً)
                             </label>
                         </div>
-                        <p class="text-muted">غير متاح نشر لأكثر من شهر واحد حاليًا بسبب تخزين الخادم المنخفض، ولكن سيتم توفيره قريبًا للجميع.</p>
+                        <div class="form-check col-4 m-2">
+                            <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
+                                value="29">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                للأبد 🤑 <br> (100,000,000 $)
+                            </label>
+                        </div>
                     </div>
+                    <p class="">إذا لم تختار الخيار الأخير، فسنرسل قناصًا إلى موقعك - أهاهم! مجرد مزاح، يمكنك تجديد خطتك مجانًا مرة أخرى (نحن كرماء جدًا)</p>
                     <button type="submit" class="btn btn-primary mb-3"><i class="bi bi-cash-stack lead mx-1"></i> <span
                             class="style-text lead mx-2">عرض للبيع</span></button>
                 </form>

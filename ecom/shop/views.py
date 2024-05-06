@@ -17,18 +17,25 @@ from ecom.settings import version, PAYPAL_RECIEVER_EMAIL, BASE_DIR
 from paypal.standard.forms import PayPalPaymentsForm
 from PIL import Image
 
-language = "ar"
-
 def change_language(request):
     global language
     if language == "en":
-        language = "ar"
+        request.session[request.user.username] = "ar"
     else:
-        language = "en"
-    referring_url = request.META.get('HTTP_REFERER')
-    return redirect(referring_url or 'shop:homepage')
+        request.session[request.user.username] = "en"
+    return redirect('shop:homepage')
 
 def login_user(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     message = ""
     if request.method == "POST":
         username = request.POST['username']
@@ -52,6 +59,16 @@ def login_user(request):
         return render(request, "ar/login.html", {"message": message})
 
 def signup_user(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     message = ""
     if request.method == "POST":
         first = request.POST['first']
@@ -142,6 +159,16 @@ def get_image(request, firebase_path):
         return HttpResponse(f"Error: {str(e)}", status=500)
 
 def homepage(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     check_data()
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
@@ -196,6 +223,16 @@ def homepage(request):
         return render(request, "ar/index.html", {"items": items,'page_obj': page_obj})
 
 def notifications(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -218,6 +255,16 @@ def delete_notification(request, notification_id):
 
 @login_required(login_url="shop:login_user")
 def wishlist(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -247,9 +294,10 @@ def wishlist(request):
     elif language == "ar":
         return render(request, "ar/wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
 
-def paid_sale_successful(request, invoice, plan):
+def paid_sale_successful(request, invoice):
     validate_invoice = Invoice.objects.filter(id=invoice)
     if validate_invoice.exists():
+        plan = 10000
         expiry_date = set_expiry(plan)
         item_id = validate_invoice.first().item.id
         item = UserListings.objects.get(id=item_id)
@@ -258,7 +306,7 @@ def paid_sale_successful(request, invoice, plan):
         item.payment_done = True
         item.save()
         notification_title = f"{item.product_name} was listed successfully in marketplace!"
-        notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
+        notification_body = f"Your product has been put up on marketplace FOREVER!!!"
         UserNotification(username=request.user.username, title=notification_title, body=notification_body, task="show_shop").save()
         validate_invoice.first().delete()
         return redirect(reverse('shop:index'))
@@ -279,11 +327,16 @@ def crop_image(request):
     CroppingImageCoordinatesCache(username=request.user.username, x=x, y=y, width=width, height=height).save()    
     return JsonResponse({'success': True})
 
-def free_post(username, product_name, product_description, price, unique_filename, expiry_date):
-    UserListings(username=username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True).save()
-    notification_title = f"{product_name} was listed successfully in marketplace!"
-    notification_body = f"Your product has been put up on marketplace and users are now able to see it till {expiry_date}"
-    UserNotification(username=username, title=notification_title, body=notification_body, task="show_shop").save()
+def free_post(item_id, plan):
+    item = UserListings.objects.get(id=item_id)
+    item.is_expired = False
+    item.payment_done = True
+    expiry_date = set_expiry(plan)
+    item.expiry = expiry_date
+    item.save()
+    notification_title = f"{item.product_name} was listed successfully in marketplace!"
+    notification_body = f"Your product has been put up on marketplace and users are now able to see it till {item.expiry}"
+    UserNotification(username=item.username, title=notification_title, body=notification_body, task="show_shop").save()
 
 def paid_post(item_id, host, plan):
     item = UserListings.objects.get(id=item_id)
@@ -294,26 +347,21 @@ def paid_post(item_id, host, plan):
         plan = int(plan.strip())
     except:
         pass
-    if int(plan) == 14:
-        amount = 2.00
-    elif int(plan) == 28:
-        amount = 3.00
-    else:
-        amount = 0
+    amount = 5.00
     paypal_checkout = {
         'business': PAYPAL_RECIEVER_EMAIL,
         'amount': amount,
-        'item_name': f"AD DURATION: {plan} DAYS",
+        'item_name': f"AD DURATION: FOREVER",
         'invoice': created_uuid,
         'currency_code': 'USD',
         'notify_url': f"http://{host}{reverse('paypal-ipn')}",
-        'return_url': f"http://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':invoice.id, 'plan':plan})}",
+        'return_url': f"http://{host}{reverse('shop:new_paid_listing', kwargs={'invoice':invoice.id})}",
         'cancel_url': f"http://{host}{reverse('shop:my_shop')}",
     }
     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
     price = 3.75*amount
-    paypal_fee = 0.85*price
-    web_fee = 0.15*price
+    paypal_fee = 0.75*price
+    web_fee = 0.25*price
     context = {
         'price': price,
         'paypal_fee': paypal_fee,
@@ -324,6 +372,16 @@ def paid_post(item_id, host, plan):
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     delete_unpaid(request.user.username)
     if request.method == "POST":
         product_name = request.POST['product_name']
@@ -364,9 +422,9 @@ def new_listing(request):
             cropped_image.save(path, format="JPEG")
         except:
             if language == "en":
-                return render(request, "sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
+                return render(request, "sell_product.html", {"message": "An error occured while uploading your photo."})
             elif language == "ar":
-                return render(request, "ar/sell_product.html", {"message": "An unkown error occured while uploading your photo. If the problem persist, please contact the developer."})
+                return render(request, "ar/sell_product.html", {"message": "An error occured while uploading your photo."})
         try:
             float(price)
         except:
@@ -382,21 +440,13 @@ def new_listing(request):
             blob.upload_from_filename(path, content_type='image/jpeg')
             os.remove(path)
             user_profile = UserProfile.objects.get(user=request.user)
-            if user_profile.privileged == True or int(plan) <= 4:
+            if user_profile.privileged == True or int(plan) <= 28:
                 expiry_date = set_expiry(plan)
-                free_post(request.user.username, product_name, product_description, price, unique_filename, expiry_date)
-                return redirect(reverse('shop:homepage'))
-            elif int(plan) == 14:
-                expiry_date = set_expiry(0)
-                item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
+                item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False, payment_done=True)
                 item.save()
-                host = request.get_host()
-                context = paid_post(item.id, host, int(plan))
-                if language == "en":
-                    return render(request, 'checkout.html', context)
-                elif language == "ar":
-                    return render(request, 'ar/checkout.html', context)
-            elif int(plan) == 28:
+                free_post(item.id, int(plan))
+                return redirect(reverse('shop:homepage'))
+            elif int(plan) > 28:
                 expiry_date = set_expiry(0)
                 item = UserListings(username=request.user.username, product_name=product_name, product_description=product_description, product_price=price, firebase_path=unique_filename, expiry=expiry_date, is_expired=False)
                 item.save()
@@ -450,6 +500,16 @@ def delete_listing(request, listing_id):
 
 @login_required(login_url="shop:login_user")
 def my_shop(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     delete_unpaid(request.user.username)
     check_data()
     items = UserListings.objects.filter(username=request.user.username)
@@ -486,14 +546,28 @@ def renew_item(request):
         host = request.get_host()
         item_id = request.POST['item_id']
         plan = request.POST['flexRadioDefault']
-        context = paid_post(item_id, host, plan)
-        print(context)
+        if int(plan) <= 28:
+            free_post(item_id, int(plan))
+            referring_url = request.META.get('HTTP_REFERER')
+            return redirect(referring_url or reverse("shop:homepage"))
+        else:
+            context = paid_post(item_id, host, plan)
         if language == "en":
             return render(request, 'checkout.html', context)
         elif language == "ar":
             return render(request, 'ar/checkout.html', context)
 
 def buy(request, item_id):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -652,6 +726,16 @@ def confirm_purchase(request, item_id):
         return render(request, "ar/confirm_purchase.html", {"item": item, "message":message})
 
 def myOrders(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -827,6 +911,16 @@ def delete_account(request):
 
 @login_required(login_url="shop:login_user")
 def profile(request):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     try:
         address_error = get_address()
     except:
@@ -868,12 +962,32 @@ def publish_new_notice(request):
     return redirect(referring_url or reverse("shop:homepage"))
 
 def page_404(request, exception):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     if language == "en":
         return render(request, "404.html", status=404)
     elif language == "ar":
         return render(request, "ar/404.html", status=404)
 
 def page_500(request, exception=None):
+    global language
+    try:
+        if request.user.username in request.session:
+            language = request.session[request.user.username]
+        else:
+            language_code = request.LANGUAGE_CODE
+            language = language_code.strip().lower()
+            request.session[request.user.username] = language
+    except:
+        language = "en"
     if language == "en":
         return render(request, "500.html", status=500)
     elif language == "ar":

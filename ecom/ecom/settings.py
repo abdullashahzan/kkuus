@@ -41,7 +41,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['unstore.pythonanywhere.com', '127.0.0.1']
 
 # Current application version
-version = "3.6"
+version = "3.7"
 
 # Application definition
 
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

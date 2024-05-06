@@ -1,8 +1,8 @@
 function openModalParameter(item_id) {
     document.getElementById('myModal').style.display = 'block';
     var item_id = item_id.trim();
-    console.log(item_id);
-    document.querySelector('.redirect_link').action = `/myShop/renew/${item_id}`;
+    document.querySelector('.redirect_link').action = `/myShop/renew/`;
+    document.querySelector('.item_id').value = item_id;
     window.scrollTo({
         top: 0,
         behavior: 'smooth'

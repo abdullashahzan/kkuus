@@ -51,7 +51,7 @@
 
 
     {% block title %}
-    <title>متجر جامعة الملك خالد غير الرسمي</title>
+    <title>سوق السكن</title>
     {% endblock %}
 </head>
 
@@ -64,7 +64,7 @@
         <div class="container-fluid" style="min-height: 0;">
             <a class="style-text-4" href="{% url 'shop:homepage' %}"
                 style="color: #f7f7f7; text-decoration: none; font-size: 2rem;"
-                title="تطبيق التجارة الإلكترونية لطلاب جامعة الملك خالد">سوق الجامعي</a>
+                title="تطبيق التجارة الإلكترونية لطلاب">سوق السكن</a>
             <div class="d-block d-lg-none mt-1 style-text">
                 {% if user.is_authenticated %}
                 <a href="{% url 'shop:logout_user' %}" class="text-light text-decoration-none">
@@ -91,7 +91,7 @@
                                 class="bi bi-cash lead mx-2"></i> بيع </span>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'shop:new_listing' %}">بيع منتج جديد</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">منتجاتي</a></li>
+                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">متجري</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown" style="cursor: pointer;">
