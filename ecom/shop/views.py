@@ -17,14 +17,11 @@ from ecom.settings import version, PAYPAL_RECIEVER_EMAIL, BASE_DIR
 from paypal.standard.forms import PayPalPaymentsForm
 from PIL import Image
 
-language = "ar"
-
 def change_language(request):
-    global language
-    if language == "en":
-        request.session[request.user.username] = "ar"
+    if 'language' in request.session and request.session['language'] == "en":
+        request.session['language'] = "ar"
     else:
-        request.session[request.user.username] = "en"
+        request.session['language'] = "en"
     referrer = request.META.get('HTTP_REFERER')
     return redirect(referrer or reverse('shop:homepage'))
 
@@ -46,9 +43,9 @@ def login_user(request):
                 next_url = request.GET.get('next', 'shop:index')
                 return redirect(next_url)
         message = "Invalid credentials"
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "login.html", {"message": message})
-    elif language == "ar":
+    else:
         return render(request, "ar/login.html", {"message": message})
 
 def signup_user(request):
@@ -84,9 +81,9 @@ def signup_user(request):
                 message = "Passwords do not match"
         else:
             message = "Please fill all the fields"
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "signup.html", {"message": message})
-    elif language == "ar":
+    else:
         return render(request, "ar/signup.html", {"message": message})
 
 def check_username_availability(request, username):
@@ -186,13 +183,13 @@ def homepage(request):
         user_wishlist_list = []
         for i in user_wishlist:
             user_wishlist_list.append(i.id)
-        if language == "en":
+        if 'language' in request.session and request.session['language'] == "en":
             return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit})
-        elif language == "ar":
+        else:
             return render(request, "ar/index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit})
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "index.html", {"items": items,'page_obj': page_obj})
-    elif language == "ar":
+    else:
         return render(request, "ar/index.html", {"items": items,'page_obj': page_obj})
 
 def notifications(request):
@@ -204,9 +201,9 @@ def notifications(request):
     for notification in notifications:
         notification.unread = False
         notification.save()
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "notifications.html", {"notifications": notifications, "new_orders": new_item_orders})
-    elif language == "ar":
+    else:
         return render(request, "ar/notifications.html", {"notifications": notifications, "new_orders": new_item_orders})
 
 def delete_notification(request, notification_id):
@@ -242,9 +239,9 @@ def wishlist(request):
         completed.append(completed_item.item.id)
     for i in user_wishlist:
         user_wishlist_list.append(i.id)
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
-    elif language == "ar":
+    else:
         return render(request, "ar/wishlist.html", {"items": user_wishlist,"wishlist":user_wishlist_list, "completed_items":completed, "bought_items": cart, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
 
 def paid_sale_successful(request, invoice):
@@ -336,9 +333,9 @@ def new_listing(request):
             if uploaded_file:
                 allowed_types = ['image/jpeg', 'image/png']
                 if uploaded_file.content_type not in allowed_types:
-                    if language == "en":
+                    if 'language' in request.session and request.session['language'] == "en":
                         return render(request, "sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
-                    elif language == "ar":
+                    else:
                         return render(request, "ar/sell_product.html", {"message": "Sorry, the only supported image file types are JPEG and PNG"})
             coordinates = CroppingImageCoordinatesCache.objects.get(username=request.user.username)
             crop_x = coordinates.x
@@ -364,16 +361,16 @@ def new_listing(request):
             path = f"{BASE_DIR}/shop/image_cache/{cropped_image_name}"
             cropped_image.save(path, format="JPEG")
         except:
-            if language == "en":
+            if 'language' in request.session and request.session['language'] == "en":
                 return render(request, "sell_product.html", {"message": "An error occured while uploading your photo."})
-            elif language == "ar":
+            else:
                 return render(request, "ar/sell_product.html", {"message": "An error occured while uploading your photo."})
         try:
             float(price)
         except:
-            if language == "en":
+            if 'language' in request.session and request.session['language'] == "en":
                 return render(request, "sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
-            elif language == "ar":
+            else:
                 return render(request, "ar/sell_product.html", {"message": "Bro you gotta type numbers for price not letters -_-"})
         if product_name != "" and product_description != "" and float(price) >= 0 and uploaded_file is not None:
             unique_filename = str(uuid.uuid4())
@@ -395,19 +392,19 @@ def new_listing(request):
                 item.save()
                 host = request.get_host()
                 context = paid_post(item.id, host, int(plan))
-                if language == "en":
+                if 'language' in request.session and request.session['language'] == "en":
                     return render(request, 'checkout.html', context)
-                elif language == "ar":
+                else:
                     return render(request, 'ar/checkout.html', context)
         else:
-            if language == "en":
+            if 'language' in request.session and request.session['language'] == "en":
                 return render(request, "sell_product.html", {"message": "Please fill all fields"})
-            elif language == "ar":
+            else:
                 return render(request, "ar/sell_product.html", {"message": "Please fill all fields"})
     else:
-        if language == "en":
+        if 'language' in request.session and request.session['language'] == "en":
             return render(request, "sell_product.html")
-        elif language == "ar":
+        else:
             return render(request, "ar/sell_product.html")
 
 def delete_image(firebase_path):
@@ -454,9 +451,9 @@ def my_shop(request):
         visits.save()
     except:
         first_visit = True
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, 'my_shop.html', {"items": items, "notifications":notifications, "first_visit": first_visit})
-    elif language == "ar":
+    else:
         return render(request, 'ar/my_shop.html', {"items": items, "notifications":notifications, "first_visit": first_visit})
 
 @require_POST
@@ -485,9 +482,9 @@ def renew_item(request):
             return redirect(referring_url or reverse("shop:homepage"))
         else:
             context = paid_post(item_id, host, plan)
-        if language == "en":
+        if 'language' in request.session and request.session['language'] == "en":
             return render(request, 'checkout.html', context)
-        elif language == "ar":
+        else:
             return render(request, 'ar/checkout.html', context)
 
 def buy(request, item_id):
@@ -512,13 +509,13 @@ def buy(request, item_id):
         user = User.objects.get(username=item.username)
         user_profile = UserProfile.objects.get(user=user)
         whatsapp = user_profile.whatsapp
-        if language == "en":
+        if 'language' in request.session and request.session['language'] == "en":
             return render(request, "buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "whatsapp": whatsapp, "new_orders": new_item_orders})
-        elif language == "ar":
+        else:
             return render(request, "ar/buy_product.html", {"item": item, "wishlist":user_wishlist_list, "comments": comments, "bought_users": bought_users_username, "whatsapp": whatsapp, "new_orders": new_item_orders})
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "buy_product.html", {"item": item})
-    elif language == "ar":
+    else:
         return render(request, "ar/buy_product.html", {"item": item})
 
 @require_POST
@@ -563,9 +560,9 @@ def order_details(request, item_id):
         order_status = object.status
         detail = [UserProfile.objects.get(user=user), order_status]
         details.append(detail)
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "ordered_by.html", {"item": item, "orders":details})
-    elif language == "ar":
+    else:
         return render(request, "ar/ordered_by.html", {"item": item, "orders":details})
 
 def purchase(request, item_id):
@@ -639,13 +636,13 @@ def confirm_purchase(request, item_id):
             item.num_orders += 1
             item.save()
             order.delete()
-            if language == "en":
+            if 'language' in request.session and request.session['language'] == "en":
                 return render(request, "purchase_complete.html", {"item":item, "user": user})
-            elif language == "ar":
+            else:
                 return render(request, "ar/purchase_complete.html", {"item":item, "user": user})
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "confirm_purchase.html", {"item": item, "message":message})
-    elif language == "ar":
+    else:
         return render(request, "ar/confirm_purchase.html", {"item": item, "message":message})
 
 def myOrders(request):
@@ -662,9 +659,9 @@ def myOrders(request):
         visits.save()
     except:
         first_visit = True
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
-    elif language == "ar":
+    else:
         return render(request, "ar/my_orders.html", {'orders': ordered_items, "notifications":notifications, "new_orders": new_item_orders, "first_visit": first_visit})
 
 def acceptOrder(request, item_id, username):
@@ -711,9 +708,9 @@ def search_item(request):
         cleaned_desc = str(listing.product_description).strip().lower()
         if item in cleaned_name or item in cleaned_desc:
             items_found.append(listing)
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "search_items.html", {"items": items_found, "new_orders": new_item_orders})
-    elif language == "ar":
+    else:
         return render(request, "ar/search_items.html", {"items": items_found, "new_orders": new_item_orders})
 
 @require_POST
@@ -835,9 +832,9 @@ def profile(request):
     notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
     this_user = User.objects.get(username=request.user.username)
     this_user_profile = UserProfile.objects.get(user=request.user)
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error, "notifications":notifications, "version": version})
-    elif language == "ar":
+    else:
         return render(request, "ar/profile.html", {"user":this_user, "other": this_user_profile, "address_error":address_error, "password_error":password_error, "notifications":notifications, "version": version})
 
 def developer(request):
@@ -865,9 +862,9 @@ def publish_new_notice(request):
     return redirect(referring_url or reverse("shop:homepage"))
 
 def page_404(request, exception):
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "404.html", status=404)
-    elif language == "ar":
+    else:
         return render(request, "ar/404.html", status=404)
 
 def page_500(request, exception=None):
@@ -879,23 +876,23 @@ def page_500(request, exception=None):
             language = "en"
     except:
         language = "ar"
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "500.html", status=500)
-    elif language == "ar":
+    else:
         return render(request, "ar/500.html", status=500)
 
 @login_required(login_url="shop:login_user")
 def preEnableNotifications(request):
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "pre_enable_notification.html")
-    elif language == "ar":
+    else:
         return render(request, "ar/pre_enable_notification.html")
 
 @login_required(login_url="shop:login_user")
 def enableNotifications(request):
-    if language == "en":
+    if 'language' in request.session and request.session['language'] == "en":
         return render(request, "enable_notifications.html")
-    elif language == "ar":
+    else:
         return render(request, "ar/enable_notifications.html")
 
 def save_fcm_token(request):
