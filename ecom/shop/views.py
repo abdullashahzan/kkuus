@@ -28,16 +28,6 @@ def change_language(request):
     return redirect('shop:homepage')
 
 def login_user(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     message = ""
     if request.method == "POST":
         username = request.POST['username']
@@ -61,16 +51,6 @@ def login_user(request):
         return render(request, "ar/login.html", {"message": message})
 
 def signup_user(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     message = ""
     if request.method == "POST":
         first = request.POST['first']
@@ -161,16 +141,6 @@ def get_image(request, firebase_path):
         return HttpResponse(f"Error: {str(e)}", status=500)
 
 def homepage(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     check_data()
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
@@ -225,16 +195,6 @@ def homepage(request):
         return render(request, "ar/index.html", {"items": items,'page_obj': page_obj})
 
 def notifications(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -257,16 +217,6 @@ def delete_notification(request, notification_id):
 
 @login_required(login_url="shop:login_user")
 def wishlist(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -374,16 +324,6 @@ def paid_post(item_id, host, plan):
 
 @login_required(login_url="shop:login_user")
 def new_listing(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     delete_unpaid(request.user.username)
     if request.method == "POST":
         product_name = request.POST['product_name']
@@ -502,16 +442,6 @@ def delete_listing(request, listing_id):
 
 @login_required(login_url="shop:login_user")
 def my_shop(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     delete_unpaid(request.user.username)
     check_data()
     items = UserListings.objects.filter(username=request.user.username)
@@ -560,16 +490,6 @@ def renew_item(request):
             return render(request, 'ar/checkout.html', context)
 
 def buy(request, item_id):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -728,16 +648,6 @@ def confirm_purchase(request, item_id):
         return render(request, "ar/confirm_purchase.html", {"item": item, "message":message})
 
 def myOrders(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -913,16 +823,6 @@ def delete_account(request):
 
 @login_required(login_url="shop:login_user")
 def profile(request):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     try:
         address_error = get_address()
     except:
@@ -964,16 +864,6 @@ def publish_new_notice(request):
     return redirect(referring_url or reverse("shop:homepage"))
 
 def page_404(request, exception):
-    global language
-    try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
-        else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
-    except:
-        language = "en"
     if language == "en":
         return render(request, "404.html", status=404)
     elif language == "ar":
@@ -982,14 +872,12 @@ def page_404(request, exception):
 def page_500(request, exception=None):
     global language
     try:
-        if request.user.username in request.session:
-            language = request.session[request.user.username]
+        if request.session[request.user.username] == "ar":
+            language = "ar"
         else:
-            language_code = request.LANGUAGE_CODE
-            language = language_code.strip().lower()
-            request.session[request.user.username] = language
+            language = "en"
     except:
-        language = "en"
+        language = "ar"
     if language == "en":
         return render(request, "500.html", status=500)
     elif language == "ar":
