@@ -17,6 +17,8 @@ from ecom.settings import version, PAYPAL_RECIEVER_EMAIL, BASE_DIR
 from paypal.standard.forms import PayPalPaymentsForm
 from PIL import Image
 
+language = "ar"
+
 def change_language(request):
     global language
     if language == "en":
