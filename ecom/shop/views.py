@@ -25,7 +25,8 @@ def change_language(request):
         request.session[request.user.username] = "ar"
     else:
         request.session[request.user.username] = "en"
-    return redirect('shop:homepage')
+    referrer = request.META.get('HTTP_REFERER')
+    return redirect(referrer or reverse('shop:homepage'))
 
 def login_user(request):
     message = ""
