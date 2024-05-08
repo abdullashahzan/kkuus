@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block title %}
+<!-- Meta tag for sharing images and stuff -->
+<meta property="og:image" content="{% url 'shop:get_image' item.firebase_path %}"/>  
+<meta property="og:title" content="KKU Souq"/>  
+<meta property="og:description" content="An online webstore for students of KKU"/> 
 <title>تفاصيل {{ item.product_name }}</title>
 {% endblock %}
 
