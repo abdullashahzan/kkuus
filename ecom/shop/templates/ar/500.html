@@ -2,20 +2,23 @@
 {% load static %}
 
 {% block title %}
-<title>Error 500</title>
+<title>خطأ 500</title>
 {% endblock %}
 
 {% block body %}
 <div class="container">
     <div class="row d-flex align-items-center" style="min-height: 80vh;">
         <div class="col-md-5 d-flex justify-content-center align-items-center">
-            <img src="{% static 'media/undraw_location_search_re_ttoj.svg' %}" alt="page 500" class="widthlock">
+            <img src="../static/media/undraw_cancel_re_pkdm.svg" alt="صفحة 500" class="widthlock">
         </div>
         <div class="col-md-7 animate__animated animate__bounceIn">
-            <h1 class="style-text-3">يبدو أن المادة قد تم حذفها..</h1>
-            <p class="text-muted style-text">يحدث هذا عندما يقوم المستخدم بحذف عنصر أو تعليق أو طلب أو أي شيء من الموقع.</p>
-            <a href="{% url 'shop:homepage' %}" class="btn btn-outline-primary">Homepage</a>
+            <article>
+                <h1 class="style-text-3">يبدو أنك تبحث عن شيء غير موجود أو قد تم حذفه...</h1>
+                <p class="text-muted style-text">عادة ما يحدث هذا عندما يتم حذف عنصر أو تعليق أو طلب بواسطة المستخدم.</p>
+                <a href="{% url 'shop:homepage' %}" class="btn btn-outline-dark">الصفحة الرئيسية</a>
+            </article>
         </div>
     </div>
 </div>
 {% endblock %}
+```

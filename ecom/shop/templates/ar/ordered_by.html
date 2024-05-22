@@ -7,27 +7,34 @@
 
 {% block body %}
 
-<div class="container">
-    <div class="row p-4">
-        <p class="text-muted style-text">يرجى تسليم هذه الطلبات إلى عملائك. لا تنسَ طلب رمزهم، وإلا لن يتم احتساب المنتج كمباع.
+<div class="container-fluid bg-light" style="min-height: 100vh;">
+    <div class="row p-2 py-4 p-md-4">
+        <h5 class="display-4 style-text-3">طلبات العملاء الجدد</h5>
+        <hr>
+        <p class="style-text-2 text-danger">
+            <strong>لا تنسى طلب رمز المصادقة المكتوب، وإلا سيُعتبر الطلب غير مسلم وقد يتلقى حسابك عقوبة.</strong>
         </p>
         {% for order in orders %}
-        <div class="card col-12 col-md-6 col-lg-4">
+        <div class="card col-md-4 shadow">
             <div class="card-body">
                 <h1 class="style-text-3">{{order.0.user.first_name}} {{order.0.user.last_name}}</h1>
                 <hr>
                 <p class="style-text">
                     <span class="text-muted">اسم المستخدم:</span> {{order.0.user.username}} <br>
-                    <span class="text-muted">العنوان:</span> غرفة {{order.0.room_no}} بناية {{order.0.building_code}} <br>
-                    <span class="text-muted">رقم الهاتف:</span> {{order.0.whatsapp}}
+                    <span class="text-muted">العنوان:</span> الغرفة {{order.0.room_no}} بناء {{order.0.building_code}} <br>
+                    <span class="text-muted">الهاتف:</span> {{order.0.whatsapp}}
+                </p>
+                <p class="style-text">
+                    <span class="text-muted">الكمية:</span> {{order.2}} <br>
+                    <span class="text-muted">ملاحظة:</span> {{order.3}}
                 </p>
                 {% if order.1 == "accepted" %}
-                <a href="https://wa.me/{{order.whatsapp}}" class="btn btn-outline-primary my-2"><i class="bi bi-whatsapp"></i> مراسلة</a>
-                <a href="{% url 'shop:confirmPurchase' item.id %}" class="btn btn-primary my-2"><i class="bi bi-receipt"></i> احصل على الرمز</a>
+                <a href="https://wa.me/{{order.whatsapp}}" class="btn btn-outline-dark my-2"><i class="bi bi-whatsapp"></i> رسالة</a>
+                <a href="{% url 'shop:confirmPurchase' item.id %}" class="btn btn-dark my-2"><i class="bi bi-receipt"></i> إدخال رمز المصادقة</a>
                 {% elif order.1 == "requested" %}
-                <a href="{% url 'shop:acceptOrder' item.id order.0.user.username %}" class="btn btn-primary">قبول الطلب</a>
+                <a href="{% url 'shop:acceptOrder' item.id order.0.user.username %}" class="btn btn-dark">قبول الطلب</a>
                 {% endif %}
-                <a href="{% url 'shop:rejectOrder' item.id order.0.user.username %}" class="btn btn-outline-danger">رفض الطلب</a>
+                <a href="{% url 'shop:rejectOrder' item.id order.0.user.username %}" class="btn btn-danger">رفض الطلب</a>
             </div>
         </div>
         {% endfor %}

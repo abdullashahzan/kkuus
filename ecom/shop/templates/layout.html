@@ -27,6 +27,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Kalnia:wght@100..700&family=Poltawski+Nowy:ital,wght@0,400..700;1,400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Trochut:ital,wght@0,400;0,700;1,400&family=Wix+Madefor+Display:wght@400..800&display=swap"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&display=swap" rel="stylesheet">
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -37,7 +38,7 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8650665056742555"
         crossorigin="anonymous"></script>
-    
+
     <!-- Google meta for search -->
     <meta name="google-site-verification" content="CoZf7wWhgTwgGuJt5FYb9e-DYpQal2LKfXkMvzUb4Xo" />
 
@@ -52,7 +53,7 @@
 
 
     {% block title %}
-    <title>Student souq (Unofficial store)</title>
+    <title>KKU unofficial souq</title>
     {% endblock %}
 </head>
 
@@ -61,185 +62,63 @@
         <div class="container d-flex justify-content-center align-items-center">
         </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary p-3">
-        <div class="container-fluid" style="min-height: 0;">
-            <a class="style-text-4" href="{% url 'shop:homepage' %}"
-                style="color: #f7f7f7; text-decoration: none; font-size: 2rem;"
-                title="E-commerce application for students">Student <span class="style-text-4"
-                    style="font-size: 1.6rem;">souq</span>
+
+    <nav class="navbar navbar-expand-lg bg-light py-2">
+        <div class="container-fluid">
+            <a class="logo style-text-3 text-dark mx-md-3 mx-1" href="{% url 'shop:homepage' %}">
+                KKU unofficial souq
             </a>
-            <div class="d-block d-lg-none mt-1 style-text">
-                {% if user.is_authenticated %}
-                <a href="{% url 'shop:logout_user' %}" class="text-light text-decoration-none">
-                    <i class="bi bi-door-open lead"></i> <span class="align-middle">Logout</span>
-                </a>
-                {% else %}
-                <a href="{% url 'shop:login_user' %}" class="text-light text-decoration-none">
-                    <i class="bi bi-person lead"></i> <span class="align-middle">Sign in</span>
-                </a>
-                {% endif %}
-            </div>
-            <div class="collapse navbar-collapse style-text" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'shop:index' %}"><i
-                                class="bi bi-house-fill lead mx-2"></i> Home </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'shop:myOrders' %}"><i
-                                class="bi bi-receipt lead mx-2"></i> My orders </a>
-                    </li>
-                    <li class="nav-item dropdown" style="cursor: pointer;">
-                        <span class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                class="bi bi-cash lead mx-2"></i> Sell </span>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'shop:new_listing' %}">Sell new product</a></li>
-                            <li><a class="dropdown-item" href="{% url 'shop:my_shop' %}">My shop</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown" style="cursor: pointer;">
-                        <span class="nav-link dropdown-toggle active notification_panel" data-bs-toggle="dropdown"
-                            aria-expanded="false"><i class="bi bi-person-circle lead mx-2"></i> Account
-                            {% if notifications %}<span class="notification_badge"></span>{% endif %}</span>
-                            <ul class="dropdown-menu">
-                                {% if user.is_authenticated %}
-                                <li class="mx-3">
-                                    <div class="style-text">Logged in as <strong>{{user.username}}</strong></div>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{% url 'shop:wishlist' %}"> Wishlist</a></li>
-                                <li><a class="dropdown-item" href="{% url 'shop:notifications' %}"> Notifications
-                                        {% if notifications %}
-                                        <span class="bg-danger rounded text-light style-text-2 p-1 mx-1">
-                                            New</span>
-                                        {% endif %}</a></li>
-                                <li><a class="dropdown-item" href="{% url 'shop:profile' %}"> Settings</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{% url 'shop:toggleLanguage' %}"><i class="bi bi-globe lead mx-2"></i> ع / En</a></li>
-                                <li><a class="dropdown-item" href="{% url 'shop:logout_user' %}"><i
-                                            class="bi bi-door-open-fill lead mx-2 text-danger"></i> Logout</a></li>
-                                {% else %}
-                                <li><a class="dropdown-item" href="{% url 'shop:toggleLanguage' %}"><i class="bi bi-globe lead mx-2"></i> ع / En</a></li>
-                                <li><a class="dropdown-item" href="{% url 'shop:login_user' %}"><i
-                                            class="bi bi-door-open-fill lead mx-2 text-success"></i> Login</a></li>
-                                {% endif %}
-                            </ul>
-                    </li>
-                    <li>
-                        <div class="vertical-line d-none d-lg-block"></div>
-                    </li>
-                    <li class="nav-item mt-2 mx-1">
-                        <form action="{% url 'shop:search_item' %}"
-                            class="d-flex justify-content-center align-items-center style-text-2" method="post">
-                            {% csrf_token %}
-                            <input type="text" class="form-control mx-2" placeholder="Search for an item"
-                                aria-label="Search for an item" aria-describedby="basic-addon2" name="search">
-                            <input type="submit" class="btn btn-outline-light lead"
-                                onclick="this.classList.add('disabled');">
-                        </form>
-                    </li>
+            <button class="btn btn-outline-none btn-light d-block d-lg-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="collapse navbar-collapse style-text-3 mt-1" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% block notification_block %}
+                    {% endblock %}
                 </ul>
+                <form class="d-flex" role="search" action="{% url 'shop:search_item' %}" method="post">
+                    {% csrf_token %}
+                    <input class="form-control me-2" type="search" name="search" placeholder="Search for a product"
+                        aria-label="Search">
+                    <button class="btn btn-outline-danger" type="submit">Search</button>
+                </form>
             </div>
         </div>
     </nav>
 
-    <div class="d-block d-lg-none mynavbar navbar navbar-expand-lg mt-2">
-        <div class="mx-2 style-text">
-            <button class="btn btn-primary shadow mb-3" id="searchButton" style="text-decoration: none; height: 2.6rem;"
-                onclick="openModal()" disabled>
-                <i class="bi bi-search"></i> <span class="align-middle">Search</span></button>
-            <a class="btn btn-primary shadow mb-3 notification_panel" style="text-decoration: none; height: 2.6rem;"
-                href="{% url 'shop:notifications' %}">
-                <i class="bi bi-chat-left-dots-fill"></i> Notifications
-                {% if notifications %}
-                <span class="notification_badge animate__animated animate__headShake"></span>
-                {% endif %}</a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;"
-                href="{% url 'shop:wishlist' %}">
-                <i class="bi bi-bag"></i> <span class="align-middle">Wishlist</span></a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem;"
-            href="{% url 'shop:toggleLanguage' %}">
-            <i class="bi bi-globe"></i> <span class="align-middle">عربي</span></a>
-            <a class="btn btn-primary shadow mb-3" style="text-decoration: none; height: 2.6rem; margin-right: 0.7rem;"
-                href="{% url 'shop:new_listing' %}">
-                <i class="bi bi-cart-plus-fill"></i> <span class="align-middle">Sell a new product</span></a>
+    <div class="mynavbar navbar navbar-expand-lg mt-1 bg-dark px-md-3 shadow sticky-top">
+        <div class="style-text-3">
+            <a href="{% url 'shop:homepage' %}" class="text-light text-decoration-none mx-2">Home</a>
+            {% if new_orders %}
+            <a href="{% url 'shop:my_shop' %}" class="text-danger text-decoration-none mx-2" title="You have new orders for your product">My shop</a>
+            {% else %}
+            <a href="{% url 'shop:my_shop' %}" class="text-light text-decoration-none mx-2">My shop</a>
+            {% endif %}
+            <a href="{% url 'shop:myOrders' %}" class="text-light text-decoration-none mx-2">My orders</a>
+            <a href="{% url 'shop:new_listing' %}" class="text-light text-decoration-none mx-2">Sell a new product</a>
+            <a href="{% url 'shop:wishlist' %}" class="text-light text-decoration-none mx-2">Wishlist</a>
+            {% if notifications %}
+            <a href="{% url 'shop:notifications' %}" class="text-danger text-decoration-none mx-2">Notifications</a>
+            {% else %}
+            <a href="{% url 'shop:notifications' %}" class="text-light text-decoration-none mx-2">Notifications</a>
+            {% endif %}
+            <a href="{% url 'shop:toggleLanguage' %}" class="text-light text-decoration-none mx-2">عربية</a>
+            <a href="{% url 'shop:profile' %}" class="text-light text-decoration-none mx-2">My Account</a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'shop:logout_user' %}" class="text-light text-decoration-none mx-2">Logout</a>
+            {% else %}
+            <a href="{% url 'shop:login_user' %}" class="text-light text-decoration-none mx-2">Sign in</a>
+            {% endif %}
         </div>
     </div>
 
-
-    <div class="d-lg-none navbar navbar-expand-lg bg-primary fixed-bottom container-fluid py-0 
-        border border-primary rounded-top d-block animate__animated px-2" id="hiddenDiv">
-        <div class="row pt-2">
-            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:homepage' %}">
-                <p class="style-text-2"><i class="bi bi-house-fill" style="font-size: 1.7rem;"></i> <br> Home</p>
-            </a>
-            <a class="col-3 text-center text-light text-decoration-none shop_panel" href="{% url 'shop:my_shop' %}">
-                <p class="style-text-2"><i class="bi bi-shop" style="font-size: 1.7rem;"></i> <br>
-                    My shop
-                    {% if new_orders %}
-                    <span class="shop_badge animate__animated animate__headShake">{{new_orders}}</span>
-                    {% endif %}
-                </p>
-            </a>
-            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:myOrders' %}">
-                <p class="style-text-2"><i class="bi bi-receipt" style="font-size: 1.7rem;"></i> <br> My orders</p>
-            </a>
-            <a class="col-3 text-center text-light text-decoration-none" href="{% url 'shop:profile' %}">
-                <p class="style-text-2"><i class="bi bi-person-circle" style="font-size: 1.7rem;"></i> <br> Account</p>
-            </a>
-        </div>
-    </div>
 
     {% block body %}
     {% endblock %}
 
-    <svg class="animatedSVG" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin slice"
-        viewBox="24 105 156 95">
-        <defs>
-            <style type="text/css">
-                @keyframes rotate {
-                    100% {
-                        transform: rotate(360deg)
-                    }
-                }
 
-                .top-outer {
-                    transform-origin: 63px 69px;
-                    animation: rotate 30s linear infinite;
-                }
-
-                .top-inner {
-                    transform-origin: 73px 69px;
-                    animation: rotate 20s linear infinite;
-                }
-
-                .bottom-outer {
-                    transform-origin: 144px 222px;
-                    animation: rotate 30s linear infinite;
-                }
-
-                .bottom-inner {
-                    transform-origin: 164px 422px;
-                    animation: rotate 20s linear infinite;
-                }
-            </style>
-        </defs>
-        <rect x="0" y="0" width="100" height="100" fill="#f7f7f7" />
-        <path class="top-outer" fill="#EDEAE0" stroke="#EDEAE0" stroke-width="1"
-            d="M68 1c23,0 67,17 69,39 4,38 5,52 -5,69 -20,36 -68,46 -120,-9 -27,-28 -7,-101 56,-99z" />
-        <path class="top-inner" fill="#EDEAE0" stroke="#EDEAE0" stroke-width="1"
-            d="M69 22c33,-7 52,21 54,37 3,26 -1,28 -8,40 -15,25 -48,25 -85,-14 -19,-20 -4,-53 39,-63z" />
-        <path class="bottom-outer" fill="#EDEAE0" stroke="#EDEAE0" stroke-width="1"
-            d="M158 158c30,13 56,50 44,75 -9,18 -22,46 -42,55 -20,10 -48,2 -73,-19 -29,-25 -27,-55 -9,-79 17,-22 43,-48 80,-32z" />
-        <path class="bottom-inner" fill="#EDEAE0" stroke="#EDEAE0" stroke-width="1"
-            d="M136 180c32,-9 45,13 46,29 3,27 8,29 0,42 -14,25 -52,24 -79,0 -21,-18 -2,-61 33,-71z" />
-    </svg>
-
-    <footer class="text-light text-center py-2 bg-primary">
+    <footer class="text-light text-center py-2 bg-dark">
         <p class="style-text">&copy; 2024 All rights reserved.</p>
     </footer>
     <script src="{% static 'script.js' %}"></script>
@@ -276,7 +155,7 @@
                 //event.preventDefault();
                 anchor.classList.add('disabled');
                 document.querySelector('.loadingScreen').style.display = "block";
-                setTimeout(()=>{
+                setTimeout(() => {
                     document.querySelector('.loadingScreen').style.display = "none";
                 }, 5000);
                 // window.location.href = anchor.href;

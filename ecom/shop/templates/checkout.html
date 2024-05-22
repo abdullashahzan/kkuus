@@ -6,30 +6,27 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh;">
-        <div class="row m-md-4 m-2 animate__animated animate__zoomIn">
-            <img class="widthlock p-2 col-12 col-md-6 mb-4"
-                src="{% static 'media/undraw_credit_card_payments_re_qboh.svg' %}" alt="empty">
-            <div class="col-12 col-md-6">
-                <article>
-                    <h1 class="mb-3 style-text-3">Order details</h1>
-                    <p class="mb-3 style-text-2" style="font-size: 1.2rem;">
-                        <span>Paypal charges: {{ paypal_fee }} (SAR)</span><br>
-                        <span>Server Fee: {{ web_fee }} (SAR)</span><br>
-                        <span>Total: <strong>{{ price }} (SAR)</strong></span>
-                    </p>
-                    <hr>
-                    <p class="text-muted style-text">You will be redirected to paypal's secure payment gateway for the
-                        transaction. <br>
-                        <strong>Note: </strong> Please do not leave the payment in between. If you encounter any bugs,
-                        send an email at <span class="text-primary">kkuunofficialstore@gmail.com</span> along with
-                        screenshot of the bug.
-                    </p>
-                    <hr>
-                    <p>{{paypal.render}}</p>
-                </article>
-            </div>
+<div class="container-fluid d-flex align-items-center" style="min-height: 90vh;">
+    <div class="row p-2 p-md-4 py-4 animate__animated animate__zoomIn">
+        <img class="widthlock col-md-6 mb-4" src="../static/media/undraw_chilling_re_4iq9.svg" alt="empty">
+        <div class="col-md-6 px-md-4">
+            <article>
+                <h1 class="mb-3 style-text-3">Order details</h1>
+                <p class="mb-3 style-text-2" style="font-size: 1.2rem;">
+                    <span>Paypal charges: {{ paypal_fee }} (SAR)</span><br>
+                    <span>Server Fee: {{ web_fee }} (SAR)</span><br>
+                    <span>Total: <strong>{{ price }} (SAR)</strong></span>
+                </p>
+                <hr>
+                <p class="text-muted style-text">You will be redirected to paypal's secure payment gateway for the
+                    transaction. <br>
+                    <strong>Note: </strong> Please do not leave the payment in between. If you encounter any bugs,
+                    send an email at <span class="text-primary">kkuunofficialstore@gmail.com</span> along with
+                    screenshot of the bug.
+                </p>
+                <hr>
+                <p>{{paypal.render}}</p>
+            </article>
         </div>
     </div>
 </div>

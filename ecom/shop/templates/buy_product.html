@@ -2,219 +2,260 @@
 {% load static %}
 
 {% block title %}
+<!-- Meta tag for sharing images and stuff -->
+<meta property="og:image" content="{% url 'shop:get_image' item.firebase_path %}" />
+<meta property="og:title" content="KKU Souq" />
+<meta property="og:description" content="An online webstore for students of KKU" />
 <title>{{ item.product_name }} details</title>
 {% endblock %}
 
 {% block body %}
-<div id="myModal" class="container-fluid slideInDown">
-    <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-md-6">
+
+{% if message %}
+<div class="notice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-dark shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3 text-light">Oops..!</h1>
+            <p class="style-text-2 text-light">
+                {{message}}
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-light"
+                    onclick="document.querySelector('.notice').style.display='none';">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div id="myModal" class="container-fluid slideInDown bg-light">
+    <div class="row">
+        <div class="col-md-8">
             <article>
                 <h1 class="style-text-3">Confirm purchase?</h1>
                 <p class="lead style-text">
-                    You are almost there! By clicking confirm purchase, seller will be notified about your purchase. For
-                    now there is no online payment option, therefore all payments will be cash on delivery or however
-                    the seller wants it (maybe via stcpay, al rajhi etc...)
+                    You are almost there! By clicking confirm purchase, seller will be notified about your purchase and
+                    will arrive shortly with your item.
+                    After placing your order, you cannot cancel it but you will be able to contact seller who can cancel it for you. You can see the status of your
+                    purchase in <a href="{% url 'shop:myOrders' %}" class="text-primary">My orders</a>.
                 </p>
-                <p class="style-text"><strong>Do not forget to show him your buyer code!</strong></p>
-                <p class="style-text"><strong>Note:</strong> You can get details of your order from <a
-                        href="{% url 'shop:myOrders' %}" class="text-primary">My orders</a>.</p>
-                <form action="{% url 'shop:purchase' item.id %}" method="post">
+                <form action="{% url 'shop:purchase'%}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-primary"
-                        onclick="this.disabled=true; this.value='Gotcha 1 sec!'; this.form.submit();">Yes, go
-                        ahead!</button>
+                    <input type="hidden" value="{{item.id}}" name="item_id">
+                    <div class="form-group my-2 style-text rounded">
+                        <select class="form-control" id="quantity" name="quantity">
+                            <option value="1">Please select quantity of your order: </option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+                    <textarea class="form-control style-text-2 mb-1" name="additional_description" id="additional_description" rows="2"
+                            style="resize: none;" placeholder="Additional description for the seller? (Optional)"></textarea>
+                    <p class="style-text-2"><span id="charCountDesc">0</span> / 120</p>
+                    <button type="submit" class="btn btn-dark" onclick="this.disabled=true; this.value='Please wait...'; this.form.submit();">
+                        <span class="style-text-2">Confirm purchase</span>
+                    </button>
                 </form>
-                <button class="btn btn-outline-danger mt-2" onclick="closeModal()">No, take me back</button>
+                <button class="btn btn-outline-dark mt-2" onclick="closeModal()">
+                    <span class="style-text-2">No, take me back</span>
+                </button>
             </article>
         </div>
-        <div class="col-md-6 d-flex justify-content-center align-items-center my-3">
-            <img class="widthlock" src="{% static 'media/undraw_access_account_re_8spm.svg' %}" alt="image">
+        <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center my-3">
+            <img style="height: 15rem; width: auto;" src="../static/media/undraw_add_to_cart_re_wrdo.svg" alt="image">
         </div>
     </div>
 </div>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-<div class="container" style="min-height: 50vh;">
-    <div class="row p-4 d-none d-md-flex">
-        <div class="col-md-4">
-            <img class="widthlock" src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}">
+
+<div class="container-fluid">
+    <div class="row m-0 imageViewer d-none justify-content-center align-items-center">
+        <img src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}">
+    </div>
+    <div class="row p-2 py-4 p-md-4 bg-dark text-light">
+        <div class="col-md-4 mb-3">
+            <div class="card p-1 bg-danger">
+                <div class="card-header">
+                    <h5 class="style-text-2 text-light">@{{item.username}}'s item</h5>
+                </div>
+                <img class="widthlock openImageViewer" src="{% url 'shop:get_image' item.firebase_path %}" alt="{{item.product_name}}" style="cursor: pointer;">
+                <div class="card-footer style-text-2 text-light row text-md-center">
+                    <div class="col-md-4 col-12">
+                        <i class="bi bi-heart-fill text-light"></i>
+                        <span class="mx-2 text-light">
+                            {% if item.ratings != None and item.ratings != 0 %}
+                            {{item.ratings}}/5.0 ({{item.num_raters}})
+                            {% else %}
+                            No ratings
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <i class="bi bi-bag-fill text-light"></i>
+                        <span class="mx-1 text-light">{{item.num_orders}} buyer(s)</span>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <i class="bi bi-eye-fill text-light"></i>
+                        <span class="mx-1">Views: {{item.num_views}}</span></span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-8">
-            <article>
-                <h1 class="style-heading">{{item.product_name}}</h1>
-                <h5 class="text-muted style-text-2">Sold by {{item.username}}</h5>
-                <h2 class="style-text-3 text-primary mt-2"><strong>SAR </strong>{{item.product_price}}</h2>
-                <h5 class="style-text-2">Ratings: {{item.ratings}} / 5.0 <span class="text-muted"
-                        style="font-size: 0.9rem;">
-                        ({{item.num_raters}} people voted)</span></h5>
-                {% if user.is_authenticated %}
-                <p class="style-text-2 text-muted">
-                    {{item.num_orders}} Buyer(s) have purchased so far <br>
-                </p>
-                {% else %}
-                <p class="text-danger">Please log in to purchase this item.</p>
-                {% endif %}
-                {% if whatsapp %}
-                <a href="https://wa.me/{{whatsapp}}?text=Hello there! I would like to know if the product *{{item.product_name}}* is still available?
-                
-                unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank" class="text-primary"><i
-                        class="bi bi-whatsapp"></i> Ask if the product is still available?</a><br>
-                {% endif %}
-                {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
-                <button class="btn btn-primary my-3" onclick="openModal()">Place order</button>
-                {% if item.id in wishlist %}
-                <button class="btn btn-outline-primary add-to-wishlist" title="Add to wishlist" data-item-id="{{ item.id }}">
-                    <i class="bi bi-star-fill"></i></button>
-                {% else %}
-                <button class="btn btn-outline-primary add-to-wishlist" title="Remove from wishlist" data-item-id="{{ item.id }}">
-                    <i class="bi bi-star"></i></button>
-                {% endif %}
-                {% else %}
-                {% endif %}
-                <hr>
-                <h5 class="lead"><strong>Product description:</strong></h5>
-                <p class="style-text-2">{{item.product_description}}</p>
-            </article>
+            <div class="style-text-3 display-5">{{item.product_name}}</div>
+            <h2 class="style-text-3 text-danger mt-2"><strong>SAR </strong>{{item.product_price}}</h2>
+            {% if user.username == 'shahzan' %}
+            {% if item.in_developers_pick %}
+            <a href="{% url 'shop:remove_from_developers_pick' item.id %}" class="btn btn-outline-danger"><span class="style-text-2">Remove the item from developer's pick</span></a>
+            {% else %}
+            <a href="{% url 'shop:add_to_developers_pick' item.id %}" class="btn btn-danger"><span class="style-text-2">Add the item to developer's pick</span></a>
+            {% endif %}
+            {% endif %}
+            {% if user.is_authenticated and user.username != item.username and user.username not in bought_users %}
+            <button class="btn btn-light my-3" onclick="openModal()"><span class="style-text-2">I'm interested</span></button>
+            {% if item.id in wishlist %}
+            <button class="btn btn-outline-light add-to-wishlist" title="Add to wishlist" data-item-id="{{ item.id }}">
+                <i class="bi bi-star-fill"></i>
+            </button>
+            {% else %}
+            <button class="btn btn-outline-light add-to-wishlist" title="Remove from wishlist"
+                data-item-id="{{ item.id }}">
+                <i class="bi bi-star"></i>
+            </button>
+            {% endif %}
+            {% else %}
+            {% endif %}
+            <hr>
+            <h5 class="lead style-text-3"><strong>Description:</strong></h5>
+            <p class="style-text-2">{{item.product_description}}</p>
         </div>
     </div>
-
-    <div class="row d-block d-md-none">
-        <div class="col-12">
-            <div class="shadow card mb-1 d-flex align-items-center">
-                <div class="card-header style-text bg-primary text-light" style="width: 100%;">@{{item.username}}'s
-                    shop
-                </div>
-                <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock" alt="{{item.product_name}}">
-                <div class="card-body mt-2" style="width: 100%;">
-                    <h2 class="style-text-2 text-primary">{{item.product_name}}</h2>
+    <div class="row p-2 py-4 p-md-4 d-flex align-items-center">
+        <div class="col-md-6">
+            <h1 class="display-1 style-text-3">Rate the product</h1>
+            <hr>
+            <p class="style-text lead">
+                Every vote counts. Let the other customers know about your experience as well.
+            </p>
+        </div>
+        <div class="col-md-6">
+            {% if not user.is_authenticated %}
+            <div class="card shadow p-3 py-4 p-md-4 bg-dark text-light">
+                <div class="mb-2 style-text">
+                    <h1 class="style-text-3">Please log in to rate this product.</h1>
                     <hr>
-                    <h4 class="style-text-2">SAR {{item.product_price}}</h4>
-                    <p class="style-text">
-                        <i class="bi bi-heart-fill lead text-danger"></i><span class="mx-2">{{item.ratings}}/5.0
-                            ({{item.num_raters}})</span>
-                        <span class="card-text style-text text-muted truncate-3-lines"><i
-                                class="bi bi-bag-fill lead text-primary"></i> <span class="mx-1">Bought by:
-                                {{item.num_orders}} buyer(s)</span></span>
-                        <span class="card-text style-text text-muted truncate-3-lines"><i
-                                class="bi bi-eye-fill lead text-muted"></i> <span class="mx-1">Viewed by
-                                {{item.num_views}} people</span></span>
-                        {% if user.is_authenticated %}
-                        {% if whatsapp %}
-                        <span class="card-text style-text text-muted truncate-3-lines"><i
-                                class="bi bi-whatsapp lead text-success"></i>
-                            <a href="https://wa.me/{{whatsapp}}?text=Hello there! I would like to know if the product *{{item.product_name}}* is still available?
-                                unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank"
-                                class="mx-1 text-muted">Message {{item.username}} on whatsapp</a></span>
-                        {% endif %}
-                        {% else %}
-                    </p>
-                    <p class="text-danger">Please log in to purchase this item.</p>
-                    {% endif %}
-
-                    {% if user.is_authenticated and user.username != item.username and user.username not in bought_users%}
-                    <button class="btn btn-primary mt-4" onclick="openModal()" style="width: 85%;"><i
-                            class="bi bi-cart"></i> <span class="mx-1 style-text-2">Place
-                            order</span></button>
-                    {% if item.id in wishlist %}
-                    <button class="btn btn-outline-primary add-to-wishlist mt-4" data-item-id="{{ item.id }}">
-                        <i class="bi bi-star-fill"></i></button>
-                    {% else %}
-                    <button class="btn btn-outline-primary add-to-wishlist mt-4" data-item-id="{{ item.id }}">
-                        <i class="bi bi-star"></i></button>
-                    {% endif %}
-                    {% else %}
-                    {% endif %}
-                    <p>
-                        <span class="style-heading">Description:</span>
-                        <span class="card-text style-text-2">{{item.product_description}}</span>
-                    </p>
+                    <p class="lead">You can access all the services once you log in. <a
+                            href="{% url 'shop:login_user' %}" class="text-light">Click here to log in</a></p>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="row m-0 p-4">
-    <h1 class="style-heading my-3">Comments</h1>
-    <hr>
-    {% if not user.is_authenticated %}
-    <h5 class="text-danger">Please log in to comment.</h5>
-    {% elif user.username != item.username %}
-    <form action="{% url 'shop:postComment' item.id %}" method="post" class="col-md-4 my-1">
-        {% csrf_token %}
-        <div class="card p-3">
-            <div class="mb-2 style-text">
-                <input class="form-control mb-2" type="text" name="heading"
-                    placeholder="How is the product? (Optional)">
-                <textarea class="form-control" name="comment" id="comment" rows="4"
-                    placeholder="Give {{ item.username }} your opinion about the product... (Optional)"
-                    style="resize: none;"></textarea>
-                <p class="style-text-2 text-primary"><span id="charCount">0</span> / 200</p>
-                <label class="style-text mt-3" for="rating">How much do you rate this product out of 5?</label>
-                <div class="rating my-2 style-text">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
-                            id="inlineRadio1" value="1">
-                        <label class="form-check-label" for="inlineRadio1">1</label>
+            {% elif user.username != item.username %}
+            <form action="{% url 'shop:postComment' item.id %}" method="post">
+                {% csrf_token %}
+                <div class="card shadow p-3 py-4 p-md-4 bg-dark text-light">
+                    <div class="mb-2 style-text">
+                        <h3 class="style-text-3">How was the product/service?</h3>
+                        <p>Give the title as the thing you liked or disliked the most about the product.</p>
+                        <input class="form-control mb-2" type="text" name="heading">
+                        <hr>
+                        <h3 class="style-text-3">Describe your experience in short.</h3>
+                        <p>Tell us why you liked the product or disliked it.</p>
+                        <textarea class="form-control" name="comment" id="comment" rows="4"
+                            style="resize: none;"></textarea>
+                        <p class="style-text-2 text-light"><span id="charCount">0</span> / 200</p>
+                        <hr>
+                        <h3 class="style-text-3">How much will you rate this product/service? <span
+                                class="text-danger">*</span></h3>
+                        <p>Give your ratings, 1 being the worst and 5 being the best.</p>
+                        <div class="rating my-2 style-text">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input border-dark" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio1" value="1">
+                                <label class="form-check-label" for="inlineRadio1">1</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input border-dark" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio2" value="2">
+                                <label class="form-check-label" for="inlineRadio2">2</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input border-dark" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio3" value="3">
+                                <label class="form-check-label" for="inlineRadio3">3</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input border-dark" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio3" value="4">
+                                <label class="form-check-label" for="inlineRadio3">4</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input border-dark" type="radio" name="inlineRadioOptions"
+                                    id="inlineRadio3" value="5">
+                                <label class="form-check-label" for="inlineRadio3">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
-                            id="inlineRadio2" value="2">
-                        <label class="form-check-label" for="inlineRadio2">2</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
-                            id="inlineRadio3" value="3">
-                        <label class="form-check-label" for="inlineRadio3">3</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
-                            id="inlineRadio3" value="4">
-                        <label class="form-check-label" for="inlineRadio3">4</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input border-primary" type="radio" name="inlineRadioOptions"
-                            id="inlineRadio3" value="5">
-                        <label class="form-check-label" for="inlineRadio3">5</label>
-                    </div>
+                    <button type="submit" class="btn btn-outline-light" onclick="this.classList.add('disabled')"><span
+                            class="style-text-2">Post</span></button>
+                    <p class="style-text-3 my-2">All fields marked with <span class="text-danger">*</span> are mandatory
+                        fields.</p>
+                </div>
+            </form>
+            {% else %}
+            <div class="card shadow p-3 py-4 p-md-4 bg-dark text-light">
+                <div class="mb-2 style-text">
+                    <h1 class="style-text-3">You cannot rate your own item</h1>
+                    <hr>
+                    <p class="lead">Only your potential buyers can rate your product.</p>
                 </div>
             </div>
-            <p class="text-danger style-text-2">{{message}}</p>
-            <button type="submit" class="btn btn-primary" onclick="this.classList.add('disabled')">Post</button>
+            {% endif %}
         </div>
-    </form>
-    {% else %}
-    <h5 class="style-text-2 text-danger col-md-4 my-1">You cannot comment on your own item.</h5>
-    {% endif %}
-    <div class="col-md-8">
-        {% for comment in comments %}
-        <div class="card my-2">
-            <div class="card-body">
-                <h2 class="style-text-2">{{comment.heading}}</h2>
-                <h6 class="text-muted style-text">By: {{comment.username}}</h6>
-                <h6 class="style-text-2 my-3"><i class="bi bi-star-fill"></i> {{comment.ratings}}/5.0</h6>
-                <hr>
-                <p class="style-text-2">{{comment.comment}}</p>
-            </div>
-            <div class="card-footer">
-                <p class="text-muted style-text">Posted on {{comment.timestamp}}</p>
-                {% if comment.username == user.username %}
-                <form action="{% url 'shop:delete_comment' comment.id item.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-                {% endif %}
-            </div>
-        </div>
-        {% empty %}
-        <div class="card my-2">
-            <div class="card-body">
-                <h2 class="style-text-2">There are no comments yet...</h2>
-            </div>
-        </div>
-        {% endfor %}
     </div>
-</div>
+    <div class="row p-2 py-4 p-md-4 bg-dark text-light">
+        <h5 class="display-4 style-text-3">
+            Comments
+            {% if comments.count == 0 %}
+            <span class="lead style-text-2">Be the first one to leave a comment</span>
+            {% else %}
+            ({{comments.count}})
+            {% endif %}
+        </h5>
+        <hr>
+        <p class="style-text lead">Ratings and reviews left by other customers...</p>
+        <div class="horizontal-scroll-div">
+            {% for comment in comments %}
+            <div class="card m-1 shadow col-md-4 d-inline-block">
+                <div class="card-body">
+                    <h2 class="style-text-3">{{comment.heading}}</h2>
+                    <h6 class="text-muted style-text-2">By: @{{comment.username}}</h6>
+                    <h6 class="style-text-2 my-3"><i class="bi bi-heart-fill"></i> {{comment.ratings}}/5.0</h6>
+                    <p class="style-text-2">{{comment.comment}}</p>
+                </div>
+                <div class="card-footer">
+                    <p class="text-muted style-text-3">Posted on {{comment.timestamp}}</p>
+                    {% if comment.username == user.username %}
+                    <form action="{% url 'shop:delete_comment' comment.id item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if comments.count > 2 %}
+        <div class="d-none d-md-flex justify-content-end">
+            <i class="bi bi-caret-left-fill text-danger scroll-left scroller"></i>
+            <i class="bi bi-caret-right-fill text-danger scroll-right scroller"></i>
+        </div>
+        {% endif %}
+    </div>
 </div>
 
 <script>
@@ -261,6 +302,13 @@
                 $(this).val(text.substring(0, 200));
             }
             $('#charCount').text($(this).val().length);
+        });
+        $('#additional_description').on('input', function () {
+            var text = $(this).val();
+            if (text.length > 120) {
+                $(this).val(text.substring(0, 120));
+            }
+            $('#charCountDesc').text($(this).val().length);
         });
     });
 </script>

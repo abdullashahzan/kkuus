@@ -8,75 +8,92 @@
 {% block body %}
 {% if not first_visit %}
 <div class="notice">
-    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-dark shadow animate__animated animate__zoomIn">
         <div class="card-body">
-            <h1 class="style-text-3">هذه صفحة طلباتك</h1>
-            <hr>
-            <p class="style-text-2">
-                ستظهر هنا جميع المنتجات التي تشتريها. يمكنك معرفة حالتها سواء تم قبولها من قبل البائع أم لا تزال تُطلب. يمكنك أيضًا رؤية تفاصيل البائع مثل رقم الواتساب الخاص بهم أو عنوانهم حتى تتمكن من زيارتهم بنفسك إذا أردت.
+            <h1 class="style-text-3 text-light">هذه صفحة طلباتك</h1>
+            <p class="style-text-2 text-light">
+                جميع المنتجات التي تشتريها ستظهر هنا. يمكنك رؤية تحديثات حالة المنتجات الخاصة بك، تفاصيل البائع مثل رقم
+                واتسابه وعنوانه وما إلى ذلك.
             </p>
             <div class="style-text mt-4">
-                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">حسنًا!</button>
+                <button class="btn btn-light" onclick="document.querySelector('.notice').style.display='none';">حسناً!</button>
             </div>
         </div>
     </div>
 </div>
 {% endif %}
-<div class="container p-4">
-    <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
+<div class="container-fluid bg-light">
+    <div class="row bg-light p-md-3 py-3 px-1">
+        <div class="col-md-8">
+            <article>
+                <h1 class="display-1 style-text-3 ">طلباتي</h1>
+                <p class="style-text">
+                    جميع المنتجات التي تشتريها تظهر في هذه الصفحة. هنا يمكنك رؤية تحديثات حالة المنتجات مثل ما إذا تم قبولها،
+                    رفضها أو ما زالت قيد الطلب. يمكنك أيضًا رؤية الرمز السري المؤقت، وتفاصيل البائع أو إلغاء طلبك.
+                </p>
+            </article>
+        </div>
+        <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_order_delivered_re_v4ab.svg" alt="صورة" style="height: 10rem; width: auto;">
+        </div>
+    </div>
+    <div class="row bg-dark p-md-4 p-3">
+        <h1 class="display-4 style-text-3 text-light">طلباتك</h1>
+    </div>
+    <div class="row p-md-4 py-4 p-2">
         {% for order in orders %}
-        <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
-            <div class="shadow fadeInUp card mb-2 d-flex justify-content-center align-items-center">
-                <div class="card-header style-text" style="width: 100%;">حالة الطلب: <span class="text-primary">{{order.status}}</span></div>
-                <img class="heightlock" src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top"
-                    alt="{{order.item.product_name}}">
-                <div class="card-body" style="width: 100%;">
-                    <h5 class="card-title text-primary style-text">{{order.item.product_name}}</h5>
-                    <hr>
-                    <p class="style-text"><strong>الرمز: </strong> <span class="text-primary lead">{{order.key}}</span><br><span class="text-muted">الرجاء إظهار هذا الرمز للبائع.</span>
-                    </p>
-                    <p class="style-text">
-                        <span class="text-primary">تفاصيل البائع:</span><br>
-                        <strong>العنوان:</strong> غرفة {{order.room_no}}، المبنى {{order.building_code}}<br>
-                        <strong>واتساب:</strong> {{order.whatsapp}}
-                    </p>
+        <div class="col-md-6">
+            <div class="card mb-3 bg-dark shadow">
+                <div class="card-header text-light style-text-3">
+                    {% if order.status == "requested" %}
+                    <span class="text-danger">مطلوبة</span>
+                    (تم إعلام البائع بطلبك)
+                    {% else %}
+                    <span class="text-success">مقبولة</span>
+                    (سيتواصل البائع معك قريبًا)
+                    {% endif %}
                 </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="row d-none d-lg-flex align-items-center" style="min-height: 80vh;">
-            <div class="col-md-7 slideInLeft">
-                <h1 class="style-text-3">ليس لديك أي طلبات...</h1>
-                <p class="text-muted style-text">تظهر طلباتك المشتراة هنا</p>
-            </div>
-            <div class="col-md-5 slideInLeft">
-                <img class="widthlock" src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="فارغ">
-            </div>
-        </div>
-        <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
-            <div class="col-12 col-md-5">
-                <div class="card shadow animate__animated animate__zoomIn">
-                    <img class="widthlock p-2" src="{% static 'media/undraw_shopping_app_flsj.svg' %}" alt="فارغ">
-                    <div class="card-body">
-                        <article>
-                            <h1 class="style-text-3 my-3">ليس لديك أي طلبات...</h1>
+                <div class="row g-0">
+                    <div class="col-md-5">
+                        <img class="product_image" src="{% url 'shop:get_image' order.item.firebase_path %}" class="card-img-top" alt="{{order.item.product_name}}">
+                    </div>
+                    <div class="col-md-7 text-light">
+                        <div class="card-body">
+                            <h5 class="card-title style-text-3 display-6 truncate-1-lines">{{order.item.product_name}}</h5>
+                            <h5 class="card-title style-text-3">{{order.item.product_price}} x {{order.quantity}} = <span class="text-danger">{% widthratio order.item.product_price 1 order.quantity %} ريال سعودي</span> </h5>
                             <hr>
-                            <p class="text-muted style-text">تظهر طلباتك المشتراة هنا</p>
-                            <a href="{% url 'shop:index' %}" class="btn btn-outline-primary style-text-2">شراء شيء</a>
-                        </article>
+                            <h5 class="style-text-3">رمز السري المؤقت: <span class="text-danger">{{order.key}}</span></h5>
+                            <p class="style-text text-light">لا تشارك رمز السري مع أي شخص إلا البائع نفسه.</p>
+                            <div class="style-text-2 row px-1">
+                                <div class="col-md-6 p-1">
+                                    <a href="{% url 'shop:buy' order.item.id %}" class="btn btn-outline-light" style="width: 100%;">عرض المنتج</a>
+                                </div>
+                                <div class="col-md-6 p-1">
+                                    <a href="https://wa.me/{{whatsapp}}?text=مرحبًا! أود أن أعرف ما إذا كان المنتج *{{item.product_name}}* متوفرًا
+                                    unstore.pythonanywhere.com/buy/{{item.id}}" target="_blank"
+                                        class="btn btn-outline-light" title="التواصل مع البائع عبر واتساب" style="width: 100%;">التواصل مع البائع</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer style-text text-light row text-md-center">
+                        <div class="col-md-7">
+                            <strong>عنوان البائع:</strong> غرفة {{order.room_no}}، مبنى {{order.building_code}}
+                        </div>
+                        <div class="col-md-5">
+                            <strong>واتساب:</strong> {{order.whatsapp}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        {% empty %}
+        <div class="display-4 style-text-3" style="min-height: 60vh;">
+            لم تقم بطلب أي شيء بعد...
+        </div>
         {% endfor %}
     </div>
 </div>
-
-
-<script>
-    var bar = document.querySelector('.orders-bar');
-    bar.classList.add('this-active');
-</script>
 
 
 {% endblock %}

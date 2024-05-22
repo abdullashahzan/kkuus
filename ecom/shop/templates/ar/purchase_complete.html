@@ -2,27 +2,24 @@
 {% load static %}
 
 {% block title %}
-<title>تم الشراء بنجاح</title>
+<title>عملية الشراء ناجحة</title>
 {% endblock %}
 
 {% block body %}
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-    <div class="row">
-        <div class="col-md-6 slideInLeft">
-            <img class="widthlock" src="{% static 'media/undraw_successful_purchase_re_mpig.svg' %}" alt="purchase_successful">
-        </div>
-        <div class="col-md-6 mt-3 p-3 slideInRight">
-            <h1 class="style-heading">تمت عملية الشراء بنجاح!</h1>
-            <p class="style-text-2 lead">{{item.product_name}} تم بيع {{user.first_name}} {{user.last_name}} ({{user.username}}) بمبلغ {{item.product_price}} ريال سعودي
-            </p>
-            <form action="{% url 'shop:delete_listing' item.id %}">
-                {% csrf_token %}
-                <input type="submit" class="btn btn-primary my-2" value="حذف المنتج" onclick="this.disabled=true; this.value='جاري الإرسال...'; this.form.submit();">
-                <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-primary">الاحتفاظ بالمنتج</a>
-            </form>
-            <p class="style-text-2 my-3"><strong>ملاحظة: </strong>يرجى حذف المنتج في حال نفاد الكمية لتجنب استلام أي طلبات جديدة.</p>
-        </div>
+    <div class="row slideInRight bg-dark text-light p-3 shadow" style="width: 60%;">
+        <h1 class="style-heading">تم بيع العنصر بنجاح!</h1>
+        <p class="style-text-2 lead">
+            تم بيع {{item.product_name}} لـ {{user.first_name}} {{user.last_name}} ({{user.username}}) بمبلغ {{item.product_price}} ريال سعودي. تم زيادة إجمالي عدد المبيعات لهذا المنتج بمقدار 1.
+        </p>
+        <form action="{% url 'shop:delete_listing' item.id %}">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger my-2" value="حذف المنتج"
+                onclick="this.disabled=true; this.value='جاري الإرسال...'; this.form.submit();">
+            <a href="{% url 'shop:my_shop' %}" class="btn btn-outline-light">الاحتفاظ بالمنتج</a>
+        </form>
+        <p class="style-text-2 my-3"><strong>ملاحظة: </strong>الرجاء حذف المنتج في حالة نفاد الكمية لتجنب استلام أي طلبيات أخرى.</p>
     </div>
 </div>
 

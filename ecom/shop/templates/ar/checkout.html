@@ -6,30 +6,26 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh;">
-        <div class="row m-md-4 m-2 animate__animated animate__zoomIn">
-            <img class="widthlock p-2 col-12 col-md-6 mb-4"
-                src="{% static 'media/undraw_credit_card_payments_re_qboh.svg' %}" alt="empty">
-            <div class="col-12 col-md-6">
-                <article>
-                    <h1 class="mb-3 style-text-3">تفاصيل الطلب</h1>
-                    <p class="mb-3 style-text-2" style="font-size: 1.2rem;">
-                        <span>Paypal رسوم: {{ paypal_fee }} (SAR)</span><br>
-                        <span>رسوم الموقع: {{ web_fee }} (SAR)</span><br>
-                        <span>المجموع: <strong>{{ price }} (SAR)</strong></span>
-                    </p>
-                    <hr>
-                    <p class="text-muted style-text">سيتم توجيهك إلى بوابة الدفع الآمنة لباي بال لإتمام العملية. <br>
-                        <strong>ملاحظة: </strong> من فضلك لا تترك الدفع بين الحين والآخر. إذا واجهتك أي علل،
-                        يُرجى إرسال بريد إلكتروني إلى <span class="text-primary">kkuunofficialstore@gmail.com</span> مع
-                        لقطة شاشة للعلل.
-                    </p>
-                    <hr>
-                    <p>{{paypal.render}}</p>
-                </article>
-            </div>
+<div class="container-fluid d-flex align-items-center" style="min-height: 90vh;">
+    <div class="row p-2 p-md-4 py-4 animate__animated animate__zoomIn">
+        <img class="widthlock col-md-6 mb-4" src="../static/media/undraw_chilling_re_4iq9.svg" alt="empty">
+        <div class="col-md-6 px-md-4">
+            <article>
+                <h1 class="mb-3 style-text-3">تفاصيل الطلب</h1>
+                <p class="mb-3 style-text-2" style="font-size: 1.2rem;">
+                    <span>رسوم باي بال: {{ paypal_fee }} (ريال سعودي)</span><br>
+                    <span>رسوم الخادم: {{ web_fee }} (ريال سعودي)</span><br>
+                    <span>الإجمالي: <strong>{{ price }} (ريال سعودي)</strong></span>
+                </p>
+                <hr>
+                <p class="text-muted style-text">سيتم توجيهك إلى بوابة الدفع الآمنة لباي بال لإتمام العملية. <br>
+                    <strong>ملاحظة: </strong> يرجى عدم ترك الدفع في منتصف العملية. إذا واجهت أي مشاكل، قم بإرسال بريد إلكتروني إلى <span class="text-primary">kkuunofficialstore@gmail.com</span> مع صورة للمشكلة.
+                </p>
+                <hr>
+                <p>{{paypal.render}}</p>
+            </article>
         </div>
     </div>
 </div>
+
 {% endblock %}

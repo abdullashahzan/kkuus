@@ -19,6 +19,7 @@ class UserProfile(models.Model):
     building_code = models.CharField(max_length=5)
     whatsapp = models.CharField(max_length=15, null=True)
     privileged = models.BooleanField(default=False)
+    fav_tags = models.CharField(max_length=512, null=True, default="everything")
 
     def __str__(self):
         return f"{self.user.username}'s profile"
@@ -38,6 +39,8 @@ class UserListings(models.Model):
     new_orders = models.IntegerField(default=0)
     payment_done = models.BooleanField(default=False)
     num_views = models.IntegerField(default=0)
+    in_developers_pick = models.BooleanField(default=False)
+    hidden = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.username} listed {self.product_name}"
@@ -63,6 +66,8 @@ class UserWishlist(models.Model):
 class UserOrder(models.Model):
     username = models.CharField(max_length=128)
     item = models.ForeignKey(UserListings, on_delete=models.CASCADE, related_name='orders')
+    quantity = models.IntegerField(default=1)
+    additional_description = models.CharField(max_length=128, null=True)
     key = models.CharField(max_length=10)
     status = models.CharField(max_length=20)
     room_no = models.IntegerField(default=0)
@@ -117,3 +122,5 @@ class UserNotices(models.Model):
 
     def __str__(self):
         return f"{self.username} has a notice {self.title}"
+
+

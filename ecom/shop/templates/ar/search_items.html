@@ -2,144 +2,145 @@
 {% load static %}
 
 {% block title %}
-<title>نتائج البحث</title>
+{% if user.is_authenticated %}
+<title>مرحبًا، {{request.user.first_name}}!</title>
+{% else %}
+<title>مرحبًا، مستخدم!</title>
+{% endif %}
 {% endblock %}
 
 {% block body %}
-<div id="myModal" class="container-fluid slideInDown">
-    <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-md-6 d-flex justify-content-center align-items-center my-4">
-            <img class="widthlock" src="{% static 'media/search.svg' %}" alt="صورة">
-        </div>
-        <div class="col-md-6">
-            <article>
-                <h1 class="style-text-3">ابحث عن منتج</h1>
-                <p class="lead style-text">
-                    اكتب اسم المنتج أو وصفه
-                </p>
-                <form action="{% url 'shop:search_item' %}" method="post" class="style-text">
-                    {% csrf_token %}
-                    <input type="text" class="form-control mb-3 shadow" placeholder="ابحث عن منتج" name="search">
-                    <button type="submit" class="btn btn-outline-primary"
-                        onclick="this.disabled=true; this.value='جاري البحث...'; this.form.submit();">
-                        بحث عن المنتج</button>
-                    <button class="btn btn-outline-danger" type="button" onclick="closeModal()">إلغاء</button>
-                </form>
-            </article>
-        </div>
+<div class="container-fluid bg-light">
+    <div class="row px-md-4 mt-3 p-2">
+        <h1 class="display-4 style-text-3">جميع المنتجات</h1>
+        <hr>
     </div>
-</div>
-<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-<div class="container">
-    <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
+    <div class="row px-md-4 p-2 mb-5">
         {% for item in items %}
-        <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
-            <div class="shadow fadeInUp card mb-1 d-flex align-items-center">
-                <div class="card-header style-text bg-primary text-light" style="width: 100%;">متجر @{{item.username}}</div>
-                <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock"
+        <div class="col-lg-3 col-md-6 my-2">
+            <div class="card card-item p-2 bg-dark" style="box-shadow: 5px 5px 10px #5b5b5b;">
+                <div class="card-header style-text-3 bg-dark text-light">
+                    منتج @{{item.username}}
+                </div>
+                <img src="{% url 'shop:get_image' item.firebase_path %}" class="product_image"
                     alt="{{item.product_name}}">
-                <div class="card-body mt-2" style="width: 100%;">
-                    <h4 class="text-primary" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
-                            class="text-primary style-text-3">{{item.product_name}}</a></h4>
-                    <hr>
-                    <h4 class="style-text-2">SAR {{item.product_price}}</h4>
-                    <p class="style-text">
-                        <i class="bi bi-heart-fill lead text-danger"></i><span class="mx-2">{{item.ratings}}/5.0
-                            ({{item.num_raters}})</span>
-                        <span class="card-text style-text text-muted truncate-3-lines"><i
-                                class="bi bi-bag-fill lead text-primary"></i> <span class="mx-1">تم الشراء بواسطة:
-                                {{item.num_orders}} مشترٍ(ين)</span></span>
+                <div class="product_details bg-dark">
+                    <h4><a href="{% url 'shop:buy' item.id %}"
+                            class="text-light text-decoration-none style-text-3 truncate-2-lines"
+                            onclick="this.classList.add('disabled');">{{item.product_name}}</a></h4>
+                    <hr class="text-light">
+                    <h4 class="style-text-3 text-light">SAR {{item.product_price}}</h4>
+                    <p class="card-text style-text text-light truncate-3-lines">
+                        {{item.product_description}}
                     </p>
-                    <p>
-                        <span class="card-text style-text-2 truncate-3-lines">{{item.product_description}}</span>
+                    <p class="style-text">
+                        <i class="bi bi-heart-fill lead text-danger"></i>
+                        <span class="mx-2 text-light">{{item.ratings}}/5.0 ({{item.num_raters}})</span>
+                        <br>
+                        <i class="bi bi-bag-fill lead text-primary"></i>
+                        <span class="mx-1 text-light">تم الشراء بواسطة: {{item.num_orders}} مشترٍ</span>
                     </p>
                     <div class="style-text-2">
                         {% if user.username != item.username %}
                         {% if item.id in bought_items %}
-                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2">مطلوب</a>
-                        {% elif item.id in completed_items %}
-                        <button class="btn btn-disabled my-2 text-primary">تم الشراء</button>
+                        <a href="{% url 'shop:myOrders' %}" class="btn btn-light my-2"
+                            onclick="this.classList.add('disabled');">مطلوب</a>
                         {% else %}
-                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2">عرض المنتج</a>
+                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-light my-2"
+                            onclick="this.classList.add('disabled');">عرض المنتج</a>
                         {% endif %}
                         {% if item.id in wishlist %}
-                        <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
+                        <button class="btn btn-outline-light add-to-wishlist" data-item-id="{{ item.id }}">
                             <i class="bi bi-star-fill"></i></button>
                         {% else %}
-                        <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
+                        <button class="btn btn-outline-light add-to-wishlist" data-item-id="{{ item.id }}">
                             <i class="bi bi-star"></i></button>
                         {% endif %}
                         {% endif %}
                     </div>
                 </div>
+                <div class="card-footer style-text-3 bg-dark text-light">
+                    نُشر في {{item.timestamp}}
+                </div>
             </div>
         </div>
         {% empty %}
-        <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 90vh;">
-            <div class="col-md-7 animate__animated animate__tada">
-                <h1 class="style-text-3">لم يتم العثور على منتجات</h1>
-                <p class="text-muted style-text">يرجى تعديل بحثك للحصول على نتائج أكثر دقة</p>
-            </div>
-            <div class="col-md-5 d-flex justify-content-center align-items-center">
-                <img class="widthlock" src="{% static 'media/undraw_empty_cart_co35.svg' %}" alt="فارغ">
-            </div>
-        </div>
-        <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
-            <div class="col-12 col-md-5">
-                <div class="card shadow animate__animated animate__zoomIn">
-                    <img class="widthlock p-2" src="{% static 'media/undraw_empty_cart_co35.svg' %}" alt="فارغ">
-                    <div class="card-body">
-                        <article>
-                            <h1 class="style-text-3 my-3">لم يتم العثور على منتجات</h1>
-                            <hr>
-                            <p class="text-muted style-text">يرجى تعديل بحثك للحصول على نتائج أكثر دقة</p>
-                        </article>
-                    </div>
-                </div>
+        <div class="row bg-dark p-4 shadow m-0">
+            <div
+                class="display-6 style-text-3 col-md-6 text-light d-flex justify-content-center align-items-center mb-3">
+                لا توجد نتائج، حاول تغيير استعلام البحث قليلًا.</div>
+            <div class="col-md-6">
+                <img src="../static/media/undraw_online_re_x00h.svg" alt="image" width="100%" height="auto">
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
 
+<input type="hidden" value="{{ csrf_token }}" name="csrfmiddlewaretoken">
+
 <script>
+    localStorage.clear()
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();
     $('.add-to-wishlist').on('click', function () {
         var icon = $(this).find('i');
         var item_id = $(this).data('item-id');
         if (icon.hasClass('bi bi-star')) {
-            // Add item to wishlist
+            // إضافة المنتج إلى قائمة الأمنيات
             $.ajax({
                 url: '/addToWishlist/' + item_id,
                 type: 'POST',
                 dataType: 'json',
                 headers: { 'X-CSRFToken': csrftoken },
                 success: function (data) {
-                    alert(data.message);
                     icon.removeClass('bi bi-star').addClass('bi bi-star-fill');
                 },
                 error: function (xhr, errmsg, err) {
-                    alert('فشلت عملية إضافة المنتج إلى قائمة رغباتك');
+                    alert('فشلت عملية إضافة المنتج إلى قائمة الأمنيات الخاصة بك');
                 }
             });
         } else if (icon.hasClass('bi bi-star-fill')) {
-            // Remove item from wishlist
+            // إزالة المنتج من قائمة الأمنيات
+
+
             $.ajax({
                 url: '/removeFromWishlist/' + item_id,
                 type: 'POST',
                 dataType: 'json',
                 headers: { 'X-CSRFToken': csrftoken },
                 success: function (data) {
-                    alert(data.message);
                     icon.removeClass('bi bi-star-fill').addClass('bi bi-star');
                 },
                 error: function (xhr, errmsg, err) {
-                    alert('فشلت عملية إزالة المنتج من قائمة رغباتك');
+                    alert('فشلت عملية إزالة المنتج من قائمة الأمنيات الخاصة بك');
                 }
             });
         }
     });
-    $('#searchButton').prop('disabled', false);
+
+    $(window).on('scroll', function () {
+        $('.card-item').each(function () {
+            var cardTop = $(this).offset().top;
+            var windowHeight = $(window).height();
+            var scrollTop = $(window).scrollTop();
+
+            // التحقق مما إذا كانت أسفل البطاقة تقع أعلى العرض القابل للعرض وأعلى البطاقة تقع أدنى العرض القابل للعرض
+            var isAboveViewport = (cardTop + $(this).outerHeight()) < scrollTop;
+            var isBelowViewport = cardTop > (scrollTop + windowHeight);
+
+            // إذا كانت البطاقة مرئية جزئيًا أو بالكامل في العرض القابل للعرض
+            if (!isAboveViewport && !isBelowViewport) {
+                $(this).removeClass('hidden');
+            } else {
+                $(this).addClass('hidden');
+            }
+        });
+    });
+
+    // إظهار البطاقات الأولى 4 في البداية
+    $(document).ready(function () {
+        $('.card-item.hidden:lt(4)').removeClass('hidden');
+    });
 </script>
 
 {% endblock %}

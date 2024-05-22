@@ -7,114 +7,155 @@
 
 {% block body %}
 
+{% if message %}
+<div class="notice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-dark shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3 text-light">Oops..!</h1>
+            <p class="style-text-2 text-light">
+                {{message}} 
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-light" onclick="document.querySelector('.notice').style.display='none';">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <div id="imagePreviewModal" class="modal">
-    <div class="modal-content bg-light animate__animated animate__bounceIn"
+    <div class="modal-content bg-dark animate__animated animate__bounceIn"
         style="height: auto; width: auto; max-width: 90%;">
         <span class="close" style="cursor: pointer;"><i class="bi bi-x-circle-fill text-danger lead mx-2"></i></span>
         <img id="preview" src="" alt="Preview" style="width: 100vh; height: auto; max-height: 70vh;">
-        <button type="button" id="cropButton" class="btn text-primary">Crop Image</button>
+        <button type="button" id="cropButton" class="btn text-light">Crop Image</button>
     </div>
 </div>
 
-<div class="container">
-    <div class="row" style="min-height: 80vh;">
-        <div class="col-md-6 d-flex justify-content-center align-items-start mt-4 slideInLeft">
-            <img class="widthlock my-3" src="{% static 'media/undraw_web_shopping_re_owap.svg' %}"
-                alt="Picture shopping">
-        </div>
-        <div class="col-md-6 d-flex justify-content-start align-items-center p-5 slideInUp">
+<div class="container-fluid bg-light">
+    <div class="row bg-light p-md-3 py-3 px-1">
+        <div class="col-md-8">
             <article>
-                <h1 class="style-heading mb-4">Create your new listing</h1>
-                {% if message %}
-                <p class="style-text" style="color: red;">{{message}}</p>
-                {% endif %}
-                <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data"
-                    class="style-text" id="myForm">
-                    {% csrf_token %}
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="product_name" class="form-label font-weight-bold">Name of your product:</label>
-                            <input type="text" class="form-control style-text" name="product_name"
-                                placeholder="e.g. Chocolate" id="product_name">
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-12">
-                            <label for="description" class="form-label font-weight-bold">Product details:</label>
-                            <textarea class="form-control style-text" id="description" name="product_description"
-                                rows="4" style="resize: none;"
-                                placeholder="e.g. I'm selling my chocolate because I just remembered that I have diabetes..."></textarea>
-                            <p class="style-text-2 text-primary"><span id="charCount">0</span> / 500</p>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="price" class="form-label font-weight-bold">Set a price for your product
-                                (SAR):</label>
-                            <input type="text" class="form-control style-text" name="price" id="price"
-                                placeholder="1,000,000,000">
-                        </div>
-                    </div>
-                    <div class="row mb-3 mt-4 d-flex justify-content-center align-items-center">
+                <h1 class="display-1 style-text-3 ">New listing</h1>
+                <p class="style-text">
+                    Do you have something to sell? Maybe a product (e.g. pen, tablet, iPhone etc) or a service (e.g.
+                    Delivery service, selling cakes, food etc) you have come to the right place. List your product
+                    or service in few simple steps on the marketplace.
+                </p>
+            </article>
+        </div>
+        <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_transfer_money_re_6o1h.svg" alt="image"
+                style="height: 10rem; width: auto;">
+        </div>
+    </div>
+    <div class="row bg-dark p-md-4 p-3">
+        <h1 class="display-4 style-text-3 text-light">Create your new listing</h1>
+    </div>
+    <form action="{% url 'shop:new_listing' %}" method="post" enctype="multipart/form-data" id="myForm">
+        <div class="row bg-light p-md-4 p-2 py-4">
+            {% csrf_token %}
+            <div class="col-md-6">
+                <div class="bg-dark text-light p-3 mb-3 shadow">
+                    <div class="row">
+                        <div class="style-text-3 display-5">Step 1: <hr></div>
+                        <h3 class="style-heading">Select an image for your product:</h3>
+                        <p class="style-text text-light">You are only allowed to select 1 image of your product or service. Make sure it is high quality and looks attractive.</p>
                         <div class="col-md-6">
-                            <label for="croppedPreview" class="form-label font-weight-bold">Image preview:</label>
-                            <img id="croppedPreview" src="" alt="Your product image appears here"
-                                style="width: 100%; max-width: 100%; height: auto;"
+                            <h5 class="style-text-3">Image preview:</h5>
+                            <img id="croppedPreview" src="" alt="Your product image appears here" style="width: 100%; max-width: 100%; height: auto;"
                                 onerror="this.onerror=null; this.src='../static/media/logo/png/logo-color.png';">
                         </div>
-                        <div class="col-md-6 my-3">
-                            <label for="imageUpload" class="btn btn-outline-primary">Select an Image</label>
-                            <input type="file" name="product_images" class="custom-file-input" id="imageUpload"
-                                accept="image/jpeg, image/png">
-                            <p class="text-primary my-2 mx-1" id="selectedFiles">No image chosen</p>
-                            <p class="text-muted">Only JPEG and PNG image formats are supported</p>
-                            <!-- Add hidden input fields for cropping data -->
-                            <input type="hidden" id="x" name="crop_x">
-                            <input type="hidden" id="y" name="crop_y">
-                            <input type="hidden" id="width" name="crop_width">
-                            <input type="hidden" id="height" name="crop_height">
+                        <div class="col-md-6 my-3 d-flex align-items-end">
+                            <div>
+                                <label for="imageUpload" class="btn btn-outline-light">Select an Image</label>
+                                <input type="file" name="product_images" class="custom-file-input" id="imageUpload"
+                                    accept="image/jpeg, image/png">
+                                <p class="text-light style-text-3 my-2 mx-1" id="selectedFiles">No image chosen</p>
+                                <hr>
+                                <p class="text-light style-text">Only JPEG and PNG image formats are supported</p>
+                                <!-- Add hidden input fields for cropping data -->
+                                <input type="hidden" id="x" name="crop_x">
+                                <input type="hidden" id="y" name="crop_y">
+                                <input type="hidden" id="width" name="crop_width">
+                                <input type="hidden" id="height" name="crop_height">
+                            </div>
                         </div>
                     </div>
-                    <!-- Add an <img> element with id "preview" where the cropped image will be displayed -->
-                    <img id="preview" src="" alt="Preview" style="max-width: 100%; height: auto; display: none;">
-                    <div class="row mb-4 mt-4 style-text">
-                        <div class="style-text"><strong>Choose your plan, please choose the last option we need some money 😔</strong></div>
-                        <div class="form-check col-4 m-2">
+                </div>
+                <div class="bg-dark text-light p-3 mb-3 shadow">
+                    <h3 class="style-heading">Select your plan:</h3>
+                    <p class="style-text text-light">Tell us for how long do you want to list your product. You can change your plan again once your product or service expires.</p>
+                    <div class="row px-4 style-text-2">
+                        <div class="form-check col-md-3 mb-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="4" checked>
                             <label class="form-check-label" for="flexRadioDefault">
                                 Post for 4 days <br> (FREE)
                             </label>
                         </div>
-                        <div class="form-check col-4 m-2">
+                        <div class="form-check col-md-3 mb-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="14">
                             <label class="form-check-label" for="flexRadioDefault">
                                 Post for 14 days <br> (FREE)
                             </label>
                         </div>
-                        <div class="form-check col-4 m-2">
+                        <div class="form-check col-md-3 mb-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="28">
                             <label class="form-check-label" for="flexRadioDefault">
                                 Post for 28 days <br> (FREE)
                             </label>
                         </div>
-                        <div class="form-check col-4 m-2">
+                        <div class="form-check col-md-3 mb-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="29">
                             <label class="form-check-label" for="flexRadioDefault">
-                                FOREVER 🤑 <br> (1,000,000,000 $)
+                                FOREVER <br> (5.00 $)
                             </label>
                         </div>
                     </div>
-                    <p class="">If you don't select the last option then we will send a sniper to your loca- ahem ahem! Just kidding, you can renew your plan again for FREE (We are very generous)</p>
-                    <button type="submit" class="btn btn-primary mb-3"><i class="bi bi-cash-stack lead mx-1"></i> <span
-                            class="style-text lead mx-2">LET'S GOOOOOOOO</span></button>
-                </form>
-            </article>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-dark text-light p-3 mb-3 shadow">
+                    <div class="style-text-3 display-5">Step 2:</div>
+                    <hr>
+                    <h3 class="style-heading">Set a name for your product or service:</h3>
+                    <p class="style-text text-light">Make sure to give a name that is short and catchy</p>
+                    <input type="text" class="form-control style-text" name="product_name" placeholder="e.g. Chocolate"
+                        id="product_name">
+                </div>
+                <div class="bg-dark text-light p-3 mb-3 shadow">
+                    <div class="style-text-3 display-5">Step 3:</div>
+                    <hr>
+                    <h3 class="style-heading">Description of your product or service:</h3>
+                    <p class="style-text text-light">The description shouldn't be too long or too short. It should give
+                        customer a clear idea about what you are selling.</p>
+                        <textarea class="form-control style-text" id="description" name="product_description" rows="4" style="resize: none;"
+                        placeholder="e.g. I'm selling my chocolate because I just remembered that I have diabetes..."></textarea>
+                    <p class="style-text-2 text-light m-2"><span id="charCount">0</span> / 500 words</p>
+                </div>
+                <div class="bg-dark text-light p-3 mb-3 shadow">
+                    <div class="style-text-3 display-5">Step 4:</div>
+                    <hr>
+                    <h3 class="style-heading">Set a price for your product or service (SAR):</h3>
+                    <p class="style-text text-light">A small but extremely important part of selling a product. Set a price that is not too cheap or too expensive for your product. Keep in mind it should be affordable.</p>
+                    <input type="text" class="form-control style-text" name="price" id="price" placeholder="1,000,000,000">
+                </div>
+            </div>
+            <div class="p-3 style-text-3">
+                <strong>Note:</strong> Make sure you have entered all the details correctly. You will not be able to modify anything again once
+                your product or service is published.
+                <br>
+                <button type="submit" class="btn btn-dark my-3">
+                    <i class="bi bi-cash-stack lead mx-1"></i> 
+                    <span class="style-text-3 lead mx-2">Publish</span>
+                </button>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script>

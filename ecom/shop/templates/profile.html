@@ -7,37 +7,51 @@
 
 {% block body %}
 
-<div class="container p-4">
-    <div class="row">
-        <div class="d-none d-lg-block col-3 p-3">
-            <h3 class="style-heading text-primary">My profile</h3>
+<div class="container-fluid bg-light">
+    <div class="row bg-light p-md-3 px-1">
+        <div class="col-md-8">
+            <article>
+                <h1 class="display-1 style-text-3 ">My account</h1>
+                <p class="style-text">
+                    Do you want to change your password? Or maybe do you want to update your Email address? 
+                    Everything related to your account, from modification to deletion, can be done on this page.
+                </p>
+            </article>
+        </div>
+        <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_set_preferences_kwia.svg" alt="image" style="height: 10rem; width: auto;">
+        </div>
+    </div>
+    <div class="row px-2">
+        <div class="d-none d-lg-block col-3 p-3 bg-dark text-light shadow" style="height: fit-content;">
+            <h3 class="style-heading">My profile</h3>
             <hr>
             <ul class="list-unstyled px-3">
-                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-primary style-text-2"
+                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-light style-text-2"
                         style="text-decoration: none;">My
                         information</a></li>
                 {% if user.is_staff and user.is_superuser and user.username == "shahzan" %}
-                <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-muted style-text-2"
+                <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-light style-text-2"
                         style="text-decoration: none;">Developer dashboard</a></li>
                 {% endif %}
                 <li class="my-1">Version: {{version}}</li>
             </ul>
             <hr>
-            <p class="text-muted style-text">
+            <p class="text-light style-text">
                 Sorry if you encounter any bugs, the developer is always listening to your problems at kkuunofficialstore@gmail.com
             </p>
         </div>
-        <div class="col-md-9 p-3">
-            <article class="mb-4">
+        <div class="col-md-9">
+            <article class="mb-4 bg-dark text-light p-3 shadow">
                 <h3 class="style-heading">Enable notification on this device</h3>
                 <hr>
                 <div class="style-text" style="min-height: 5vh;">
-                    <a href="{% url 'shop:preEnableNotifications' %}" class="btn btn-primary">Enable</a>
-                    <p class="text-muted mt-2">If you are not receiving notifications on this device or have not enabled
+                    <a href="{% url 'shop:preEnableNotifications' %}" class="btn btn-light">Enable</a>
+                    <p class="text-light mt-2">If you are not receiving notifications on this device or have not enabled
                         notifications for this device, please click here to enable it.</p>
                 </div>
             </article>
-            <article class="mb-4">
+            <article class="mb-4 bg-dark text-light p-3 shadow">
                 <h3 class="style-heading">Update address</h3>
                 <hr>
                 <form action="{% url 'shop:update_address' %}" class=" style-text-2" method="post">
@@ -68,10 +82,10 @@
                     {% if address_error %}
                     <p class="text-danger">{{address_error}}</p>
                     {% endif %}
-                    <button type="submit" class="btn btn-primary">Update address</button>
+                    <button type="submit" class="btn btn-light">Update address</button>
                 </form>
             </article>
-            <article class="mb-4">
+            <article class="mb-4 bg-dark text-light p-3 shadow">
                 <h3 class="style-heading">General information</h3>
                 <hr>
                 <form class="style-text-2" action="{% url 'shop:update_info' %}" method="post">
@@ -103,10 +117,10 @@
                             oninput="delayFunction()">
                         <div id="checkEmailAvailability" class="form-text"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary updateInfo">Update information</button>
+                    <button type="submit" class="btn btn-light updateInfo">Update information</button>
                 </form>
             </article>
-            <article class="mb-4">
+            <article class="mb-4 bg-dark text-light p-3 shadow">
                 <h3 class="style-heading">Update password</h3>
                 <hr>
                 <form action="{% url 'shop:update_password' %}" class="style-text-2" method="post">
@@ -126,20 +140,20 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <div class="btn btn-outline-primary password_toggler" onclick="togglePasswordVisibility()">Show
+                        <div class="btn btn-outline-light password_toggler" onclick="togglePasswordVisibility()">Show
                             passwords</div>
                     </div>
                     <hr>
                     {% if password_error %}
                     <p class="text-danger">{{password_error}}</p>
                     {% endif %}
-                    <button type="submit" class="btn btn-primary">Update password</button>
+                    <button type="submit" class="btn btn-light">Update password</button>
                 </form>
             </article>
-            <article class="mb-4">
+            <article class="mb-4 bg-dark text-light p-3 shadow">
                 <h3 class="style-heading">Help this website remain free forever</h3>
                 <hr>
-                <p class="text-muted style-text">Hosting a website takes a lot of resources, every donation even if it is just a dollar counts :)</p>
+                <p class="text-light style-text">Hosting a website takes a lot of resources, every donation counts even if it is just a dollar :)</p>
                 <a href="https://buymeacoffee.com/kkuunofficialstore" class="btn btn-light shadow"><img style="width: 8rem;" src="../static/media/logo/bmc-full-logo-no-background.png" alt="bmc"></a>
             </article>
             <hr>

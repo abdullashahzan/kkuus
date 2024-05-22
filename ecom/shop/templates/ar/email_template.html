@@ -5,23 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>KKU unofficial store</title>
+    <title>متجر جامعة الملك خالد غير الرسمي</title>
 
     <style>
         .style-heading {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 2.5rem;
-        }
-
-        .style-text {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .style-footer {
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
             font-size: 1.5rem;
         }
 
@@ -32,7 +20,7 @@
 
         .container {
             min-height: 30vh;
-            background-color: #0d6efd;
+            background-color: #000;
             padding: 2rem;
         }
 
@@ -43,20 +31,21 @@
 </head>
 
 
-<body>
+<body dir="rtl">
     <div class="container">
         <article>
-            <h1 class="style-heading">{{specialKeys.0}} قام بطلب {{specialKeys.2}}</h1>
-            <p class="style-text">
+            <h1 class="style-heading">{{ specialKeys.0 }} قام بطلب {{ specialKeys.2 }}. يرجى التحقق من متجرك فوراً.</h1>
+            <p class="style-heading">
                 <strong style="font-size: 2rem;">تفاصيل المشتري</strong><br><br>
-                الاسم: <span class="text-white">{{specialKeys.0}}</span><br>
-                واتساب: <a href="https://wa.me/{{specialKeys.5}}" class="text-white">{{specialKeys.5}} (انقر هنا للتواصل مع المستخدم على الواتساب)</a>
+                الاسم: <span class="text-white">{{ specialKeys.0 }}</span><br>
+                واتساب: <a href="https://wa.me/{{ specialKeys.5 }}" class="text-white">{{ specialKeys.5 }} (انقر هنا للتواصل مع المستخدم عبر واتساب)</a>
                 <br><br>
-                -> <a href="https://unstore.pythonanywhere.com/myShop/" class="btn" target="_blank">انقر هنا للانتقال إلى متجرك وقبول طلب المستخدم.</a>
+                <a href="https://unstore.pythonanywhere.com/myShop/" class="btn" target="_blank">انقر هنا للذهاب إلى متجرك وقبول طلب المستخدم.</a>
             </p>
-            <p class="style-footer">
+            <p class="style-heading">
+                ملاحظة: في حال عدم تسليم الطلب، سيتم فرض عقوبة على حسابك. <br> <br>
                 تحياتنا <br>
-                <strong>سوق السكن</strong>
+                <strong>متجر جامعة الملك خالد غير الرسمي</strong>
             </p>
         </article>
     </div>

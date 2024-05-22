@@ -2,191 +2,131 @@
 {% load static %}
 
 {% block body %}
-<main>
-    <div class="container d-none d-lg-block">
-        <div class="row" style="min-height: 80vh;">
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <img class="widthlock" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="Picture">
-            </div>
-            <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
-                <article>
-                    <h1 class="style-heading mb-4">Yeah unfortunately, you will have to fill this boring form to register yourself 😩</h1>
-                    <form action="{% url 'shop:signup_user' %}" method="post" class="style-text" id="myForm">
-                        {% csrf_token %}
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <label for="first" class="form-label">First name</label>
-                                <input type="text" class="form-control" name="first" id="web_first" placeholder="Mohammad">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="second" class="form-label">Second name</label>
-                                <input type="text" class="form-control" name="second" id="web_second" placeholder="Abdul">
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <label for="whatsapp" class="form-label">Whatsapp no.</label>
-                                <input type="text" class="form-control" name="whatsapp" id="web_whatsapp"
-                                    placeholder="e.g. +966509338765">
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" name="username" id="userInput"
-                                    aria-describedby="checkUsernameAvailability" oninput="delayFunction()" placeholder="JoJo">
-                                <div id="checkUsernameAvailability" class="form-text"></div>
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" name="email" id="web_email"
-                                    placeholder="e.g. my_email@gmail.com">
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="ilovecupcakes">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="exampleInputPassword2" class="form-label">Confirm password</label>
-                                <input type="password" name="password2" class="form-control" placeholder="ilovecupcakes">
-                            </div>
-                        </div>
-                        <div class="row mb-4">
-                            <label for="address" class="form-label">Student housing address</label>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="room_no" id="address"
-                                    placeholder="Enter your Room number" aria-describedby="address_help">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <select class="form-control" id="building_code" name="building_code">
-                                        <option value="0">Select your building</option>
-                                        <option value="br1">BR1</option>
-                                        <option value="br2">BR2</option>
-                                        <option value="br3">BR3</option>
-                                        <option value="br4">BR4</option>
-                                        <option value="br5">BR5</option>
-                                        <option value="br6">BR6</option>
-                                        <option value="br7">BR7</option>
-                                        <option value="br8">BR8</option>
-                                        <option value="br9">BR9</option>
-                                        <option value="br10">BR10</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div id="address_help" class="form-text text-dark">Make sure your address is correct or someone else will recieve your order 💀</div>
-                        </div>
-                        {% if message %}
-                        <p class="style-text" style="color: red;">{{message}}</p>
-                        {% endif %}
-                        <button type="submit" class="btn btn-primary my-2">Register</button><br>
-                        <a href="{% url 'shop:login_user' %}" type="submit"
-                            class="btn btn-light btn-outline-primary">Already
-                            have an account</a>
-                    </form>
-                </article>
+
+{% if message %}
+<div class="notice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-dark shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3 text-light">Oops..!</h1>
+            <p class="style-text-2 text-light">
+                {{message}}
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-light"
+                    onclick="document.querySelector('.notice').style.display='none';">Okay</button>
             </div>
         </div>
     </div>
-    <div class="container d-block d-lg-none justify-content-center align-items-center mb-4" style="min-height: 80vh;">
-        <div class="col-12">
-            <div class="card shadow animate__animated animate__zoomIn">
-                <img class="widthlock p-2" src="{% static 'media/undraw_sign_up_n6im.svg' %}" alt="empty">
-                <div class="card-body">
-                    <article>
-                        <h1 class="style-heading mb-4">Yeah unfortunately, you will have to fill this boring form to register yourself 😩</h1>
-                        <form action="{% url 'shop:signup_user' %}" method="post" class="style-text" id="myForm">
-                            {% csrf_token %}
-                            <div class="row mb-2">
-                                <div class="col-md-6">
-                                    <label for="first" class="form-label">First name</label>
-                                    <input type="text" class="form-control" name="first" id="first">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="second" class="form-label">Second name</label>
-                                    <input type="text" class="form-control" name="second" id="second">
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-md-12">
-                                    <label for="whatsapp" class="form-label">Whatsapp no.</label>
-                                    <input type="text" class="form-control" name="whatsapp" id="whatsapp"
-                                        placeholder="e.g. +966509338765">
-                                    <div id="address_help" class="form-text">Make sure you write correct country code
-                                        with a "+" in
-                                        the begining. This number will be displayed to sellers or buyers to contact you.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-md-12">
-                                    <label for="username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" name="username" id="userInput"
-                                        aria-describedby="checkUsernameAvailability" oninput="delayFunction()">
-                                    <div id="checkUsernameAvailability" class="form-text"></div>
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-md-12">
-                                    <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" name="email" id="email" aria-describedby="email_help">
-                                    <div id="address_help" class="form-text">Please make sure your email is active. We
-                                        use it
-                                        to send you details about your orders.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-md-6">
-                                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                                    <input type="password" name="password" class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="exampleInputPassword2" class="form-label">Confirm password</label>
-                                    <input type="password" name="password2" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row mb-4">
-                                <label for="address" class="form-label">Student housing address</label>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" name="room_no" id="web_address"
-                                        placeholder="Enter your Room number" aria-describedby="address_help">
-                                </div>
-                                <div class="col-md-6 my-2">
-                                    <div class="form-group">
-                                        <select class="form-control" id="building_code" name="building_code">
-                                            <option value="0">Select your building</option>
-                                            <option value="br1">BR1</option>
-                                            <option value="br2">BR2</option>
-                                            <option value="br3">BR3</option>
-                                            <option value="br4">BR4</option>
-                                            <option value="br5">BR5</option>
-                                            <option value="br6">BR6</option>
-                                            <option value="br7">BR7</option>
-                                            <option value="br8">BR8</option>
-                                            <option value="br9">BR9</option>
-                                            <option value="br10">BR10</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="address_help" class="form-text">Make sure your address is correct or someone else will recieve your order 💀</div>
-                            {% if message %}
-                            <p class="style-text" style="color: red;">{{message}}</p>
-                            {% endif %}
-                            <button type="submit" class="btn btn-primary my-2">Register</button><br>
-                            <a href="{% url 'shop:login_user' %}" type="submit"
-                                class="btn btn-light btn-outline-primary">Already
-                                have an account</a>
-                        </form>
-                    </article>
-                </div>
+</div>
+{% endif %}
+
+<main>
+    <div class="container-fluid bg-light">
+        <div class="row bg-light p-md-3 py-3 px-1">
+            <div class="col-md-8">
+                <article>
+                    <h1 class="display-1 style-text-3 ">Sign up</h1>
+                    <p class="style-text">
+                        Don't have an account and want to create one? This is the right page you are looking for.
+                        Create a new account in few simple steps.
+                    </p>
+                </article>
+            </div>
+            <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center">
+                <img src="../static/media/undraw_login_re_4vu2.svg" alt="image" style="height: 10rem; width: auto;">
             </div>
         </div>
+        <div class="row bg-dark p-md-4 p-3">
+            <h1 class="display-4 style-text-3 text-light">Create new account</h1>
+        </div>
+        <form action="{% url 'shop:signup_user' %}" method="post" class="style-text-3" id="myForm">
+            {% csrf_token %}
+            <div class="row p-2 py-4 p-md-4">
+                <div class="col-md-6 px-md-3">
+                    <div class="row mb-2 bg-dark text-light p-3 shadow">
+                        <h3 class="style-heading">Your full name</h3>
+                        <p class="style-text text-light">This is the name that will appear to sellers and your potential buyers</p>
+                        <div class="col-md-6">
+                            <label for="first" class="form-label">First name</label>
+                            <input type="text" class="form-control" name="first" id="web_first" placeholder="Mohammad">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="second" class="form-label">Second name</label>
+                            <input type="text" class="form-control" name="second" id="web_second" placeholder="Abdul">
+                        </div>
+                    </div>
+                    <div class="row mb-2 bg-dark text-light p-3 shadow">
+                        <h3 class="style-heading">Your username and Email</h3>
+                        <p class="style-text text-light">Give yourself a unique username and a valid Email id. You will need this for logging in anytime, try not to forget it. All your status updates will be sent on your Email, make sure it is valid and working.</p>
+                        <div class="col-md-6">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" id="userInput" aria-describedby="checkUsernameAvailability" oninput="delayFunction()" placeholder="e.g. JoJo">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" name="email" id="web_email" placeholder="e.g. my_email@gmail.com">
+                        </div>
+                        <div id="checkUsernameAvailability" class="form-text lead"><p class="style-text-3 text-light">Check username availability</p></div>
+                    </div>
+                    <div class="row mb-2 bg-dark text-light p-3 shadow">
+                        <h3 class="style-heading">Create new password</h3>
+                        <p class="style-text text-light">Make a new password for your account. Please make sure to remember it.</p>
+                        <div class="col-md-6">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                            <input type="text" name="password" class="form-control" placeholder="ilovecupcakes">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="exampleInputPassword2" class="form-label">Confirm password</label>
+                            <input type="password" name="password2" class="form-control" placeholder="ilovecupcakes">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 px-md-3">
+                    <div class="row mb-2 bg-dark text-light p-3 shadow">
+                        <h3 class="style-heading">Please enter your whatsapp number</h3>
+                        <p class="style-text text-light">This will be used by your potential buyers and sellers to contact you. Make sure you don't forget the '+' symbol while writing your whatsapp number.</p>
+                        <div class="col-md-12">
+                            <label for="whatsapp" class="form-label">Whatsapp no.</label>
+                            <input type="text" class="form-control" name="whatsapp" id="web_whatsapp"
+                                placeholder="e.g. +966509338765">
+                        </div>
+                    </div>
+                    <div class="row mb-2 bg-dark text-light p-3 shadow">
+                        <h3 class="style-heading">Student housing address</h3>
+                        <p class="style-text text-light">Please enter your address, this will be used by sellers to deliver you your products. Make sure it is correct.</p>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="room_no" id="address"
+                                placeholder="Enter your Room number" aria-describedby="address_help">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <select class="form-control" id="building_code" name="building_code">
+                                    <option value="0">Select your building</option>
+                                    <option value="br1">BR1</option>
+                                    <option value="br2">BR2</option>
+                                    <option value="br3">BR3</option>
+                                    <option value="br4">BR4</option>
+                                    <option value="br5">BR5</option>
+                                    <option value="br6">BR6</option>
+                                    <option value="br7">BR7</option>
+                                    <option value="br8">BR8</option>
+                                    <option value="br9">BR9</option>
+                                    <option value="br10">BR10</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2 bg-dark text-light p-3 shadow">
+                        <div>
+                            <button type="submit" class="btn btn-light my-2">Register</button>
+                            <a href="{% url 'shop:login_user' %}" type="submit" class="btn text-light btn-outline-dark">Already have an account</a>
+                            <hr>
+                            <p>By clicking on register you agree to accept our <a href="{% url 'shop:terms_conditions' %}" class="text-light">terms and conditions</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </main>
 
@@ -213,7 +153,7 @@
         var userInputValue = userInput.value;
 
         if (userInputValue == "") {
-            html_data = `<p class="style-text" style="color: red;">Username cannot be empty</p>`
+            html_data = `<p class="style-text-3 text-danger">Username cannot be empty</p>`
             messageBox.innerHTML = html_data;
         } else {
             fetch(`/username_availability/${userInputValue}`, {
@@ -229,11 +169,11 @@
                     var html_data;
                     console.log(data.response)
                     if (data.response == "available") {
-                        html_data = `<p class="style-text" style="color: green;">Username is available</p>`
+                        html_data = `<p class="style-text-3 text-success">Username is available</p>`
                         messageBox.innerHTML = html_data;
                     }
                     else if (data.response == "not available") {
-                        html_data = `<p class="style-text" style="color: red;">Username is already taken</p>`
+                        html_data = `<p class="style-text-3 text-danger">Username is already taken</p>`
                         messageBox.innerHTML = html_data;
                     }
                 });
@@ -248,13 +188,7 @@
             whatsapp: document.getElementById('whatsapp').value,
             username: document.getElementById('userInput').value,
             email: document.getElementById('email').value,
-            address: document.getElementById('address').value,
-
-            web_first: document.getElementById('web_first').value,
-            web_second: document.getElementById('web_second').value,
-            web_whatsapp: document.getElementById('web_whatsapp').value,
-            web_email: document.getElementById('web_email').value,
-            web_address: document.getElementById('web_address').value,
+            address: document.getElementById('address').value
         };
 
         localStorage.setItem('formData', JSON.stringify(formData));
@@ -271,12 +205,6 @@
             document.getElementById('userInput').value = formData.username;
             document.getElementById('email').value = formData.email;
             document.getElementById('address').value = formData.address;
-
-            document.getElementById('web_first').value = formData.web_first;
-            document.getElementById('web_second').value = formData.web_second;
-            document.getElementById('web_whatsapp').value = formData.web_whatsapp;
-            document.getElementById('web_email').value = formData.web_email;
-            document.getElementById('web_address').value = formData.web_address;
         }
     }
 

@@ -6,33 +6,17 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 80vh;">
+<div class="container-fluid">
+    <div class="row p-2 py-4 p-md-4 d-flex justify-content-center align-items-center" style="min-height: 90vh;">
         <div class="col-md-7 animate__animated animate__bounceIn">
-            <h1 class="style-text-3">الرجاء تمكين الإشعارات في الصفحة التالية...</h1>
+            <h1 class="style-text-3 display-4">يرجى تمكين الإشعارات في الصفحة التالية...</h1>
             <hr>
-            <p class="text-muted style-text">نحن نستخدم الإشعارات لإبقائك على اطلاع حول طلبك. إذا كنت بائعًا أو ترغب في أن تصبح واحدًا، فمن الأساسي تمكين الإشعارات بحيث يمكنك تلقي إشعارات حول الطلبات الجديدة.</p>
-            <a href="{% url 'shop:enableNotifications' %}" class="btn btn-outline-primary style-text-2">المتابعة</a>
-            <a href="{% url 'shop:index' %}" class="btn btn-outline-danger style-text-2">لاحقًا</a>
+            <p class="lead style-text">قم بتمكين الإشعارات الفورية لتبقى محدّثًا بطلباتك ومبيعاتك.</p>
+            <a href="{% url 'shop:enableNotifications' %}" class="btn btn-dark style-text-2">المتابعة</a>
+            <a href="{% url 'shop:index' %}" class="btn btn-danger style-text-2">لاحقًا</a>
         </div>
         <div class="col-md-5 d-flex justify-content-center align-items-center">
-            <img class="widthlock" src="{% static 'media/undraw_reminders_re_gtyb.svg' %}" alt="قائمة الرغبات">
-        </div>
-    </div>
-    <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
-        <div class="col-12 col-md-5">
-            <div class="card shadow animate__animated animate__zoomIn">
-                <img class="widthlock p-2" src="{% static 'media/undraw_reminders_re_gtyb.svg' %}" alt="empty">
-                <div class="card-body">
-                    <article>
-                        <h1 class="style-text-3 my-3">الرجاء تمكين الإشعارات في الصفحة التالية...</h1>
-                        <hr>
-                        <p class="text-muted style-text">نحن نستخدم الإشعارات لإبقائك على اطلاع حول طلبك. إذا كنت بائعًا أو ترغب في أن تصبح واحدًا، فمن الأساسي تمكين الإشعارات بحيث يمكنك تلقي إشعارات حول الطلبات الجديدة.</p>
-                        <a href="{% url 'shop:enableNotifications' %}" class="btn btn-outline-primary style-text-2">المتابعة</a>
-                        <a href="{% url 'shop:index' %}" class="btn btn-outline-danger style-text-2">لاحقًا</a>
-                    </article>
-                </div>
-            </div>
+            <img class="widthlock" src="../static/media/undraw_push_notifications_re_t84m.svg" alt="صورة">
         </div>
     </div>
 </div>

@@ -2,130 +2,169 @@
 {% load static %}
 
 {% block title %}
-<title>متجر {{request.user.first_name}}</title>
+<title>{{request.user.first_name}}'s Shop</title>
 {% endblock %}
 
 {% block body %}
-<div id="myModal" class="container-fluid slideInDown">
+
+{% if not first_visit and user.is_authenticated %}
+<div class="notice">
+    <div class="card p-md-2 p-2 mx-4 col-md-6 bg-dark shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3 text-light">هذا متجرك</h1>
+            <p class="style-text-2 text-light mt-3">
+                أي عنصر أو خدمة تبيعها ستظهر على هذه الصفحة. يمكنك معرفة متى ستنتهي صلاحية المنتجات الخاصة بك أو كم عدد الطلبات الجديدة التي تلقيتها لعنصر أو خدمة. يمكنك أيضًا تجديد المنتجات المنتهية على هذه الصفحة.
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-light"
+                    onclick="document.querySelector('.notice').style.display='none';">حسناً!!</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div id="myModal" class="container-fluid slideInDown bg-dark">
     <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <article>
-                <h1 class="style-text-3">هل ترغب في تجديد العنصر؟</h1>
-                <p class="lead style-text">قم بتجديد منتجك لجعله متاحًا مرة أخرى لعملائك</p>
+                <h1 class="style-text-3 text-success display-4">هل تريد تجديد العنصر؟</h1>
+                <p class="lead style-text text-light">قم بتجديد منتجك لتجعله متاحًا مرة أخرى لعملائك دون فقدان أي من بياناته (مثل التعليقات، الإعجابات، العروض الخ)</p>
                 <form class="redirect_link" action="" method="post">
                     {% csrf_token %}
-                    <div class="row mb-4 mt-4 style-text">
+                    <div class="row mb-4 mt-4 style-text text-light">
                         <input type="hidden" name="item_id" value="" class="item_id">
-                        <div class="style-text"><strong>اختر خطتك:</strong></div>
+                        <div class="style-text"><strong>حدد خطتك:</strong></div>
                         <div class="form-check col-4 m-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="14" checked>
                             <label class="form-check-label" for="flexRadioDefault">
-                                نشر لمدة 14 يومًا <br> (مجاناً)
+                                تجديد لمدة 14 يومًا <br> (مجاناً)
                             </label>
                         </div>
                         <div class="form-check col-4 m-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="28">
                             <label class="form-check-label" for="flexRadioDefault">
-                                نشر لمدة 28 يومًا <br> (مجاناً تماماً)
+                                تجديد لمدة 28 يومًا <br> (مجاناً)
                             </label>
                         </div>
                         <div class="form-check col-4 m-2">
                             <input class="form-check-input border-primary" type="radio" name="flexRadioDefault"
                                 value="29">
                             <label class="form-check-label" for="flexRadioDefault">
-                                تجديد للأبد!!! <br> (1,00000,000000000000,00000000000000 $)
+                                تجديد الى الأبد!!! <br> (5.00 $)
                             </label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-outline-primary">نعم، تابع!</button>
+                    <button type="submit" class="btn btn-success">نعم، قم بالموافقة!</button>
                 </form>
-                <button class="btn btn-outline-danger mt-2" onclick="closeModal()">لا، أعيدني للوراء</button>
+                <button class="btn btn-danger mt-2" onclick="closeModal()">لا، عدني للخلف</button>
             </article>
         </div>
-        <div class="col-md-6 d-flex justify-content-center align-items-center">
-            <img class="widthlock mt-4" src="{% static 'media/undraw_access_account_re_8spm.svg' %}" alt="صورة">
+        <div class="col-md-4 d-flex justify-content-center align-items-center">
+            <img class="widthlock mt-4" src="../static/media/undraw_pet_adoption_-2-qkw.svg" alt="صورة">
         </div>
     </div>
 </div>
-{% if not first_visit %}
-<div class="notice">
-    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
-        <div class="card-body">
-            <h1 class="style-text-3">هذا متجرك</h1>
-            <hr>
-            <p class="style-text-2">
-                سيظهر كل ما تبيعه على هذه الصفحة. هذه هي الصفحة التي ستزورها بشكل متكرر لمعرفة عدد الطلبات التي تلقيتها وأشياء من هذا القبيل...
-            </p>
-            <div class="style-text mt-4">
-                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">رائع!</button>
-            </div>
+<div class="container-fluid bg-light">
+    <div class="row bg-light p-md-3 py-3 px-1">
+        <div class="col-md-8">
+            <article>
+                <h1 class="display-1 style-text-3 ">متجري</h1>
+                <p class="style-text">
+                    أي شيء تبيعه سيظهر هنا. يمكنك التحكم في رؤية منتجاتك، معرفة عدد المستخدمين الذين عرضوا منتجك، ومعرفة إجمالي المبيعات لمنتجك، وتقديم منتجك للاختيار من قبل المطورين والكثير من الأشياء الأخرى.
+                </p>
+            </article>
+        </div>
+        <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_shopping_re_hdd9.svg" alt="صورة" style="height: 10rem; width: auto;">
         </div>
     </div>
-</div>
-{% endif %}
-<div class="container" style="min-height: 100vh;">
-    <div class="row mx-3 mx-md-0" data-masonry='{"percentPosition": true }'>
+    <div class="row bg-dark p-md-4 p-3">
+        <h1 class="display-4 style-text-3 text-light">منتجاتك</h1>
+    </div>
+    <div class="row p-2 py-4 p-md-4">
         {% for item in items %}
-        <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
-            <div class="shadow fadeInUp card mb-3 d-flex align-items-center">
-                {% if item.new_orders != 0 %}
-                <div class="card-header style-text" style="width: 100%;"><a
-                        href="{% url 'shop:order_details' item.id %}" class="text-danger lead">{{item.new_orders}} طلب جديد!</a></div>
-                {% else %}
-                <div class="card-header style-text text-muted" style="width: 100%;">لا يوجد طلبات جديدة</div>
-                {% endif %}
-                <img class="heightlock" src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top"
-                    alt="{{item.product_name}}">
-                <div class="card-body mt-2" style="width: 100%;">
-                    <h5 class="card-title text-primary" id="itemModal{{ item.id }}"><a
-                            href="{% url 'shop:buy' item.id %}"
-                            class="text-primary style-text">{{item.product_name}}</a></h5>
-                    <hr>
-                    <h5 class="card-title style-text">ريال {{item.product_price}}</h5>
+        <div class="col-md-6">
+            <div class="card mb-3 bg-dark">
+                <div class="card-header text-light style-text-3">
                     {% if item.is_expired == True %}
-                    <button class="btn btn-primary" onclick="openModalParameter('{{item.id}}')">تجديد</button>
-                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-danger delete-link">حذف</a>
+                    <span class="text-danger" title="انتهت صلاحية عنصرك"><i class="bi bi-exclamation-lg lead"></i> انتهاء صلاحية العنصر</span>
+                    {% elif item.hidden == True %}
+                    <span class="text-warning" title="العنصر الخاص بك غير معروض على المتجر"><i class="bi bi-eye-slash lead"></i> العنصر مخفي</span>
                     {% else %}
-                    <p class="text-muted style-text">انقر هنا لإدخال رمز المشتري</p>
-                    <a href="{% url 'shop:confirmPurchase' item.id %}" class="btn btn-outline-primary">أدخل الرمز</a>
-                    <a href="{% url 'shop:delete_listing' item.id %}"
-                        class="btn btn-outline-danger delete-link">حذف</a>
+                    <span class="text-success" title="ال
+عنصر الخاص بك متاح على المتجر"><i class="bi bi-check2-all lead"></i> على الانترنت</span>
                     {% endif %}
                 </div>
-                {% if item.is_expired %}
-                <div class="card-footer style-text text-light bg-danger" style="width: 100%;">انتهى العنصر</div>
-                {% else %}
-                <div class="card-footer style-text text-light bg-primary" style="width: 100%;">ينتهي العنصر في:
-                    <br>{{item.expiry}}</div>
-                {% endif %}
-            </div>
-        </div>
-        {% empty %}
-        <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 90vh;">
-            <div class="col-md-7 animate__animated animate__tada">
-                <h1 class="style-text-3">يبدو متجرك فارغًا...</h1>
-                <p class="text-muted style-text">ليس لديك شيء للبيع</p>
-            </div>
-            <div class="col-md-5 d-flex justify-content-center align-items-center">
-                <img class="widthlock" src="{% static 'media/undraw_void_-3-ggu.svg' %}" alt="فراغ">
-            </div>
-        </div>
-        <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
-            <div class="col-12 col-md-5">
-                <div class="card shadow animate__animated animate__zoomIn">
-                    <img class="widthlock p-2" src="{% static 'media/undraw_void_-3-ggu.svg' %}" alt="فارغ">
-                    <div class="card-body">
-                        <article>
-                            <h1 class="style-text-3 my-3">يبدو متجرك فارغًا...</h1>
-                            <hr>
-                            <p class="text-muted style-text">لم تقم بوضع أي شيء للبيع</p>
-                            <a href="{% url 'shop:new_listing' %}" class="btn btn-outline-primary style-text-2">بيع شيء</a>
-                        </article>
+                <div class="row g-0">
+                    <div class="col-md-5">
+                        <img src="{% url 'shop:get_image' item.firebase_path %}" class="card-img-top" alt="{{item.product_name}}">
+                    </div>
+                    <div class="col-md-7 text-light">
+                        {% if item.new_orders != 0 %}
+                        <div class="card-header lead bg-danger" style="width: 100%;"><a href="{% url 'shop:order_details' item.id %}" class="style-text text-light text-decoration-none">لديك {{item.new_orders}} طلب جديد!</a></div>
+                        {% else %}
+                        <div class="card-header style-text lead">لا توجد طلبات جديدة</div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title style-text-3">ريال سعودي {{item.product_price}}</h5>
+                            <p class="card-text text-danger style-text-3">انتهاء الصلاحية: {{item.expiry}}</p>
+                            <div class="style-text-2 row px-1">
+                                {% if item.is_expired == True %}
+                                <div class="col-md-6 col-6 p-1">
+                                    <button class="btn btn-outline-success" onclick="openModalParameter('{{item.id}}')" style="width: 100%;">تجديد</button>
+                                </div>
+                                <div class="col-md-6 col-6 p-1">
+                                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-outline-danger delete-link" style="width: 100%;">حذف</a>
+                                </div>
+                                {% else %}
+                                <div class="col-md-6 col-6 p-1">
+                                    <a href="{% url 'shop:confirmPurchase' item.id %}" class="btn btn-outline-light" style="width: 100%;">إدخال الكود </a>
+                                </div>
+                                <div class="col-md-6 col-6 p-1">
+                                    {% if item.hidden %}
+                                    <a href="{% url 'shop:show_listing' item.id %}" class="btn btn-outline-light" style="width: 100%;">إظهار العنصر</a>
+                                    {% else %}
+                                    <a href="{% url 'shop:hide_listing' item.id %}" class="btn btn-outline-light" style="width: 100%;">إخفاء العنصر</a>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 col-6 p-1">
+                                    <a href="{% url 'shop:delete_listing' item.id %}" class="btn btn-outline-light delete-link" style="width: 100%;">حذف</a>
+                                </div>
+                                <div class="col-md-6 col-6 p-1">
+                                    <a href="{% url 'shop:buy' item.id %}" class="btn btn-outline-light" style="width: 100%;">عرض المنتج</a>
+                                </div>
+                                <!--
+                                <div class="col-md-8 col-12 p-1">
+                                    <a href="" class="btn btn-outline-light" style="width: 100%;">تقديم للاختيار من قبل المطورين</a>
+                                </div>
+                                -->
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer style-text text-light row text-md-center">
+                        <div class="col-md-4 col-6">
+                            <i class="bi bi-heart-fill text-danger"></i>
+                            <span class="mx-2 text-light">{{item.ratings}}/5.0 ({{item.num_raters}})</span>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <i class="bi bi-bag-fill text-primary"></i> 
+                            <span class="mx-1 text-light">{{item.num_orders}} مشتري(ن)</span>
+                        </div>
+                        <div class="col-md-4 col-6">
+                            <i class="bi bi-eye-fill text-light"></i> 
+                            <span class="mx-1">المشاهدات: {{item.num_views}}</span></span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        {% empty %}
+        <div class="display-4 style-text-3" style="min-height: 60vh;">
+            لم تقم بنشر أي منتج بعد...
         </div>
         {% endfor %}
     </div>
@@ -133,7 +172,9 @@
 
 <script>
     $(document).ready(function () {
-        $(".delete-link").click(function (e) {
+        $(".delete-link").click(function (
+
+e) {
             e.preventDefault();
             var confirmation = confirm("هل أنت متأكد أنك تريد حذف هذا العنصر؟");
             if (confirmation) {
@@ -141,7 +182,6 @@
             }
         });
     });
-    $('.myshop-bar').addClass('this-active');
 </script>
 
 {% endblock %}

@@ -12,91 +12,86 @@
 {% block body %}
 {% if not first_visit %}
 <div class="notice">
-    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-light shadow animate__animated animate__zoomIn">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-dark shadow animate__animated animate__zoomIn">
         <div class="card-body">
-            <h1 class="style-text-3">هذه صفحة قائمة رغباتك</h1>
-            <hr>
-            <p class="style-text-2">
-                هل وجدت المنتج المفضل لديك؟ إذا كان الأمر كذلك، يمكنك إضافته إلى قائمة الأماني الخاصة بك وعدم فقدانه بين آلاف المنتجات الأخرى!
+            <h1 class="style-text-3 text-light">هذه صفحة قائمة أمنياتك</h1>
+            <p class="style-text-2 text-light">
+                هل وجدت منتجك المفضل؟ إذا كان الأمر كذلك، فيمكنك إضافته إلى قائمة أمنياتك وعدم فقده بين الآلاف من المنتجات الأخرى!
             </p>
             <div class="style-text mt-4">
-                <button class="btn btn-primary" onclick="document.querySelector('.notice').style.display='none';">فهمت!</button>
+                <button class="btn btn-light" onclick="document.querySelector('.notice').style.display='none';">تم الفهم!</button>
             </div>
         </div>
     </div>
 </div>
 {% endif %}
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-<div class="container p-4">
-    <div class="row" data-masonry='{"percentPosition": true }'>
+<div class="container-fluid bg-light">
+    <div class="row bg-light p-md-3 py-3 px-1">
+        <div class="col-md-8">
+            <article>
+                <h1 class="display-1 style-text-3 ">قائمة الأمنيات</h1>
+                <p class="style-text">
+                    هل وجدت منتجك المفضل أو خدمة؟ لا تفقدها بين الآلاف من المنتجات الأخرى عن طريق إضافتها إلى قائمة الأمنيات الخاصة بك. ستظهر جميع العناصر التي تمت إضافتها إلى قائمة الأمنيات هنا.
+                </p>
+            </article>
+        </div>
+        <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_wishlist_re_m7tv.svg" alt="صورة"
+                style="height: 10rem; width: auto;">
+        </div>
+    </div>
+    <div class="row bg-dark p-md-4 p-3">
+        <h1 class="display-4 style-text-3 text-light">العناصر الموجودة في قائمة أمنياتك</h1>
+    </div>
+    <div class="row">
         {% for item in items %}
-        <div class="col-sm-2 col-xs-2 col-md-6 col-lg-3 g-3">
-            <div class="shadow fadeInUp card mb-1 d-flex align-items-center">
-                <div class="card-header style-text bg-primary text-light" style="width: 100%;">متجر @{{item.username}}
+        <div class="col-lg-3 col-md-6 my-2">
+            <div class="card card-item shadow">
+                <div class="card-header style-text-3 bg-dark text-light">
+                    عنصر @{{item.username}}
                 </div>
-                <img src="{% url 'shop:get_image' item.firebase_path %}" class="heightlock"
-                    alt="{{item.product_name}}">
-                <div class="card-body mt-2" style="width: 100%;">
-                    <h4 class="text-primary" id="itemModal{{ item.id }}"><a href="{% url 'shop:buy' item.id %}"
-                            class="text-primary style-text-3">{{item.product_name}}</a></h4>
-                    <hr>
-                    <h4 class="style-text-2">SAR {{item.product_price}}</h4>
-                    <p class="style-text">
-                        <i class="bi bi-heart-fill lead text-danger"></i><span class="mx-2">{{item.ratings}}/5.0
-                            ({{item.num_raters}})</span>
-                        <span class="card-text style-text text-muted truncate-3-lines"><i
-                                class="bi bi-bag-fill lead text-primary"></i> <span class="mx-1">تم شراؤها بواسطة:
-                                {{item.num_orders}} مشترين</span></span>
+                <img src="{% url 'shop:get_image' item.firebase_path %}" class="product_image" alt="{{item.product_name}}">
+                <div class="product_details bg-dark">
+                    <h4><a href="{% url 'shop:buy' item.id %}" class="text-light text-decoration-none style-text-3 truncate-2-lines" onclick="this.classList.add('disabled');">{{item.product_name}}</a></h4>
+                    <hr class="text-light">
+                    <h4 class="style-text-3 text-light">SAR {{item.product_price}}</h4>
+                    <p class="card-text style-text text-light truncate-3-lines">
+                        {{item.product_description}}
                     </p>
-                    <p>
-                        <span class="card-text style-text-2 truncate-3-lines">{{item.product_description}}</span>
+                    <p class="style-text">
+                        <i class="bi bi-heart-fill lead text-danger"></i>
+                        <span class="mx-2 text-light">{{item.ratings}}/5.0 ({{item.num_raters}})</span>
+                        <br>
+                        <i class="bi bi-bag-fill lead text-primary"></i> 
+                        <span class="mx-1 text-light">تم شراؤه بواسطة: {{item.num_orders}} مشترٍ(ين)</span>
                     </p>
                     <div class="style-text-2">
                         {% if user.username != item.username %}
                         {% if item.id in bought_items %}
-                        <a href="{% url 'shop:myOrders' %}" class="btn btn-primary my-2">تم الطلب</a>
-                        {% elif item.id in completed_items %}
-                        <button class="btn btn-disabled my-2 text-primary">تم الشراء</button>
+                        <a href="{% url 'shop:myOrders' %}" class="btn btn-light my-2"
+                            onclick="this.classList.add('disabled');">تم الطلب</a>
                         {% else %}
-                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-primary my-2">عرض العنصر</a>
+                        <a href="{% url 'shop:buy' item.id %}" class="btn btn-light my-2"
+                            onclick="this.classList.add('disabled');">عرض العنصر</a>
                         {% endif %}
                         {% if item.id in wishlist %}
-                        <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
+                        <button class="btn btn-outline-light add-to-wishlist" data-item-id="{{ item.id }}">
                             <i class="bi bi-star-fill"></i></button>
                         {% else %}
-                        <button class="btn btn-outline-primary add-to-wishlist" data-item-id="{{ item.id }}">
+                        <button class="btn btn-outline-light add-to-wishlist" data-item-id="{{ item.id }}">
                             <i class="bi bi-star"></i></button>
                         {% endif %}
                         {% endif %}
                     </div>
                 </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="row d-none d-lg-flex align-items-center p-4" style="min-height: 80vh;">
-            <div class="col-md-7 animate__animated animate__bounceIn">
-                <h1 class="style-text-3">ليس لديك أي عناصر في قائمة أمانيك...</h1>
-                <p class="text-muted style-text">تظهر العناصر المضافة إلى قائمة الأماني هنا</p>
-            </div>
-            <div class="col-md-5 d-flex justify-content-center align-items-center">
-                <img class="widthlock" src="{% static 'media/undraw_wishlist_re_m7tv.svg' %}" alt="Wishlist">
-            </div>
-        </div>
-        <div class="container d-flex d-lg-none justify-content-center align-items-center" style="min-height: 50vh;">
-            <div class="col-12 col-md-5">
-                <div class="card shadow animate__animated animate__zoomIn">
-                    <img class="widthlock p-2" src="{% static 'media/undraw_wishlist_re_m7tv.svg' %}" alt="empty">
-                    <div class="card-body">
-                        <article>
-                            <h1 class="style-text-3 my-3">ليس لديك أي عناصر في قائمة أمانيك...</h1>
-                            <hr>
-                            <p class="text-muted style-text">تظهر العناصر المضافة إلى قائمة الأماني هنا</p>
-                            <a href="{% url 'shop:index' %}" class="btn btn-outline-primary style-text-2">الرئيسية</a>
-                        </article>
-                    </div>
+                <div class="card-footer style-text-3 bg-dark text-light">
+                    نُشر في {{item.timestamp}}
                 </div>
             </div>
         </div>
+        {% empty %}
+        <h5 class="display-6 style-text-3 p-md-4 p-2 py-4" style="height: 70vh;">ليس لديك أي عناصر في قائمة أمنياتك</h5>
         {% endfor %}
     </div>
 </div>
@@ -104,6 +99,8 @@
 <script>
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();
     $('.add-to-wishlist').on('click', function () {
+
+
         var icon = $(this).find('i');
         var item_id = $(this).data('item-id');
         if (icon.hasClass('bi bi-star')) {
@@ -118,7 +115,7 @@
                     icon.removeClass('bi bi-star').addClass('bi bi-star-fill');
                 },
                 error: function (xhr, errmsg, err) {
-                    alert('فشل في إضافة العنصر إلى قائمة الأماني الخاصة بك');
+                    alert('فشلت عملية إضافة العنصر إلى قائمة الأمنيات الخاصة بك');
                 }
             });
         } else if (icon.hasClass('bi bi-star-fill')) {
@@ -133,7 +130,7 @@
                     icon.removeClass('bi bi-star-fill').addClass('bi bi-star');
                 },
                 error: function (xhr, errmsg, err) {
-                    alert('فشل في إزالة العنصر من قائمة الأماني الخاصة بك');
+                    alert('فشلت عملية إزالة العنصر من قائمة الأمنيات الخاصة بك');
                 }
             });
         }

@@ -34,17 +34,16 @@
             <article>
                 <h1>الرجاء تمكين الإشعارات</h1>
                 <hr>
-                <p class="text-muted">إذا لم تتلق أي نافذة منبثقة للإشعار، فقد يكون متصفحك يمنع ذلك. سيتم توجيهك تلقائيًا بمجرد قبول الإشعار.</p>
-                <p class="text-muted"><strong>ملاحظة: </strong>إذا استمرت المشكلة لأكثر من ٤ محاولات يرجى الاتصال بالمطور. قد تواجه أخطاء إذا كنت تستخدم متصفح Brave.</p>
-                <a href="" id="myButton" class="btn btn-primary disabled">إعادة المحاولة في <span
-                        id="countdown">١٠</span> ثواني</a>
-                <a href="{% url 'shop:homepage' %}" class="btn btn-danger">يلغي</a>
+                <p class="text-muted">إذا لم تتلق أي إشعار منبثق، فقد يكون متصفحك قد حظره. سيتم توجيهك تلقائيًا بمجرد قبول الإشعار.</p>
+                <p class="text-muted"><strong>ملاحظة: </strong> إذا استمرت المشكلة لأكثر من 4 محاولات، يرجى الاتصال بالمطور. قد تواجه أخطاء إذا كنت تستخدم متصفح الشجاع.</p>
+                <a href="" id="myButton" class="btn btn-dark disabled">إعادة المحاولة في <span
+                        id="countdown">10</span> ثواني</a>
+                <a href="{% url 'shop:homepage' %}" class="btn btn-danger">إلغاء</a>
                 <p class="mt-3"><strong>الحالة</strong>: <span class="notification-status">...</span></p>
                 <p class="mt-3">بريد المطور: kkuunofficialstore@gmail.com</p>
             </article>
         </div>
     </div>
-
 
     <input type="hidden" name="csrfmiddlewaretoken" value="{{csrf_token}}">
 
@@ -80,30 +79,31 @@
                 body: JSON.stringify({ token: token }),
             }).then(response => {
                 if (response.ok) {
-                    console.log('Token saved successfully on the server');
-                    status.innerHTML = "تم حفظ الرمز بنجاح على الخادم.";
+                    console.log('تم حفظ الرمز بنجاح على الخادم');
+                    status.innerHTML = "تم حفظ الرمز بنجاح على اخادم.";
+
                     window.location.href = "https://unstore.pythonanywhere.com/home/";
                 } else {
-                    console.error('Failed to save token on the server');
+                    console.error('فشل حفظ الرمز على الخادم');
                     status.innerHTML = 'فشل حفظ الرمز على الخادم';
                 }
             }).catch(error => {
-                console.error('Error saving token on the server:', error);
+                console.error('خطأ في حفظ الرمز على الخادم:', error);
                 status.innerHTML = 'خطأ في حفظ الرمز على الخادم';
             });
         }
 
         function requestPermission() {
-            console.log('Requesting permission...');
-            status.innerHTML = "جاري طلب الإذن...";
+            console.log('طلب الإذن...');
+            status.innerHTML = "طلب الإذن...";
             return Notification.requestPermission().then((permission) => {
                 if (permission === 'granted') {
-                    console.log('Notification permission granted.');
-                    status.innerHTML = 'تم منح إذن الإشعار.';
+                    console.log('تم منح إذن الإشعارات.');
+                    status.innerHTML = 'تم منح إذن الإشعارات.';
                     return true;
                 } else {
-                    console.log('Notification permission denied.');
-                    status.innerHTML = 'تم رفض إذن الإشعار.';
+                    console.log('تم رفض إذن الإشعارات.');
+                    status.innerHTML = 'تم رفض إذن الإشعارات.';
                     setInterval(requestPermission, 1000);
                     return false;
                 }
@@ -112,12 +112,12 @@
 
         // Initialize Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyBSCpcctpJNIr26-D73N9-M6Jhxe3pZnk0",
-            authDomain: "kku-unofficial-store.firebaseapp.com",
-            projectId: "kku-unofficial-store",
-            storageBucket: "kku-unofficial-store.appspot.com",
-            messagingSenderId: "920854395385",
-            appId: "1:920854395385:web:2c52cbe92d41289d912528"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
         firebase.initializeApp(firebaseConfig);
 
@@ -126,32 +126,32 @@
 
         requestPermission().then((permissionGranted) => {
             if (permissionGranted) {
-                messaging.getToken({ vapidKey: 'BOkX5E9wd8wzhPoDIz9hGmdv6LhLXm_EZrEJxkr9wRa9jjnBflc2nzzNwnwm2oGpOiNb8uD0emVRIh9wipRpZds' })
+                messaging.getToken({ vapidKey: 'YOUR_VAPID_KEY' })
                     .then((currentToken) => {
                         if (currentToken) {
                             saveTokenToServer(currentToken);
                         } else {
-                            console.log('No registration token available. Request permission to generate one.');
-                            status.innerHTML = 'لا تتوفر رمز تسجيل الاشتراك. اطلب الإذن لإنشاء واحد.';
+                            console.log('لا يوجد رمز تسجيل متاح. اطلب الإذن لتوليد واحد.');
+                            status.innerHTML = 'لا يوجد رمز تسجيل متاح. اطلب الإذن لتوليد واحد.';
                         }
                     })
                     .catch((error) => {
-                        console.log('Error getting token:', error);
+                        console.log('خطأ في الحصول على الرمز:', error);
                         status.innerHTML = "خطأ في الحصول على الرمز."
                     });
             }
         }).catch((error) => {
-            console.error('Error requesting permission:', error);
+            console.error('خطأ في طلب الإذن:', error);
             status.innerHTML = "خطأ في طلب الإذن."
         });
 
         /*
         navigator.serviceWorker.register('/firebase-messaging-sw.js')
             .then((registration) => {
-                console.log('Service worker registered:', registration);
+                console.log('تم تسجيل الخدمة:', registration);
             })
             .catch((error) => {
-                console.error('Service worker registration failed:', error);
+                console.error('فشل تسجيل الخدمة:', error);
             });
         */
 

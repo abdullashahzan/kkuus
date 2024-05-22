@@ -3,25 +3,22 @@
 
 {% block body %}
 <main>
-    <div class="container">
-        <div class="row" style="min-height: 80vh;">
-            <div class="col-md-6 d-flex justify-content-center align-items-center slideInLeft">
-                <img class="widthlock" src="{% static 'media/undraw_certification_re_ifll.svg' %}"
-                    alt="Picture">
-            </div>
-            <div class="col-md-6 d-flex justify-content-start align-items-center p-5 slideInUp">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center align-items-center p-2 p-md-0" style="min-height: 90vh;">
+            <div class="col-md-6 slideInUp bg-dark text-light p-3 p-md-4 shadow">
                 <article>
                     <h1 class="mb-4 style-heading">Please ask the buyer to give the 6 digit code to complete the purchase</h1>
                     <form action="{% url 'shop:confirmPurchase' item.id %}" method="post">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="code" class="form-label style-text">Enter key:</label>
-                            <input type="text" name="code" placeholder="e.g. iJk5G6" class="form-control style-text" id="code">
+                            <label for="code" class="form-label style-text lead">Enter key:</label>
+                            <input type="text" name="code" placeholder="e.g. 746728" class="form-control style-text" id="code">
                         </div>
                         {% if message %}
                             <p class="style-text text-danger">Invalid code, no such code exists.</p>
                         {% endif %}
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <hr>
+                        <button type="submit" class="btn btn-light">Submit</button>
                     </form>
                 </article>
             </div>

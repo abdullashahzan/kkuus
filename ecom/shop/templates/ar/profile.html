@@ -2,40 +2,54 @@
 {% load static %}
 
 {% block title %}
-<title>ملفي الشخصي</title>
+<title>ملفّي الشخصي</title>
 {% endblock %}
 
 {% block body %}
 
-<div class="container p-4">
-    <div class="row">
-        <div class="d-none d-lg-block col-3 p-3">
-            <h3 class="style-heading text-primary">ملفي الشخصي</h3>
+<div class="container-fluid bg-light">
+    <div class="row bg-light p-md-3 px-1">
+        <div class="col-md-8">
+            <article>
+                <h1 class="display-1 style-text-3 ">حسابي</h1>
+                <p class="style-text">
+                    هل تريد تغيير كلمة السر الخاصة بك؟ أو ربما ترغب في تحديث عنوان بريدك الإلكتروني؟
+                    يمكن القيام بكل شيء متعلق بحسابك، من التعديل إلى الحذف، على هذه الصفحة.
+                </p>
+            </article>
+        </div>
+        <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center">
+            <img src="../static/media/undraw_set_preferences_kwia.svg" alt="صورة" style="height: 10rem; width: auto;">
+        </div>
+    </div>
+    <div class="row px-2">
+        <div class="d-none d-lg-block col-3 p-3 bg-dark text-light shadow" style="height: fit-content;">
+            <h3 class="style-heading">ملفّي الشخصي</h3>
             <hr>
             <ul class="list-unstyled px-3">
-                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-primary style-text-2"
+                <li class="my-1"><a href="{% url 'shop:profile' %}" class="text-light style-text-2"
                         style="text-decoration: none;">معلوماتي</a></li>
                 {% if user.is_staff and user.is_superuser and user.username == "shahzan" %}
-                <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-muted style-text-2"
-                        style="text-decoration: none;">لوحة المطور</a></li>
+                <li class="my-1"><a href="{% url 'shop:developer' %}" class="text-light style-text-2"
+                        style="text-decoration: none;">لوحة تحكم المطور</a></li>
                 {% endif %}
                 <li class="my-1">الإصدار: {{version}}</li>
             </ul>
             <hr>
-            <p class="text-muted style-text">
-                نأسف إذا واجهت أي أخطاء، فالمطور يستمع دائمًا إلى مشاكلك على kkuunofficialstore@gmail.com
+            <p class="text-light style-text">
+                نأسف إذا واجهت أي مشاكل، المطور دائما مستعد لسماع مشاكلك على kkuunofficialstore@gmail.com
             </p>
         </div>
-        <div class="col-md-9 p-3">
-            <article class="mb-4">
+        <div class="col-md-9">
+            <article class="mb-4 bg-dark text-light p-3 shadow">
                 <h3 class="style-heading">تمكين الإشعارات على هذا الجهاز</h3>
                 <hr>
                 <div class="style-text" style="min-height: 5vh;">
-                    <a href="{% url 'shop:preEnableNotifications' %}" class="btn btn-primary">تمكين</a>
-                    <p class="text-muted mt-2">إذا لم تكن تستلم الإشعارات على هذا الجهاز أو لم تقم بتمكين الإشعارات لهذا الجهاز، يرجى النقر هنا لتمكينها.</p>
+                    <a href="{% url 'shop:preEnableNotifications' %}" class="btn btn-light">تمكين</a>
+                    <p class="text-light mt-2">إذا لم تكن تتلقى الإشعارات على هذا الجهاز أو لم تقم بتمكين الإشعارات لهذا الجهاز، يرجى النقر هنا لتمكينها.</p>
                 </div>
             </article>
-            <article class="mb-4">
+            <article class="mb-4 bg-dark text-light p-3 shadow">
                 <h3 class="style-heading">تحديث العنوان</h3>
                 <hr>
                 <form action="{% url 'shop:update_address' %}" class=" style-text-2" method="post">
@@ -66,10 +80,10 @@
                     {% if address_error %}
                     <p class="text-danger">{{address_error}}</p>
                     {% endif %}
-                    <button type="submit" class="btn btn-primary">تحديث العنوان</button>
+                    <button type="submit" class="btn btn-light">تحديث العنوان</button>
                 </form>
             </article>
-            <article class="mb-4">
+            <article class="mb-4 bg-dark text-light p-3 shadow">
                 <h3 class="style-heading">معلومات عامة</h3>
                 <hr>
                 <form class="style-text-2" action="{% url 'shop:update_info' %}" method="post">
@@ -87,64 +101,65 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="whatsapp" class="form-label">رقم واتساب</label>
+                        <label for="whatsapp" class="form-label">رقم الواتساب</label>
                         <input type="text" class="form-control" name="whatsapp" id="whatsapp"
                             placeholder="{{other.whatsapp}}">
                     </div>
                     <div class="mb-3">
-                        <label for="username" class="form-label">اسم المستخدم</label>
+                        <label for="username" class="form-label">اسم المستخد
+
+م</label>
                         <input type="text" class="form-control" id="username" disabled placeholder="{{user.username}}">
                     </div>
                     <div class="mb-4">
-                        <label for="email" class="form-label">البريد الإلكتروني</label>
+                        <label for="email" class="form-label">عنوان البريد الإلكتروني</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="{{user.email}}"
                             oninput="delayFunction()">
                         <div id="checkEmailAvailability" class="form-text"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary updateInfo">تحديث المعلومات</button>
+                    <button type="submit" class="btn btn-light updateInfo">تحديث المعلومات</button>
                 </form>
             </article>
-            <article class="mb-4">
-                <h3 class="style-heading">تحديث كلمة المرور</h3>
+            <article class="mb-4 bg-dark text-light p-3 shadow">
+                <h3 class="style-heading">تحديث كلمة السر</h3>
                 <hr>
                 <form action="{% url 'shop:update_password' %}" class="style-text-2" method="post">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="password1" class="form-label">كلمة المرور القديمة</label>
+                        <label for="password1" class="form-label">كلمة السر القديمة</label>
                         <input type="password" class="form-control" id="password1" name="old_password">
                     </div>
                     <div class="mb-3 row">
                         <div class="col-md-6">
-                            <label for="password2" class="form-label">كلمة المرور الجديدة</label>
+                            <label for="password2" class="form-label">كلمة السر الجديدة</label>
                             <input type="password" class="form-control" id="password2" name="new_password1">
                         </div>
                         <div class="col-md-6">
-                            <label for="password3" class="form-label">إعادة إدخال كلمة المرور الجديدة</label>
+                            <label for="password3" class="form-label">إعادة إدخال كلمة السر الجديدة</label>
                             <input type="password" class="form-control" id="password3" name="new_password2">
                         </div>
                     </div>
                     <div class="mb-3">
-                        <div class="btn btn-outline-primary password_toggler" onclick="togglePasswordVisibility()">عرض كلمات المرور</div>
+                        <div class="btn btn-outline-light password_toggler" onclick="togglePasswordVisibility()">إظهار كلمات السر</div>
                     </div>
                     <hr>
                     {% if password_error %}
                     <p class="text-danger">{{password_error}}</p>
                     {% endif %}
-                    <button type="submit" class="btn btn-primary">تحديث كلمة المرور</button>
+                    <button type="submit" class="btn btn-light">تحديث كلمة السر</button>
                 </form>
             </article>
-            <article class="mb-4">
-                <h3 class="style-heading">ساعد في جعل هذا الموقع مجاني للأبد</h3>
+            <article class="mb-4 bg-dark text-light p-3 shadow">
+                <h3 class="style-heading">ساعد في جعل هذا الموقع مجانيًا إلى الأبد</h3>
                 <hr>
-                <p class="text-muted style-text">استضافة موقع يستغرق الكثير من الموارد، كل تبرع حتى لو كان دولارًا واحدًا يهم :)</p>
+                <p class="text-light style-text">استضافة موقع الويب تتطلب الكثير من الموارد، كل تبرع يهم حتى لو كان دولارًا واحدًا :)</p>
                 <a href="https://buymeacoffee.com/kkuunofficialstore" class="btn btn-light shadow"><img style="width: 8rem;" src="../static/media/logo/bmc-full-logo-no-background.png" alt="bmc"></a>
             </article>
             <hr>
             <article class="d-flex justify-content-center align-items-center mt-4 p-4">
                 <div class="style-text" style="text-align: center;">
                     <a href="{% url 'shop:delete_account' %}" class="btn btn-danger mb-2 delete-link">حذف الحساب</a>
-                    <p class="text-muted">يرجى ملاحظة أن هذه العملية لا يمكن التراجع عنها، بمجرد حذف حسابك لن تتمكن من استعادته مرة أخرى.
-                    </p>
+                    <p class="text-muted">يرجى ملاحظة أن هذه العملية لا يمكن التراجع عنها، بمجرد حذف حسابك لن تتمكن من استعادته.</p>
                 </div>
             </article>
         </div>
@@ -168,10 +183,10 @@
         var passwordInput3 = document.getElementById('password3');
         var btn = document.querySelector('.password_toggler')
 
-        if (btn.innerHTML === "عرض كلمات المرور") {
-            btn.innerHTML = "إخفاء كلمات المرور"
+        if (btn.innerHTML === "إظهار كلمات السر") {
+            btn.innerHTML = "إخفاء كلمات السر"
         } else {
-            btn.innerHTML = "عرض كلمات المرور";
+            btn.innerHTML = "إظهار كلمات السر";
         }
 
         if (passwordInput1.type === "password") {
@@ -201,7 +216,9 @@
         timeoutId = setTimeout(() => {
             if (!functionCalled) {
                 checkEmail();
-                functionCalled = true;
+                functionCalled
+
+ = true;
             }
         }, 10);
         functionCalled = false;
@@ -215,7 +232,7 @@
         var userInputValue = userInput.value;
 
         if (userInputValue == "") {
-            html_data = `<p class="style-text" style="color: red;">لا يمكن ترك البريد الإلكتروني فارغًا</p>`
+            html_data = `<p class="style-text" style="color: red;">لا يمكن أن يكون البريد الإلكتروني فارغًا</p>`
             messageBox.innerHTML = html_data;
         } else {
             fetch(`/email_availability/${userInputValue}`, {
@@ -248,8 +265,8 @@
     bar.classList.add('this-active');
 </script>
 
-<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+<!--<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
         data-id="kkuunofficialstore" data-description="Support me on Buy me a coffee!" data-color="#0d6efd"
-        data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+        data-position="Right" data-x_margin="18" data-y_margin="108"></script>-->
 
 {% endblock %}

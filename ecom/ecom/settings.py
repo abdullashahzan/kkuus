@@ -41,7 +41,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['unstore.pythonanywhere.com', '127.0.0.1', 'www.kkusouq.com']
 
 # Current application version
-version = "3.8 (Stable release)"
+version = "4.0 (Stable release)"
 
 # Application definition
 

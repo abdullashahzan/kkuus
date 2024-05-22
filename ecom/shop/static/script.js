@@ -27,32 +27,6 @@ function closeModal() {
     cards.style.filter = "blur(0)";
 }
 
-// Function to check if a string contains Arabic characters
-function containsArabic(text) {
-    var arabicPattern = /[\u0600-\u06FF]/;
-    return arabicPattern.test(text);
-}
-
-let lastScrollTop = 0;
-const hiddenDiv = document.getElementById("hiddenDiv");
-
-window.addEventListener("scroll", function () {
-    let currentScroll = window.scrollY;
-    if (currentScroll > (lastScrollTop + 30)) {
-        // Scroll down
-        hiddenDiv.classList.remove("animate__slideInUp");
-        hiddenDiv.classList.add("animate__slideOutDown");
-        hiddenDiv.addEventListener("animationend", function () {
-            hiddenDiv.classList.remove("d-none");
-            hiddenDiv.classList.add("d-block");
-        });
-    } else if (currentScroll <= (lastScrollTop - 10)) {
-        // Scroll up
-        hiddenDiv.classList.remove("animate__slideOutDown");
-        hiddenDiv.classList.add("animate__slideInUp");
-    }
-    lastScrollTop = currentScroll;
-});
 
 document.addEventListener("DOMContentLoaded", function () {
     var forms = document.querySelectorAll("form");
@@ -61,21 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
         form.addEventListener("submit", function (event) {
             var submitButton = form.querySelector("button[type='submit']");
             submitButton.disabled = true;
-
-            var elements = document.getElementsByTagName('body');
-            if (elements.length > 0) {
-                var bodyText = elements[0].innerText;
-                if (containsArabic(bodyText)) {
-                    submitButton.innerHTML = "انتظر من فضلك...";
-                } else {
-                    submitButton.innerHTML = "Please wait...";
-                }
-            }
-
-            // Prevent the default form submission behavior
             event.preventDefault();
-
-            // Manually submit the form after a short delay (optional)
             setTimeout(function () {
                 form.submit();
             }, 200); // Adjust the delay as needed
@@ -83,4 +43,50 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+var scroll_left = document.querySelectorAll(".scroll-left");
+var scroll_right = document.querySelectorAll(".scroll-right");
+var horizontal_scroll_div = document.querySelectorAll(".horizontal-scroll-div");
+
+function scrollRight(item) {
+    var scroll_pos = item.scrollLeft + 500;
+    item.scrollTo({
+        left: scroll_pos,
+        behavior: 'smooth'
+    })
+}
+
+function scrollLeft(item) {
+    var scroll_pos = item.scrollLeft - 300;
+    item.scrollTo({
+        left: scroll_pos,
+        behavior: 'smooth'
+    })
+}
+
+function scrollerRight(item){
+    item.addEventListener("click", ()=>{
+        horizontal_scroll_div.forEach(scrollRight);
+    })
+}
+
+function scrollerLeft(item){
+    item.addEventListener("click", ()=>{
+        horizontal_scroll_div.forEach(scrollLeft);
+    })
+}
+
+scroll_right.forEach(scrollerRight)
+scroll_left.forEach(scrollerLeft)
+
+var imageViewer = document.querySelector(".imageViewer");
+imageViewer.addEventListener('click', ()=>{
+    imageViewer.classList.remove('d-flex');
+    imageViewer.classList.add('d-none');
+})
+
+var openImageViewer = document.querySelector(".openImageViewer");
+openImageViewer.addEventListener("click", ()=>{
+    imageViewer.classList.remove('d-none');
+    imageViewer.classList.add('d-flex');
+})
 

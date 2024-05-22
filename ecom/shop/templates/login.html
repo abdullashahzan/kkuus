@@ -2,63 +2,62 @@
 {% load static %}
 
 {% block body %}
-<main>
-    <div class="container d-none d-lg-block">
-        <div class="row" style="min-height: 80vh;">
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
-                <img class="widthlock" src="{% static 'media/undraw_secure_login_pdn4.svg' %}"
-                    alt="Picture">
-            </div>
-            <div class="col-md-6 d-flex justify-content-start align-items-center p-5">
-                <article>
-                    <h1 class="mb-4 style-heading">Login to your account to access all the services</h1>
-                    <form action="{% url 'shop:login_user' %}" method="post">
-                        {% csrf_token %}
-                        <div class="mb-2">
-                            <label for="InputEmail1" class="form-label style-text">Username or Email</label>
-                            <input type="text" name="username" placeholder="e.g. JoJo" class="form-control style-text" id="InputEmail1">
-                        </div>
-                        <div class="mb-3">
-                            <label for="InputPassword1" class="form-label style-text">Password</label>
-                            <input type="password" name="password" class="form-control style-text" id="InputPassword1" placeholder="ilovecupcakes">
-                        </div>
-                        {% if message %}
-                            <p class="style-text" style="color: red;">Invalid credentials, please try again.</p>
-                        {% endif %}
-                        <button type="submit" class="btn btn-primary">Log in</button>
-                        <a href="{% url 'shop:signup_user' %}" type="submit" class="btn btn-light btn-outline-primary mx-2">Register a new account</a>
-                    </form>
-                </article>
+
+{% if message %}
+<div class="notice">
+    <div class="card p-md-3 p-2 mx-4 col-md-6 bg-dark shadow animate__animated animate__zoomIn">
+        <div class="card-body">
+            <h1 class="style-text-3 text-light">Oops..!</h1>
+            <p class="style-text-2 text-light">
+                {{message}}
+            </p>
+            <div class="style-text mt-4">
+                <button class="btn btn-light"
+                    onclick="document.querySelector('.notice').style.display='none';">Okay</button>
             </div>
         </div>
     </div>
-    <div class="container d-block d-lg-none justify-content-center align-items-center" style="min-height: 80vh;">
-        <div class="col-12">
-            <div class="card shadow animate__animated animate__zoomIn">
-                <img class="widthlock p-2" src="{% static 'media/undraw_secure_login_pdn4.svg' %}" alt="empty">
-                <div class="card-body">
-                    <article>
-                        <h1 class="mb-4 style-heading">Please log in to your account to access all the services</h1>
-                        <form action="{% url 'shop:login_user' %}" method="post">
-                            {% csrf_token %}
-                            <div class="mb-2">
-                                <label for="InputEmail1" class="form-label style-text">Username</label>
-                                <input type="text" name="username" placeholder="e.g. john53" class="form-control style-text" id="InputEmail1">
-                            </div>
-                            <div class="mb-3">
-                                <label for="InputPassword1" class="form-label style-text">Password</label>
-                                <input type="password" name="password" class="form-control" id="InputPassword1">
-                            </div>
-                            {% if message %}
-                                <p class="style-text" style="color: red;">Invalid credentials, please try again.</p>
-                            {% endif %}
-                            <button type="submit" class="btn btn-primary my-2">Log in</button>
-                            <a href="{% url 'shop:signup_user' %}" type="submit" class="btn text-primary">Register a new account</a>
-                        </form>
-                    </article>
-                </div>
+</div>
+{% endif %}
+
+<main>
+    <div class="container-fluid bg-dark">
+        <div class="row bg-light p-md-3 py-3 px-1">
+            <div class="col-md-8">
+                <article>
+                    <h1 class="display-1 style-text-3 ">Log in</h1>
+                    <p class="style-text">
+                        Log in to your account to access all the services like buying, selling, commenting, interacting
+                        with different posts, wishlisting and many more.
+                    </p>
+                </article>
+            </div>
+            <div class="col-md-4 d-none d-md-flex justify-content-center align-items-center">
+                <img src="../static/media/undraw_login_re_4vu2.svg" alt="image" style="height: 10rem; width: auto;">
             </div>
         </div>
+        <form action="{% url 'shop:login_user' %}" method="post">
+            <div class="p-2 py-4 p-md-4 text-light style-text-3" style="min-height: 80vh;">
+                {% csrf_token %}
+                <div class="col-md-6 mb-3">
+                    <h5 class="display-4 style-text-3">Username or Email</h5>
+                    <input type="text" name="username" placeholder="e.g. JoJo" class="form-control"
+                        id="InputEmail1">
+                </div>
+                <div class="col-md-6 mb-5">
+                    <h5 class="display-4 style-text-3">Password</h5>
+                    <input type="text" name="password" class="form-control" id="InputPassword1"
+                        placeholder="ilovecupcakes">
+                </div>
+                <div class="col-md-6 style-text-3 mb-3">
+                    <button type="submit" class="btn btn-light">Log in</button>
+                    <a href="{% url 'shop:signup_user' %}" type="submit" class="btn btn-outline-dark text-light mx-2">Register a
+                        new account</a>
+                </div>
+                <hr>
+                <p>By clicking on log in you agree to accept our <a href="{% url 'shop:terms_conditions' %}" class="text-light">terms and conditions</a></p>
+            </div>
+        </form>
     </div>
 </main>
 {% endblock %}

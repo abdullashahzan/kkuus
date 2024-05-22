@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from django.db import IntegrityError
 from .models import *
 import uuid, json, os
+from difflib import SequenceMatcher
 from firebase_admin import storage, messaging
 from .scripts import *
 from django.db.models import Avg
@@ -138,17 +139,62 @@ def get_image(request, firebase_path):
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}", status=500)
 
+def add_to_developers_pick(request, item_id):
+    item = UserListings.objects.get(id=item_id)
+    item.in_developers_pick = True
+    item.save()
+    notification_title = "Your product has been selected by the developer!"
+    notification_body = "Congratulations! Your product stood out amongst all the other products and has been added to developer's pick. Well done!"
+    UserNotification(username=item.username, title=notification_title, body=notification_body).save()
+    http_referrer = request.META.get('HTTP_REFERER')
+    return redirect(http_referrer or reverse('shop:homepage'))
+
+def remove_from_developers_pick(request, item_id):
+    item = UserListings.objects.get(id=item_id)
+    item.in_developers_pick = False
+    item.save()
+    http_referrer = request.META.get('HTTP_REFERER')
+    return redirect(http_referrer or reverse('shop:homepage'))
+
+def add_fav_tag(item_id, this_user):
+    ignore_words = ['the', 'is', 'an', 'a', ',', '!', '.', "'", 'he', 'she', 'it', 'also', 'by', 'this', 'that']
+    this_item = UserListings.objects.get(id=item_id)
+    item_tag = this_item.product_name + " " + this_item.product_description
+    item_tag = [i for i in item_tag.split(" ") if i not in ignore_words]
+    item_tag = set(sorted(item_tag))
+    item_tag = " ".join(item_tag)[:510].lower()
+    if this_user.fav_tags == "":
+        this_user.fav_tags = item_tag
+    elif this_user.fav_tags == "-":
+        this_user.fav_tags = ""
+        this_user.save()
+    else:
+        all_tags = item_tag + " " + this_user.fav_tags
+        this_user.fav_tags = all_tags[:510]
+    this_user.save()
+
 def homepage(request):
     check_data()
+    orderby = '-timestamp'
+    if request.method == "POST":
+        orderby = request.POST['orderby']
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
         new_item_orders += item.new_orders
-    items = UserListings.objects.filter(is_expired=False).order_by('-timestamp')
+    our_user = UserProfile.objects.get(user=request.user)
+    items = UserListings.objects.filter(is_expired=False, hidden=False).order_by(orderby)
     bought_items = UserOrder.objects.filter(username=request.user.username, status='requested')
     completed_items = UserOrder.objects.filter(username=request.user.username, status='Completed')
-    notifications = UserNotification.objects.filter(username=request.user.username, unread=True).count()
+    notifications = UserNotification.objects.filter(username=request.user.username).count()
     get_notice = UserNotices.objects.filter(username=request.user.username).first()
+    suggestions = []
+    fav_tags = our_user.fav_tags
+    for item in items:
+        item_list = item.product_name + " " + item.product_description
+        ratio = SequenceMatcher(a=fav_tags, b=item_list).ratio()
+        if ratio > 0.01:
+            suggestions.append(item)
     try:
         if get_notice.new == False:
             get_notice.delete()
@@ -184,7 +230,7 @@ def homepage(request):
         for i in user_wishlist:
             user_wishlist_list.append(i.id)
         if 'language' in request.session and request.session['language'] == "en":
-            return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit})
+            return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit, "suggestions": suggestions})
         else:
             return render(request, "ar/index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit})
     if 'language' in request.session and request.session['language'] == "en":
@@ -209,6 +255,16 @@ def notifications(request):
 def delete_notification(request, notification_id):
     try:
         UserNotification.objects.get(id=notification_id).delete()
+    except:
+        pass
+    return redirect(reverse('shop:notifications'))
+
+def delete_all_notification(request):
+    try:
+        all_notifications = UserNotification.objects.filter(username=request.user.username)
+        for notification in all_notifications:
+            notification.delete()
+        all_notifications.save()
     except:
         pass
     return redirect(reverse('shop:notifications'))
@@ -438,6 +494,20 @@ def delete_listing(request, listing_id):
         pass
     return redirect(reverse('shop:my_shop'))
 
+def hide_listing(request, item_id):
+    item = UserListings.objects.get(id=item_id)
+    item.hidden = True
+    item.save()
+    http_referer = request.META.get('HTTP_REFERER')
+    return redirect(http_referer or reverse('shop:homepage'))
+
+def show_listing(request, item_id):
+    item = UserListings.objects.get(id=item_id)
+    item.hidden = False
+    item.save()
+    http_referer = request.META.get('HTTP_REFERER')
+    return redirect(http_referer or reverse('shop:homepage'))
+
 @login_required(login_url="shop:login_user")
 def my_shop(request):
     delete_unpaid(request.user.username)
@@ -488,6 +558,8 @@ def renew_item(request):
             return render(request, 'ar/checkout.html', context)
 
 def buy(request, item_id):
+    our_user = UserProfile.objects.get(user=request.user)
+    add_fav_tag(item_id, our_user)
     ordered_items = UserListings.objects.filter(username=request.user.username)
     new_item_orders = 0
     for item in ordered_items:
@@ -558,14 +630,20 @@ def order_details(request, item_id):
     for object in purchased_by:
         user = User.objects.get(username = object.username)
         order_status = object.status
-        detail = [UserProfile.objects.get(user=user), order_status]
+        order_quantity = object.quantity
+        order_note = object.additional_description
+        detail = [UserProfile.objects.get(user=user), order_status, order_quantity, order_note]
         details.append(detail)
     if 'language' in request.session and request.session['language'] == "en":
         return render(request, "ordered_by.html", {"item": item, "orders":details})
     else:
         return render(request, "ar/ordered_by.html", {"item": item, "orders":details})
 
-def purchase(request, item_id):
+def purchase(request):
+    if request.method == "POST":
+        item_id = request.POST['item_id']
+        quantity = request.POST['quantity']
+        additional_description = request.POST['additional_description']
     item = UserListings.objects.get(id=item_id)
     buyer_object = UserProfile.objects.get(user=request.user)
     recipient_list = [User.objects.get(username=item.username).email]
@@ -592,7 +670,7 @@ def purchase(request, item_id):
     key = generate_random_key()
     get_user = User.objects.get(username=item.username)
     whatsapp = UserProfile.objects.get(user=get_user).whatsapp
-    UserOrder(username=request.user.username, item=item, key=key, status="requested", room_no=UserProfile.objects.get(user=get_user).room_no, building_code=UserProfile.objects.get(user=get_user).building_code, whatsapp=whatsapp).save()
+    UserOrder(username=request.user.username, item=item, quantity=quantity, additional_description=additional_description, key=key, status="requested", room_no=UserProfile.objects.get(user=get_user).room_no, building_code=UserProfile.objects.get(user=get_user).building_code, whatsapp=whatsapp).save()
     item.new_orders += 1
     item.save()
     notification_title = f"{request.user.username} would like to purchase {item.product_name}"
@@ -706,7 +784,9 @@ def search_item(request):
     for listing in all_listings:
         cleaned_name = str(listing.product_name).strip().lower()
         cleaned_desc = str(listing.product_description).strip().lower()
-        if item in cleaned_name or item in cleaned_desc:
+        ratio_desc = SequenceMatcher(a=item, b=cleaned_desc).ratio()
+        ratio_name = SequenceMatcher(a=item, b=cleaned_name).ratio()
+        if item in cleaned_name or item in cleaned_desc or ratio_desc > 0.2 or ratio_name > 0.15:
             items_found.append(listing)
     if 'language' in request.session and request.session['language'] == "en":
         return render(request, "search_items.html", {"items": items_found, "new_orders": new_item_orders})
@@ -912,4 +992,7 @@ def process_purchase(request):
     for token in tokens:
         send_notification(token.token, title, body)
     return redirect(reverse('shop:profile'))
+
+def terms_conditions(request):
+    return render(request, 'terms_conditions.html')
 
