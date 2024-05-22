@@ -182,14 +182,17 @@ def homepage(request):
     new_item_orders = 0
     for item in ordered_items:
         new_item_orders += item.new_orders
-    our_user = UserProfile.objects.get(user=request.user)
+    try:
+        our_user = UserProfile.objects.get(user=request.user)
+        fav_tags = our_user.fav_tags
+    except:
+        fav_tags = "new interesting item"
     items = UserListings.objects.filter(is_expired=False, hidden=False).order_by(orderby)
     bought_items = UserOrder.objects.filter(username=request.user.username, status='requested')
     completed_items = UserOrder.objects.filter(username=request.user.username, status='Completed')
     notifications = UserNotification.objects.filter(username=request.user.username).count()
     get_notice = UserNotices.objects.filter(username=request.user.username).first()
     suggestions = []
-    fav_tags = our_user.fav_tags
     for item in items:
         item_list = item.product_name + " " + item.product_description
         ratio = SequenceMatcher(a=fav_tags, b=item_list).ratio()
@@ -232,7 +235,7 @@ def homepage(request):
         if 'language' in request.session and request.session['language'] == "en":
             return render(request, "index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit, "suggestions": suggestions})
         else:
-            return render(request, "ar/index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit})
+            return render(request, "ar/index.html", {"items": items, "wishlist":user_wishlist_list, "bought_items": cart, "notifications":notifications, "completed_items":completed, "new_orders": new_item_orders,'page_obj': page_obj, 'notice': notice, "first_visit":first_visit, "suggestions": suggestions})
     if 'language' in request.session and request.session['language'] == "en":
         return render(request, "index.html", {"items": items,'page_obj': page_obj})
     else:
