@@ -150,15 +150,15 @@ http://127.0.0.1:8000
 * 📲 Personalized notifications & address selection during setup
 
 <p align="center">
-  <img src="https://i.imgur.com/2JP84AQ.png" width="250"/>
-  <img src="https://i.imgur.com/PVInN21.png" width="250"/>
-  <img src="https://i.imgur.com/eO7qd0h.png" width="250"/>
+  <img src="https://i.imgur.com/2JP84AQ.png" width="400"/>
+  <img src="https://i.imgur.com/PVInN21.png" width="400"/>
+  <img src="https://i.imgur.com/eO7qd0h.png" width="400"/>
 </p>
 
 <p align="center">
-  <img src="https://i.imgur.com/OkLBIYb.png" width="250"/>
-  <img src="https://i.imgur.com/d126qKp.png" width="250"/>
-  <img src="https://i.imgur.com/et9SsJT.png" width="250"/>
+  <img src="https://i.imgur.com/OkLBIYb.png" width="400"/>
+  <img src="https://i.imgur.com/d126qKp.png" width="400"/>
+  <img src="https://i.imgur.com/et9SsJT.png" width="400"/>
 </p>
 
 ---
@@ -177,9 +177,12 @@ http://127.0.0.1:8000
 </p>
 
 <p align="center">
-  <img src="https://i.imgur.com/tvCWjbB.png" width="250"/>
-  <img src="https://i.imgur.com/OXdpeKJ.png" width="250"/>
+  <img src="https://i.imgur.com/tvCWjbB.png" width="300"/>
   <img src="https://i.imgur.com/AZkmTBs.png" width="250"/>
+</p>
+
+<p align="center">
+  <img src="https://i.imgur.com/OXdpeKJ.png" width="250"/>
   <img src="https://i.imgur.com/oMUWJ1J.png" width="250"/>
   <img src="https://i.imgur.com/YxiKzbQ.png" width="250"/>
 </p>
@@ -196,27 +199,27 @@ http://127.0.0.1:8000
 * 🧾 Track purchased orders & sales performance
 
 <p align="center">
-  <img src="https://i.imgur.com/jnj41Om.png" width="250"/>
-  <img src="https://i.imgur.com/mrLhNjt.png" width="250"/>
-  <img src="https://i.imgur.com/Fb2dGZJ.png" width="250"/>
+  <img src="https://i.imgur.com/jnj41Om.png" width="300"/>
+  <img src="https://i.imgur.com/mrLhNjt.png" width="300"/>
+  <img src="https://i.imgur.com/Fb2dGZJ.png" width="300"/>
 </p>
 
 <p align="center">
-  <img src="https://i.imgur.com/WEHW9o1.png" width="250"/>
-  <img src="https://i.imgur.com/0fLsZbG.png" width="250"/>
-  <img src="https://i.imgur.com/FAJflGk.png" width="250"/>
+  <img src="https://i.imgur.com/WEHW9o1.png" width="300"/>
+  <img src="https://i.imgur.com/0fLsZbG.png" width="300"/>
+  <img src="https://i.imgur.com/FAJflGk.png" width="300"/>
 </p>
 
 <p align="center">
-  <img src="https://i.imgur.com/hFj5S7K.png" width="250"/>
-  <img src="https://i.imgur.com/RMzhMED.png" width="250"/>
-  <img src="https://i.imgur.com/I5AvK5v.png" width="250"/>
+  <img src="https://i.imgur.com/hFj5S7K.png" width="300"/>
+  <img src="https://i.imgur.com/RMzhMED.png" width="300"/>
+  <img src="https://i.imgur.com/I5AvK5v.png" width="300"/>
 </p>
 
 <p align="center">
-  <img src="https://i.imgur.com/Q5jaSTR.png" width="250"/>
-  <img src="https://i.imgur.com/ovxCuw3.png" width="250"/>
-  <img src="https://i.imgur.com/6VaevD8.png" width="250"/>
+  <img src="https://i.imgur.com/Q5jaSTR.png" width="300"/>
+  <img src="https://i.imgur.com/ovxCuw3.png" width="300"/>
+  <img src="https://i.imgur.com/6VaevD8.png" width="300"/>
 </p>
 
 <p align="center">
@@ -247,9 +250,9 @@ http://127.0.0.1:8000
 * 🔑 **Django Admin Dashboard** + Firebase integration for analytics
 
 <p align="center">
-  <img src="https://i.imgur.com/yw9OTtv.png" width="250"/>
-  <img src="https://i.imgur.com/CJXSxOs.png" width="250"/>
-  <img src="https://i.imgur.com/izPGGsC.png" width="250"/>
+  <img src="https://i.imgur.com/yw9OTtv.png" width="350"/>
+  <img src="https://i.imgur.com/CJXSxOs.png" width="350"/>
+  <img src="https://i.imgur.com/izPGGsC.png" width="350"/>
 </p>
 
 ---
