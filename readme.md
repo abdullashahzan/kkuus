@@ -287,3 +287,14 @@ http://127.0.0.1:8000
 * Real-world features comparable to professional ecommerce platforms: notifications, developer-picked products, OTP-secured purchases
 * **Portfolio-ready** to showcase technical and design skills
 
+---
+
+## 👨‍💻 Author
+
+**Created by:**  
+**Abdulla Shahzan**  
+
+📧 Email: [abdullashahzan@gmail.com](mailto:abdullashahzan@gmail.com)  
+🔗 LinkedIn: [linkedin.com/in/abdullashahzan](https://www.linkedin.com/in/abdullashahzan)  
+
+---
